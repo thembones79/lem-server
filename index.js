@@ -5,6 +5,7 @@ const morgan = require("morgan");
 const app = express();
 const router = require("./router");
 const mongoose = require("mongoose");
+const cors = require("cors");
 
 require("dotenv").config();
 
@@ -17,6 +18,7 @@ mongoose.connect(process.env.DB_ATLAS, {
 
 // App setup
 app.use(morgan("combined")); // logging framework for debugging
+app.use(cors());
 app.use(bodyParser.json({ type: "*/*" })); // parse all requests to JSON
 router(app);
 
