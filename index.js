@@ -6,11 +6,12 @@ const app = express();
 const router = require("./router");
 const mongoose = require("mongoose");
 const cors = require("cors");
+const keys = require("./config/keys");
 
 require("dotenv").config();
 
 // DB setup
-mongoose.connect(process.env.DB_ATLAS, {
+mongoose.connect(keys.dbAtlas, {
   useNewUrlParser: true,
   useCreateIndex: true,
   useUnifiedTopology: true,
