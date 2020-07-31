@@ -7,8 +7,6 @@ exports.addUser = function (req, res, next) {
   const password = req.body.password;
   const type = req.body.type;
 
-  console.log(req.user);
-
   if (req.user.type !== "manager") {
     return res.status(422).send({
       error: "You do not have privileges to add new user!",
