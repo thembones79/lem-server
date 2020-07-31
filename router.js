@@ -1,6 +1,7 @@
 const Auhentication = require("./controllers/authentication");
 const Line = require("./controllers/line");
 const UserController = require("./controllers/user");
+const OrderController = require("./controllers/order");
 const passportService = require("./services/passport");
 const passport = require("passport");
 
@@ -18,4 +19,5 @@ module.exports = function (app) {
   app.post("/signup", Auhentication.signup);
   app.post("/api/lineadd", Line.addLine);
   app.post("/api/user", requireAuth, UserController.addUser);
+  app.post("/api/order", requireAuth, OrderController.addOrder);
 };
