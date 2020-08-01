@@ -1,5 +1,5 @@
 const Auhentication = require("./controllers/authentication");
-const Line = require("./controllers/line");
+const LineController = require("./controllers/line");
 const UserController = require("./controllers/user");
 const OrderController = require("./controllers/order");
 const passportService = require("./services/passport");
@@ -17,7 +17,8 @@ module.exports = function (app) {
   });
   app.post("/signin", requireSignin, Auhentication.signin);
   app.post("/signup", Auhentication.signup);
-  app.post("/api/lineadd", Line.addLine);
+  app.post("/api/line", requireAuth, LineController.addLine);
+  app.get("/api/lines", LineController.getLines);
   app.post("/api/user", requireAuth, UserController.addUser);
   app.post("/api/order", requireAuth, OrderController.addOrder);
 };
