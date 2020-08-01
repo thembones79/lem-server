@@ -2,6 +2,7 @@ const Auhentication = require("./controllers/authentication");
 const LineController = require("./controllers/line");
 const UserController = require("./controllers/user");
 const OrderController = require("./controllers/order");
+const ScanController = require("./controllers/scan");
 const passportService = require("./services/passport");
 const passport = require("passport");
 
@@ -21,4 +22,5 @@ module.exports = function (app) {
   app.get("/api/lines", requireAuth, LineController.getLines);
   app.post("/api/user", requireAuth, UserController.addUser);
   app.post("/api/order", requireAuth, OrderController.addOrder);
+  app.post("/api/scan", requireAuth, ScanController.addScan);
 };
