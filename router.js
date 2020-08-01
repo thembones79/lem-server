@@ -18,7 +18,7 @@ module.exports = function (app) {
   app.post("/signin", requireSignin, Auhentication.signin);
   app.post("/signup", Auhentication.signup);
   app.post("/api/line", requireAuth, LineController.addLine);
-  app.get("/api/lines", LineController.getLines);
+  app.get("/api/lines", requireAuth, LineController.getLines);
   app.post("/api/user", requireAuth, UserController.addUser);
   app.post("/api/order", requireAuth, OrderController.addOrder);
 };

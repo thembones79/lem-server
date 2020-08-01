@@ -7,7 +7,7 @@ exports.addOrder = function (req, res, next) {
   const qrCode = req.body.qrCode;
   const tactTime = req.body.tactTime;
   const customer = req.body.customer;
-  const orderStatus = "todo";
+  const orderStatus = "open";
   const breaks = [];
   const scans = [];
 

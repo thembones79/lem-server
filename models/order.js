@@ -12,7 +12,7 @@ const orderSchema = new Schema({
   qrCode: { type: String, required: true },
   tactTime: { type: Number },
   customer: { type: String },
-  orderStatus: { type: String, required: true, default: "todo", index: true },
+  orderStatus: { type: String, required: true, default: "open", index: true },
   orderAddedAt: { type: Date, default: Date.now },
   breaks: [breakSchema],
   scans: [scanSchema],

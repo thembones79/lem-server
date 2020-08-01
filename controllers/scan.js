@@ -1,49 +1,15 @@
-
-
-scanContent: {
-  type: String,
-  required: true,
-  index: true,
-  sparse: true,
-},
-timeStamp: { type: Date, default: Date.now },
-errorCode: {
-  type: String,
-  required: true,
-  index: true,
-  default: "e000",
-},
-_line: { type: Schema.Types.ObjectId, ref: "Line" },
-_user: { type: Schema.Types.ObjectId, ref: "User" },
-});
-
-
-
-
 const Order = require("../models/order");
 const scanSchema = require("../models/scan");
-
 const Scan = mongoose.model("Scan", scanSchema);
 
 exports.addScan = function (req, res, next) {
   const orderNumber = req.body.orderNumber;
-  const quantity = req.body.quantity;
-  const partNumber = req.body.partNumber;
-  const qrCode = req.body.qrCode;
-  const tactTime = req.body.tactTime;
-  const customer = req.body.customer;
-  const orderStatus = "todo";
-  const breaks = [];
-  const scans = [];
+  const scanContent = req.body.scanContent;
+  const errorCode = req.body.errorCode || "e000";
+  const _line = req.body._line;
+  const _user = req.body._user;
 
-  if (
-    !orderNumber ||
-    !quantity ||
-    !partNumber ||
-    !qrCode ||
-    !tactTime ||
-    !customer
-  ) {
+  if (!orderNumber || !scanContent || !errorCode || !_line || !_user) {
     return res.status(422).send({
       error: "Not enough values!",
     });
@@ -57,7 +23,7 @@ exports.addScan = function (req, res, next) {
       return res.status(422).send({ error: "Order exists" });
     }
 
-    const order = new Order({
+    const scan = new Scan({
       orderNumber,
       quantity,
       partNumber,
