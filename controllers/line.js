@@ -37,3 +37,15 @@ exports.addLine = function (req, res, next) {
     });
   });
 };
+
+exports.getLines = function (req, res, next) {
+  Line.find({}, function (err, lines) {
+    if (err) {
+      return next(err);
+    }
+
+    res.json({
+      lines,
+    });
+  });
+};
