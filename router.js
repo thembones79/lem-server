@@ -3,6 +3,7 @@ const LineController = require("./controllers/line");
 const UserController = require("./controllers/user");
 const OrderController = require("./controllers/order");
 const ScanController = require("./controllers/scan");
+const BreakController = require("./controllers/break");
 const passportService = require("./services/passport");
 const passport = require("passport");
 
@@ -12,7 +13,7 @@ const requireSignin = passport.authenticate("local", { session: false });
 module.exports = function (app) {
   app.get("/", requireAuth, function (req, res) {
     res.send({
-      message: "-- this is a secret message stright from the server, really",
+      message: "-- Hello from the inside of Riverdi LEM server",
       user: req.user,
     });
   });
@@ -23,4 +24,6 @@ module.exports = function (app) {
   app.post("/api/user", requireAuth, UserController.addUser);
   app.post("/api/order", requireAuth, OrderController.addOrder);
   app.post("/api/scan", requireAuth, ScanController.addScan);
+  app.post("/api/break/start", requireAuth, BreakController.addBreakStart);
+  app.post("/api/break/end", requireAuth, BreakController.addBreakEnd);
 };
