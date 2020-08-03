@@ -21,8 +21,6 @@ const xlsxSourceSchema = new Schema({
   },
 });
 
-module.exports = scanSchema;
-
 // Create the model class
 const XlsxSource = mongoose.model("XlsxSource", xlsxSourceSchema);
 

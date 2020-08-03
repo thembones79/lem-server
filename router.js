@@ -4,6 +4,7 @@ const UserController = require("./controllers/user");
 const OrderController = require("./controllers/order");
 const ScanController = require("./controllers/scan");
 const BreakController = require("./controllers/break");
+const MenuController = require("./controllers/xlsxSource");
 const passportService = require("./services/passport");
 const passport = require("passport");
 
@@ -24,6 +25,8 @@ module.exports = function (app) {
   app.post("/api/user", requireAuth, UserController.addUser);
   app.post("/api/order", requireAuth, OrderController.addOrder);
   app.post("/api/scan", requireAuth, ScanController.addScan);
+  app.post("/api/menu", requireAuth, MenuController.updateMenu);
+  app.get("/api/menu", requireAuth, MenuController.getMenu);
   app.post("/api/break/start", requireAuth, BreakController.addBreakStart);
   app.post("/api/break/end", requireAuth, BreakController.addBreakEnd);
 };
