@@ -9,6 +9,10 @@ exports.updateMenu = function (req, res, next) {
       return next(err);
     }
 
+    if (!menuContent) {
+      return res.status(422).send({ error: "Menu content is missing" });
+    }
+
     existingMenu.menuContent = menuContent;
     existingMenu.timeStamp = new Date();
 
