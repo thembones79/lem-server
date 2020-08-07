@@ -54,3 +54,22 @@ exports.addOrder = function (req, res, next) {
     });
   });
 };
+
+exports.getOrder = function (req, res, next) {
+  const orderNumber = req.params.dashedordernumber.replace(/-/g, "/");
+  console.log({ orderNumber });
+  if (!orderNumber) {
+    return res.status(422).send({
+      error: "You have to provide order number!",
+    });
+  }
+  Order.findOne({ orderNumber: orderNumber }, function (err, existingOrder) {
+    if (err) {
+      return next(err);
+    }
+
+    res.json({
+      existingOrder,
+    });
+  });
+};

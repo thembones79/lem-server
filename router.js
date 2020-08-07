@@ -24,6 +24,11 @@ module.exports = function (app) {
   app.get("/api/lines", requireAuth, LineController.getLines);
   app.post("/api/user", requireAuth, UserController.addUser);
   app.post("/api/order", requireAuth, OrderController.addOrder);
+  app.get(
+    "/api/order/:dashedordernumber",
+    requireAuth,
+    OrderController.getOrder
+  );
   app.post("/api/scan", requireAuth, ScanController.addScan);
   app.post("/api/menu", requireAuth, MenuController.updateMenu);
   app.get("/api/menu", requireAuth, MenuController.getMenu);
