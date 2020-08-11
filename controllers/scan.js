@@ -46,6 +46,18 @@ exports.addScan = function (req, res, next) {
       }
     });
 
+    // checks if scan's serial number is in the quantity range
+    const serialNumber = parseInt(scanContent.substr(-5)) || 0;
+    if (serialNumber < 1 || serialNumber > quantity) {
+      errorCode = "e002";
+    }
+
+    // checks if scan consists valid QR code
+    const qrCodeFromScan = scanContent.substr(0, scanContent.length - 5);
+    if (qrCode !== qrCodeFromScan) {
+      errorCode = "e003";
+    }
+
     const scan = new Scan({
       scanContent,
       errorCode,
@@ -53,7 +65,7 @@ exports.addScan = function (req, res, next) {
       _user,
     });
 
-    scans.push(scan);
+    scans.unshift(scan);
 
     existingOrder.save(function (err) {
       if (err) {
