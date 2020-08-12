@@ -9,7 +9,6 @@ const lineSchema = new Schema({
   lineStatus: {
     type: String,
     required: true,
-    unique: true,
     index: true,
     default: "free",
   },
