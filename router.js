@@ -25,6 +25,8 @@ module.exports = function (app) {
   app.put("/api/line/status", requireAuth, LineController.changeStatus);
   app.post("/api/user", requireAuth, UserController.addUser);
   app.post("/api/order", requireAuth, OrderController.addOrder);
+  app.put("/api/order/close", requireAuth, OrderController.closeOrder);
+  app.get("/api/orders", requireAuth, OrderController.getOrders);
   app.get(
     "/api/order/:dashedordernumber",
     requireAuth,

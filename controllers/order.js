@@ -73,3 +73,65 @@ exports.getOrder = function (req, res, next) {
     });
   });
 };
+
+exports.getOrders = function (req, res, next) {
+  Order.find({}, function (err, orders) {
+    if (err) {
+      return next(err);
+    }
+
+    res.json({
+      orders,
+    });
+  });
+};
+
+exports.closeOrder = function (req, res, next) {
+  try {
+    const orderNumber = req.body.orderNumber;
+
+    if (!orderNumber) {
+      return res.status(422).send({
+        error: "You must provide order number!",
+      });
+    }
+
+    Order.findOne({ orderNumber }, function (err, existingOrder) {
+      if (err) {
+        console.log("dupa");
+        return next(err);
+      }
+
+      if (!existingOrder) {
+        return res.status(422).send({ error: "Order do not exist!" });
+      }
+
+      if (existingOrder.orderStatus === "closed") {
+        return res.status(422).send({ error: "Order is already closed!" });
+      }
+
+      // logic closed in in IFSTATEMENT beause there can be other ststuses in the future
+      if (existingOrder.orderStatus === "open") {
+        existingOrder.orderStatus = "closed";
+        existingOrder.save(function (err) {
+          if (err) {
+            return next(err);
+          }
+          const message = `Updated order no. ${existingOrder.orderNumber} status to: ${existingOrder.orderStatus}`;
+          // Respond to request indicating the user was created
+          res.json({
+            message,
+          });
+        });
+      } else {
+        const message = `No changes were added`;
+        // Respond to request indicating the user was created
+        res.json({
+          message,
+        });
+      }
+    });
+  } catch (error) {
+    return next(error);
+  }
+};
