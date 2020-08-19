@@ -51,16 +51,16 @@ exports.getLines = function (req, res, next) {
 };
 
 exports.changeStatus = function (req, res, next) {
-  const lineNumber = parseInt(req.body.lineNumber, 10);
+  const lineId = req.body.lineId;
   const lineStatus = req.body.lineStatus;
 
-  if (!lineNumber || !lineStatus) {
+  if (!lineId || !lineStatus) {
     return res.status(422).send({
       error: "You must provide line number and line status!",
     });
   }
 
-  Line.findOne({ lineNumber }, function (err, existingLine) {
+  Line.findOne({ _id: lineId }, function (err, existingLine) {
     if (err) {
       return next(err);
     }
@@ -75,7 +75,7 @@ exports.changeStatus = function (req, res, next) {
       if (err) {
         return next(err);
       }
-      const message = `Updated line no. ${existingLine.lineNumber} status to: ${existingLine.lineStatus}`;
+      const message = `Updated line with id: ${existingLine._id} status to: ${existingLine.lineStatus}`;
       // Respond to request indicating the user was created
       res.json({
         message,
