@@ -3,6 +3,7 @@ const XlsxSource = require("../models/xlsxSource");
 exports.updateMenu = function (req, res, next) {
   const idCode = "menu";
   const menuContent = req.body.menuContent;
+  const timeStamp = req.body.timeStamp;
 
   XlsxSource.findOne({ idCode: idCode }, function (err, existingMenu) {
     if (err) {
@@ -14,7 +15,7 @@ exports.updateMenu = function (req, res, next) {
     }
 
     existingMenu.menuContent = menuContent;
-    existingMenu.timeStamp = new Date();
+    existingMenu.timeStamp = timeStamp || new Date();
 
     existingMenu.save(function (err) {
       if (err) {
