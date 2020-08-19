@@ -24,7 +24,9 @@ exports.updateMenu = function (req, res, next) {
       }
 
       res.json({
+        what: "is going on",
         existingMenu,
+        message: "OK",
       });
     });
   });
