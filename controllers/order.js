@@ -57,7 +57,7 @@ exports.addOrder = function (req, res, next) {
 
 exports.getOrder = function (req, res, next) {
   const orderNumber = req.params.dashedordernumber.replace(/-/g, "/");
-  console.log({ orderNumber });
+
   if (!orderNumber) {
     return res.status(422).send({
       error: "You have to provide order number!",
@@ -98,19 +98,18 @@ exports.closeOrder = function (req, res, next) {
 
     Order.findOne({ orderNumber }, function (err, existingOrder) {
       if (err) {
-        console.log("dupa");
         return next(err);
       }
 
       if (!existingOrder) {
-        return res.status(422).send({ error: "Order do not exist!" });
+        return res.status(422).send({ error: "Order does not exist!" });
       }
 
       if (existingOrder.orderStatus === "closed") {
         return res.status(422).send({ error: "Order is already closed!" });
       }
 
-      // logic closed in in IFSTATEMENT beause there can be other ststuses in the future
+      // logic closed in in IF STATEMENT beause there can be other statuses in the future
       if (existingOrder.orderStatus === "open") {
         existingOrder.orderStatus = "closed";
         existingOrder.save(function (err) {
@@ -118,14 +117,42 @@ exports.closeOrder = function (req, res, next) {
             return next(err);
           }
           const message = `Updated order no. ${existingOrder.orderNumber} status to: ${existingOrder.orderStatus}`;
-          // Respond to request indicating the user was created
+
           res.json({
             message,
           });
         });
       } else {
         const message = `No changes were added`;
-        // Respond to request indicating the user was created
+
+        res.json({
+          message,
+        });
+      }
+    });
+  } catch (error) {
+    return next(error);
+  }
+};
+
+exports.deleteOrder = function (req, res, next) {
+  try {
+    const orderNumber = req.params.dashedordernumber.replace(/-/g, "/");
+
+    if (!orderNumber) {
+      return res.status(422).send({
+        error: "You must provide order number!",
+      });
+    }
+
+    Order.findOneAndRemove({ orderNumber }, function (err, existingOrder) {
+      if (err) {
+        return next(err);
+      } else if (!existingOrder) {
+        return res.status(422).send({ error: "Order does not exist!" });
+      } else {
+        const message = `Deleted order no. ${existingOrder.orderNumber}`;
+
         res.json({
           message,
         });

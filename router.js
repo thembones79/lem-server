@@ -32,6 +32,11 @@ module.exports = function (app) {
     requireAuth,
     OrderController.getOrder
   );
+  app.delete(
+    "/api/order/:dashedordernumber",
+    requireAuth,
+    OrderController.deleteOrder
+  );
   app.post("/api/scan", requireAuth, ScanController.addScan);
   app.post("/api/menu", requireAuth, MenuController.updateMenu);
   app.get("/api/menu", requireAuth, MenuController.getMenu);
