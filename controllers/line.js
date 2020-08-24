@@ -66,7 +66,7 @@ exports.changeStatus = function (req, res, next) {
     }
 
     if (!existingLine) {
-      return res.status(422).send({ error: "Line do not exist!" });
+      return res.status(422).send({ error: "Line does not exist!" });
     }
 
     existingLine.lineStatus = lineStatus;
