@@ -48,39 +48,53 @@ exports.addBreakStart = function (req, res, next) {
 };
 
 exports.addBreakEnd = function (req, res, next) {
-  const orderNumber = req.body.orderNumber;
-  const breakEnd = new Date();
-  const _line = req.body._line;
+  try {
+    const orderNumber = req.body.orderNumber;
+    const breakEnd = new Date();
+    const _line = req.body._line;
 
-  if (!orderNumber || !_line) {
-    return res.status(422).send({
-      error: "Not enough values!",
-    });
-  }
-  Order.findOne({ orderNumber: orderNumber }, function (err, existingOrder) {
-    if (err) {
-      return next(err);
+    if (!orderNumber || !_line) {
+      return res.status(422).send({
+        error: "Not enough values!",
+      });
     }
-
-    if (!existingOrder) {
-      return res.status(422).send({ error: "Order does not exist" });
-    }
-
-    const { orderStatus, breaks } = existingOrder;
-
-    if (orderStatus === "closed") {
-      return res.status(422).send({ error: "Order is completed" });
-    }
-
-    breaks[breaks.length - 1].breakEnd = breakEnd;
-
-    existingOrder.save(function (err) {
+    Order.findOne({ orderNumber: orderNumber }, function (err, existingOrder) {
       if (err) {
         return next(err);
       }
-      res.json({
-        existingOrder,
-      });
+
+      if (!existingOrder) {
+        return res.status(422).send({ error: "Order does not exist" });
+      }
+
+      const { orderStatus, breaks } = existingOrder;
+
+      if (orderStatus === "closed") {
+        return res.status(422).send({ error: "Order is completed" });
+      }
+
+      const thisLineBreaks = breaks.filter((item) => item._line == _line);
+
+      if (thisLineBreaks.length === 0) {
+        return res.status(422).send({ error: "Break does not exist" });
+      } else {
+        const breakId = thisLineBreaks[thisLineBreaks.length - 1]._id;
+
+        const breaksIndex = breaks.findIndex((item) => item._id === breakId);
+
+        breaks[breaksIndex].breakEnd = breakEnd;
+
+        existingOrder.save(function (err) {
+          if (err) {
+            return next(err);
+          }
+          res.json({
+            existingOrder,
+          });
+        });
+      }
     });
-  });
+  } catch (err) {
+    return next(err);
+  }
 };
