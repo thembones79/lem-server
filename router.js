@@ -14,7 +14,7 @@ const requireSignin = passport.authenticate("local", { session: false });
 module.exports = function (app) {
   app.get("/", requireAuth, function (req, res) {
     res.send({
-      message: "-- Hello from the inside of Riverdi LEM server",
+      message: "Hello ",
       user: req.user,
     });
   });
