@@ -53,8 +53,9 @@ exports.addScan = function (req, res, next) {
     }
 
     // checks if scan consists valid QR code
-    const qrCodeFromScan = scanContent.substr(0, scanContent.length - 5);
-    if (qrCode !== qrCodeFromScan) {
+    const qrCodeFromScan = scanContent.substr(0, scanContent.length - 17);
+    const qrCodeWithoutDate = qrCode.substr(0, qrCode.length - 12);
+    if (qrCodeWithoutDate !== qrCodeFromScan) {
       errorCode = "e003";
     }
 
