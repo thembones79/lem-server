@@ -1,6 +1,6 @@
 # REST API for LEM (Line Efficiency Monitoring) System
 
-The app is meant to work with some kind of frontend. In this particular system, there is SPA (Single Page Application) in React created for this job (here).
+The app is meant to work with some kind of frontend. In this particular system, there is SPA (Single Page Application) in React created for this job (app, code).
 
 LEM System is meant to be an internal tool, so there is no "sign up" feature. Users can not add themselves to the system, they can be added only by admin/manager.
 
@@ -69,9 +69,7 @@ _**Feature:** allows user to add new production line_
 >
 > Response: `{lines}`
 
-```
-Feature: fetches all lines data
-```
+_**Feature:** fetches all lines data_
 
 ---
 
@@ -85,9 +83,7 @@ Feature: fetches all lines data
 >
 > Response: `{message: confirmationMessage}`
 
-```
-Feature: changes chosen line ("lineId") status to lineStatus sent in the request&#39;s body
-```
+_**Feature:** changes chosen line ("lineId") status to lineStatus sent in the request&#39;s body_
 
 ---
 
@@ -101,7 +97,7 @@ Feature: changes chosen line ("lineId") status to lineStatus sent in the request
 >
 > Response: `{userType: user.type, userName: user.firstname, userId: user._id,}`
 
-_**Feature:** `create a new user with data provided in the request&#39;s body (important! New users can be added only by managers/admins – standard user would get 422 error with message: **"You do not have privileges to add new user!"** )`_
+_**Feature:** create a new user with data provided in the request&#39;s body (important! New users can be added only by managers/admins – standard user would get 422 error with message: **"You do not have privileges to add new user!"** )_
 
 ---
 
@@ -115,19 +111,19 @@ _**Feature:** `create a new user with data provided in the request&#39;s body (i
 >
 > Response: `{order}`
 
-_**Feature:** `adds new order`_
+_**Feature:** adds new order_
 
 ---
 
 **Route (protected): `/api/order/close`**
 
-Request: `PUT`
-
-Request Body: `{orderNumber}`
-
-Request Security Headers: `{authorization: validJsonWebTokenString}`
-
-Response: `{message: confirmationMessage}`
+> Request: `PUT`
+>
+> Request Body: `{orderNumber}`
+>
+> Request Security Headers: `{authorization: validJsonWebTokenString}`
+>
+> Response: `{message: confirmationMessage}`
 
 _**Feature:** closes (existing and opened) order_
 
@@ -135,11 +131,11 @@ _**Feature:** closes (existing and opened) order_
 
 **Route (protected): `/api/orders`**
 
-Request: `GET`
-
-Request Security Headers: `{authorization: validJsonWebTokenString}`
-
-Response: `{orders}`
+> Request: `GET`
+>
+> Request Security Headers: `{authorization: validJsonWebTokenString}`
+>
+> Response: `{orders}`
 
 _**Feature:** fetches all orders data_
 
@@ -147,11 +143,11 @@ _**Feature:** fetches all orders data_
 
 **Route (protected): `/api/order/:dashedordernumber`**
 
-Request: `GET`
-
-Request Security Headers: `{authorization: validJsonWebTokenString}`
-
-Response: `{existingOrder}`
+> Request: `GET`
+>
+> Request Security Headers: `{authorization: validJsonWebTokenString}`
+>
+> Response: `{existingOrder}`
 
 _**Feature:** fetches chosen order full data_
 
@@ -159,11 +155,11 @@ _**Feature:** fetches chosen order full data_
 
 **Route (protected): `/api/order/:dashedordernumber`**
 
-Request: `DELETE`
-
-Request Security Headers: `{authorization: validJsonWebTokenString}`
-
-Response: `{message: confirmationMessage}`
+> Request: `DELETE`
+>
+> Request Security Headers: `{authorization: validJsonWebTokenString}`
+>
+> Response: `{message: confirmationMessage}`
 
 _**Feature:** deletes chosen order_
 
@@ -171,13 +167,13 @@ _**Feature:** deletes chosen order_
 
 **Route (protected): `/api/scan`**
 
-Request: `POST`
-
-Request Body: `{scanContent, errorCode, _line, _user}`
-
-Request Security Headers: `{authorization: validJsonWebTokenString}`
-
-Response: `{existingOrder}`
+> Request: `POST`
+>
+> Request Body: `{scanContent, errorCode, _line, _user}`
+>
+> Request Security Headers: `{authorization: validJsonWebTokenString}`
+>
+> Response: `{existingOrder}`
 
 _**Feature:** adds new scan to the chosen order and chosen line_
 
@@ -192,8 +188,8 @@ _**Feature:** adds new scan to the chosen order and chosen line_
 > Request Security Headers: `{authorization: validJsonWebTokenString}`
 >
 > Response: `{existingMenu}`
->
-> _**Feature:** overwrites existing order menu with new one (with new time stamp as synchronization indicator and sanity check. Order menu consists orders that have to be processed by manufacture department, and the application. This route is meant to be hit not by regular frontend, but by another node service that takes company&#39;s internal data – excel spreadsheet – processes it and sends to the API in 10 minute intervals)._
+
+_**Feature:** overwrites existing order menu with new one (with new time stamp as synchronization indicator and sanity check. Order menu consists orders that have to be processed by manufacture department, and the application. This route is meant to be hit not by regular frontend, but by another node service that takes company&#39;s internal data – excel spreadsheet – processes it and sends to the API in 10 minute intervals)._
 
 ---
 
@@ -204,8 +200,8 @@ _**Feature:** adds new scan to the chosen order and chosen line_
 > Request Security Headers: `{authorization: validJsonWebTokenString}`
 >
 > Response: `{timestamp, menuContent}`
->
-> _**Feature:** fetches updated order menu content with a last update time stamp_
+
+_**Feature:** fetches updated order menu content with a last update time stamp_
 
 ---
 
@@ -218,8 +214,8 @@ _**Feature:** adds new scan to the chosen order and chosen line_
 > Request Security Headers: `{authorization: validJsonWebTokenString}`
 >
 > Response: `{existingOrder}`
->
-> _**Feature:** creates a new break in chosen order on chosen line (and adds time stamp to the breakStart property)_
+
+_**Feature:** creates a new break in chosen order on chosen line (and adds time stamp to the breakStart property)_
 
 ---
 
@@ -232,8 +228,8 @@ _**Feature:** adds new scan to the chosen order and chosen line_
 > Request Security Headers: `{authorization: validJsonWebTokenString}`
 >
 > Response: `{existingOrder}`
->
-> _**Feature:** adds a breakEnd time stamp_ _to the last break without a breakEnd_ _in chosen order on chosen line (and adds time stamp to the breakStart property)_
+
+_**Feature:** adds a breakEnd time stamp_ _to the last break without a breakEnd_ _in chosen order on chosen line (and adds time stamp to the breakStart property)_
 
 ---
 
@@ -249,7 +245,7 @@ When it comes to validation, the app checks:
 1. is the part before the number the same as the code taken from your excel (if not, it gives the code `e003 - "wrong code"`)
 2. whether the number is in the given range (if not, it gives an error `e002 - "out of range"` )
 3. if the number was not repeated (if it repeated, it gives error `e001 - "repeated scan"`)
-4. if there is no error from the above it returns `e000 - "OK"` and counts this scan
+4. if there is no error from the above it returns `e000 - "OK"` and **counts this scan**
 
 Thanks to this, manager can change the pattern in Excel that generates the basis of the sticker code and theoretically nothing should go wrong
 
