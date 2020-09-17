@@ -2,7 +2,7 @@
 
 The app is meant to work with some kind of frontend. In this particular system, there is SPA (Single Page Application) in React created for this job (here).
 
-LEM System is meant to be an internal tool, so there is no &quot;sign up&quot; feature. Users can not add themselves to the system, they can be added only by admin/manager.
+LEM System is meant to be an internal tool, so there is no "sign up" feature. Users can not add themselves to the system, they can be added only by admin/manager.
 
 ### Install:
 
@@ -18,27 +18,29 @@ npm run dev
 
 The app listens on port 3090 if PORT is not provided in environmental variable.
 
-**Please note that the application has &quot;config&quot; directory.**
+#### Please note that the application has "config" directory.
 
-The &quot;config&quot; directory should have three files:
+The "config" directory should have three files:
 
 - Keys.js (committed to the repository – consists of logic determining if the app is currently in production or development environment and uses one of described below config files accordingly)
 - Prod.js (all secrets, api keys, MongoDB connection strings are taken here from environmental variables. In this particular case I&#39;m using Heroku environment)
-- Dev.js (UNCOMMITTED! – you have to create it yourself and put there MongoDB connection string and secret string (long, random string is needed to properly generate JWTs). Please add this file to your &quot;.gitignore&quot; and never send or commit it anywhere!)
+- Dev.js (UNCOMMITTED! – you have to create it yourself and put there MongoDB connection string and secret string (long, random string is needed to properly generate JWTs). Please add this file to your ".gitignore" and never send or commit it anywhere!)
 
-![](assets/uncommitted_on_backend.png)
+<div style="text-align:center"><img src="assets/uncommitted_on_backend.png" /></div>
 
-Usage (note: this is a REST API and it is supposed to be used by some kind of frontend, SPA preferably, or a mobile app):
+---
 
-**Route (unprotected): /signin**
+### Usage (note: this is a REST API and it is supposed to be used by some kind of frontend, SPA preferably, or a mobile app):
 
-Request: POST
-
-Request Body: {email, password}
-
-Response: {token, userId, username, userType}
-
-_Feature: allows existing user to &quot;sign in&quot; - gives user a valid JSON Web Token that can be used to make other protected API requests_
+> **Route (unprotected): `/signin`**
+>
+> Request: `POST`
+>
+> Request Body: `{email, password}`
+>
+> Response: `{token, userId, username, userType}`
+>
+> _**Feature:** allows existing user to "sign in" - gives user a valid JSON Web Token that can be used to make other protected API requests_
 
 **Route (protected): /api/line**
 
@@ -50,7 +52,7 @@ Request Security Headers: {authorization: validJsonWebTokenString}
 
 Response: {message: confirmationMessage}
 
-_Feature: allows user to add new production line_
+_**Feature:** allows user to add new production line_
 
 **Route (protected): /api/lines**
 
@@ -60,7 +62,7 @@ Request Security Headers: {authorization: validJsonWebTokenString}
 
 Response: {lines}
 
-_Feature: fetches all lines data_
+_**Feature:** fetches all lines data_
 
 **Route (protected): /api/line/status**
 
@@ -72,7 +74,7 @@ Request Security Headers: {authorization: validJsonWebTokenString}
 
 Response: {message: confirmationMessage}
 
-_Feature: changes chosen line (&quot;lineId&quot;) status to lineStatus sent in the request&#39;s body_
+_**Feature:** changes chosen line ("lineId") status to lineStatus sent in the request&#39;s body_
 
 **Route (protected): /api/user**
 
@@ -92,7 +94,7 @@ userId: user.\_id,
 
 }
 
-_Feature: create a new user with data provided in the request&#39;s body (important! New users can be added only by managers/admins – standard user would get 422 error with message:\_\_&quot;You do not have privileges to add new user!&quot; )_
+_**Feature:** create a new user with data provided in the request&#39;s body (important! New users can be added only by managers/admins – standard user would get 422 error with message:\_\_"You do not have privileges to add new user!" )_
 
 **Route (protected): /api/order**
 
@@ -116,7 +118,7 @@ Request Security Headers: {authorization: validJsonWebTokenString}
 
 Response: {order}
 
-_Feature: adds new order_
+_**Feature:** adds new order_
 
 **Route (protected): /api/order/close**
 
@@ -128,7 +130,7 @@ Request Security Headers: {authorization: validJsonWebTokenString}
 
 Response: {message: confirmationMessage}
 
-_Feature: closes (existing and opened) order_
+_**Feature:** closes (existing and opened) order_
 
 **Route (protected): /api/orders**
 
@@ -138,7 +140,7 @@ Request Security Headers: {authorization: validJsonWebTokenString}
 
 Response: {orders}
 
-_Feature: fetches all orders data_
+_**Feature:** fetches all orders data_
 
 **Route (protected): /api/order/:dashedordernumber**
 
@@ -148,7 +150,7 @@ Request Security Headers: {authorization: validJsonWebTokenString}
 
 Response: {existingOrder}
 
-_Feature: fetches chosen order full data_
+_**Feature:** fetches chosen order full data_
 
 **Route (protected): /api/order/:dashedordernumber**
 
@@ -158,7 +160,7 @@ Request Security Headers: {authorization: validJsonWebTokenString}
 
 Response: {message: confirmationMessage}
 
-_Feature: deletes chosen order_
+_**Feature:** deletes chosen order_
 
 **Route (protected): /api/scan**
 
@@ -170,74 +172,74 @@ Request Security Headers: {authorization: validJsonWebTokenString}
 
 Response: {existingOrder}
 
-_Feature: adds new scan to the chosen order and chosen line_
+_**Feature:** adds new scan to the chosen order and chosen line_
 
-**Route (protected): /api/menu**
+> **Route (protected): `/api/menu`**
+>
+> Request: `POST`
+>
+> Request Body: `{menuContent, timeStamp}`
+>
+> Request Security Headers: `{authorization: validJsonWebTokenString}`
+>
+> Response: `{existingMenu}`
+>
+> _**Feature:** overwrites existing order menu with new one (with new time stamp as synchronization indicator and sanity check. Order menu consists orders that have to be processed by manufacture department, and the application. This route is meant to be hit not by regular frontend, but by another node service that takes company&#39;s internal data – excel spreadsheet – processes it and sends to the API in 10 minute intervals)._
 
-Request: POST
+> **Route (protected): `/api/menu`**
+>
+> Request: `GET`
+>
+> Request Security Headers: `{authorization: validJsonWebTokenString}`
+>
+> Response: `{timestamp, menuContent}`
+>
+> _**Feature:** fetches updated order menu content with a last update time stamp_
 
-Request Body: {menuContent, timeStamp}
+> **Route (protected): `/api/break/start`**
+>
+> Request: `POST`
+>
+> Request Body: `{orderNumber, _line}`
+>
+> Request Security Headers: `{authorization: validJsonWebTokenString}`
+>
+> Response: `{existingOrder}`
+>
+> _**Feature:** creates a new break in chosen order on chosen line (and adds time stamp to the breakStart property)_
 
-Request Security Headers: {authorization: validJsonWebTokenString}
+> **Route (protected): `/api/break/end`**
+>
+> Request: `POST`
+>
+> Request Body: `{orderNumber, _line}`
+>
+> Request Security Headers: `{authorization: validJsonWebTokenString}`
+>
+> Response: `{existingOrder}`
+>
+> _**Feature:** adds a breakEnd time stamp_ _to the last break without a breakEnd_ _in chosen order on chosen line (and adds time stamp to the breakStart property)_
 
-Response: {existingMenu}
+---
 
-_Feature: overwrites existing order menu with new one (with new time stamp as synchronization indicator and sanity check. Order menu consists orders that have to be processed by manufacture department, and the application. This route is meant to be hit not by regular frontend, but by another node service that takes company&#39;s internal data – excel spreadsheet – processes it and sends to the API in 10 minute intervals)._
+### The application also checks correctness of barcode reader scans.
 
-**Route (protected): /api/menu**
+The app divides the code from the scan into 2 parts:
 
-Request: GET
-
-Request Security Headers: {authorization: validJsonWebTokenString}
-
-Response: {timestamp, menuContent}
-
-_Feature: fetches updated order menu content with a last update time stamp_
-
-**Route (protected): /api/break/start**
-
-Request: POST
-
-Request Body: {orderNumber, \_line}
-
-Request Security Headers: {authorization: validJsonWebTokenString}
-
-Response: {existingOrder}
-
-_Feature: creates a new break in chosen order on chosen line (and adds time stamp to the breakStart property)_
-
-**Route (protected): /api/break/end**
-
-Request: POST
-
-Request Body: {orderNumber, \_line}
-
-Request Security Headers: {authorization: validJsonWebTokenString}
-
-Response: {existingOrder}
-
-_Feature: adds a breakEnd time stamp_ _to the last break without a breakEnd_ _in chosen order on chosen line (and adds time stamp to the breakStart property)_
-
-The application also checks correctness of barcode reader scans.
-
-the app divides the code from the scan into 2 parts:
-
-1. the main code (I have called it &quot;qrCode&quot;, which takes it from your Excel and assumes that it is correct and that it can change, because, for example, a manager came up with a different pattern to generate and I will not predict it)
+1. the main code (I have called it "qrCode", which takes it from your Excel and assumes that it is correct and that it can change, because, for example, a manager came up with a different pattern to generate and I will not predict it)
 2. and attached to it a (five-digit) number from 00001 to the given quantity
 
-When it comes to validation:
-
-The app checks:
+When it comes to validation, the app checks:
 
 1. is the part before the number the same as the code taken from your excel (if not, it gives the code `e003 - "wrong code"`)
-2. whether the number is in the given range (if not, it gives an error **e002 - &quot;out of range&quot;** )
-3. if the number was not repeated (if it repeated, it gives error **e001 - &quot;repeated scan&quot;)**
-4. if there is no error from the above it returns **e000 - &quot;OK&quot;** and counts this scan
+2. whether the number is in the given range (if not, it gives an error `e002 - "out of range"` )
+3. if the number was not repeated (if it repeated, it gives error `e001 - "repeated scan"`)
+4. if there is no error from the above it returns `e000 - "OK"` and counts this scan
 
-thanks to this, manager can change the pattern in Excel that generates the basis of the sticker code and theoretically nothing should go wrong
+Thanks to this, manager can change the pattern in Excel that generates the basis of the sticker code and theoretically nothing should go wrong
 
 Error codes will be used in the future for statistical purposes.
 
 Besides time efficiency, there are going to be statistics about errors on particular line, particular user, particular order, particular part number and all permutation of the above.
 
-So it would be easier to estimate, for example, which partnumber is &quot;harder&quot; to make, or who needs some more training, or which line has mixed up components, or which line needs extra help from quality department or from other line to deliver on time, etc.
+So it would be easier to estimate, for example, which partnumber is "harder" to make, or who needs some more training, or which line has mixed up components, or which line needs extra help from quality department or from other line to deliver on time, etc.
