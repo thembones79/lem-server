@@ -31,7 +31,9 @@ The "config" directory should have three files:
 
 ---
 
-### Usage (note: this is a REST API and it is supposed to be used by some kind of frontend, SPA preferably, or a mobile app):
+### Usage _(note: this is a REST API and it is supposed to be used by some kind of frontend, SPA preferably, or a mobile app)_:
+
+---
 
 **Route (unprotected): `/signin`**
 
@@ -42,6 +44,8 @@ The "config" directory should have three files:
 > Response: `{token, userId, username, userType}`
 >
 > _**Feature:** allows existing user to "sign in" - gives user a valid JSON Web Token that can be used to make other protected API requests_
+
+---
 
 **Route (protected): `/api/line`**
 
@@ -55,6 +59,8 @@ The "config" directory should have three files:
 >
 > _**Feature:** allows user to add new production line_
 
+---
+
 **Route (protected): `/api/lines`**
 
 > Request: `GET`
@@ -64,6 +70,8 @@ The "config" directory should have three files:
 > Response: `{lines}`
 >
 > _**Feature:** fetches all lines data_
+
+---
 
 **Route (protected): `/api/line/status`**
 
@@ -76,6 +84,8 @@ The "config" directory should have three files:
 > Response: `{message: confirmationMessage}`
 >
 > _**Feature:** changes chosen line ("lineId") status to lineStatus sent in the request&#39;s body_
+
+---
 
 **Route (protected): `/api/user`**
 
@@ -141,6 +151,8 @@ Response: `{existingOrder}`
 
 _**Feature:** fetches chosen order full data_
 
+---
+
 **Route (protected): `/api/order/:dashedordernumber`**
 
 Request: `DELETE`
@@ -164,6 +176,8 @@ Request Security Headers: `{authorization: validJsonWebTokenString}`
 Response: `{existingOrder}`
 
 _**Feature:** adds new scan to the chosen order and chosen line_
+
+---
 
 **Route (protected): `/api/menu`**
 
