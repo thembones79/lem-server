@@ -25,11 +25,10 @@ The "config" directory should have three files:
 - Keys.js (committed to the repository – consists of logic determining if the app is currently in production or development environment and uses one of described below config files accordingly)
 - Prod.js (all secrets, api keys, MongoDB connection strings are taken here from environmental variables. In this particular case I&#39;m using Heroku environment)
 - Dev.js (UNCOMMITTED! – you have to create it yourself and put there MongoDB connection string and secret string (long, random string is needed to properly generate JWTs). Please add this file to your ".gitignore" and never send or commit it anywhere!)
-
-<div style="text-align:center"><img src="assets/uncommitted_on_backend.png" /></div>
 <p align="center">
   <img src="assets/uncommitted_on_backend.png" />
 </p>
+
 ---
 
 ### Usage (note: this is a REST API and it is supposed to be used by some kind of frontend, SPA preferably, or a mobile app):
@@ -46,133 +45,121 @@ The "config" directory should have three files:
 
 **Route (protected): /api/line**
 
-Request: POST
-
-Request Body: {lineNumber}
-
-Request Security Headers: {authorization: validJsonWebTokenString}
-
-Response: {message: confirmationMessage}
-
-_**Feature:** allows user to add new production line_
+> Request: `POST`
+>
+> Request Body: `{lineNumber}`
+>
+> Request Security Headers: `{authorization: validJsonWebTokenString}`
+>
+> Response: `{message: confirmationMessage}`
+>
+> _**Feature:** allows user to add new production line_
 
 **Route (protected): /api/lines**
 
-Request: GET
-
-Request Security Headers: {authorization: validJsonWebTokenString}
-
-Response: {lines}
-
-_**Feature:** fetches all lines data_
+> Request: `GET`
+>
+> Request Security Headers: `{authorization: validJsonWebTokenString}`
+>
+> Response: `{lines}`
+>
+> _**Feature:** fetches all lines data_
 
 **Route (protected): /api/line/status**
 
-Request: PUT
-
-Request Body: {lineId, lineStatus}
-
-Request Security Headers: {authorization: validJsonWebTokenString}
-
-Response: {message: confirmationMessage}
-
-_**Feature:** changes chosen line ("lineId") status to lineStatus sent in the request&#39;s body_
+> Request: `PUT`
+>
+> Request Body: `{lineId, lineStatus}`
+>
+> Request Security Headers: `{authorization: validJsonWebTokenString}`
+>
+> Response: `{message: confirmationMessage}`
+>
+> _**Feature:** changes chosen line ("lineId") status to lineStatus sent in the request&#39;s body_
 
 **Route (protected): /api/user**
 
-Request: POST
+Request: `POST`
 
-Request Body: {firstname, lastname, email, password, type}
+Request Body: `{firstname, lastname, email, password, type}`
 
-Request Security Headers: {authorization: validJsonWebTokenString}
+Request Security Headers: `{authorization: validJsonWebTokenString}`
 
-Response: {
+Response: `{userType: user.type, userName: user.firstname, userId: user._id,}`
 
-userType: user.type,
+_**Feature:** create a new user with data provided in the request&#39;s body (important! New users can be added only by managers/admins – standard user would get 422 error with message: **"You do not have privileges to add new user!"** )_
 
-userName: user.firstname,
-
-userId: user.\_id,
-
-}
-
-_**Feature:** create a new user with data provided in the request&#39;s body (important! New users can be added only by managers/admins – standard user would get 422 error with message:\_\_"You do not have privileges to add new user!" )_
+---
 
 **Route (protected): /api/order**
 
-Request: POST
+Request: `POST`
 
-Request Body: {
+Request Body: `{orderNumber, quantity, partNumber, qrCode, customer, tactTime}`
 
-orderNumber,
+Request Security Headers: `{authorization: validJsonWebTokenString}`
 
-quantity,
-
-partNumber,
-
-qrCode,
-
-customer,
-
-tactTime}
-
-Request Security Headers: {authorization: validJsonWebTokenString}
-
-Response: {order}
+Response: `{order}`
 
 _**Feature:** adds new order_
 
+---
+
 **Route (protected): /api/order/close**
 
-Request: PUT
+Request: `PUT`
 
-Request Body: {orderNumber}
+Request Body: `{orderNumber}`
 
-Request Security Headers: {authorization: validJsonWebTokenString}
+Request Security Headers: `{authorization: validJsonWebTokenString}`
 
-Response: {message: confirmationMessage}
+Response: `{message: confirmationMessage}`
 
 _**Feature:** closes (existing and opened) order_
 
+---
+
 **Route (protected): /api/orders**
 
-Request: GET
+Request: `GET`
 
-Request Security Headers: {authorization: validJsonWebTokenString}
+Request Security Headers: `{authorization: validJsonWebTokenString}`
 
-Response: {orders}
+Response: `{orders}`
 
 _**Feature:** fetches all orders data_
 
+---
+
 **Route (protected): /api/order/:dashedordernumber**
 
-Request: GET
+Request: `GET`
 
-Request Security Headers: {authorization: validJsonWebTokenString}
+Request Security Headers: `{authorization: validJsonWebTokenString}`
 
-Response: {existingOrder}
+Response: `{existingOrder}`
 
 _**Feature:** fetches chosen order full data_
 
 **Route (protected): /api/order/:dashedordernumber**
 
-Request: DELETE
+Request: `DELETE`
 
-Request Security Headers: {authorization: validJsonWebTokenString}
+Request Security Headers: `{authorization: validJsonWebTokenString}`
 
-Response: {message: confirmationMessage}
+Response: `{message: confirmationMessage}`
 
 _**Feature:** deletes chosen order_
 
 **Route (protected): /api/scan**
 
-Request: POST
+Request: `POST`
 
-Request Body: {scanContent, errorCode, \_line, \_user}
+Request Body: `{scanContent, errorCode, _line, _user}`
 
-Request Security Headers: {authorization: validJsonWebTokenString}
+Request Security Headers: `{authorization: validJsonWebTokenString}`
 
-Response: {existingOrder}
+Response: `{existingOrder}`
 
 _**Feature:** adds new scan to the chosen order and chosen line_
 
