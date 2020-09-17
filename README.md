@@ -177,6 +177,8 @@ _**Feature:** adds new scan to the chosen order and chosen line_
 >
 > _**Feature:** overwrites existing order menu with new one (with new time stamp as synchronization indicator and sanity check. Order menu consists orders that have to be processed by manufacture department, and the application. This route is meant to be hit not by regular frontend, but by another node service that takes company&#39;s internal data – excel spreadsheet – processes it and sends to the API in 10 minute intervals)._
 
+---
+
 **Route (protected): `/api/menu`**
 
 > Request: `GET`
@@ -186,6 +188,8 @@ _**Feature:** adds new scan to the chosen order and chosen line_
 > Response: `{timestamp, menuContent}`
 >
 > _**Feature:** fetches updated order menu content with a last update time stamp_
+
+---
 
 **Route (protected): `/api/break/start`**
 
@@ -198,6 +202,8 @@ _**Feature:** adds new scan to the chosen order and chosen line_
 > Response: `{existingOrder}`
 >
 > _**Feature:** creates a new break in chosen order on chosen line (and adds time stamp to the breakStart property)_
+
+---
 
 **Route (protected): `/api/break/end`**
 
