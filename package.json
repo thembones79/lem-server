@@ -11,7 +11,17 @@
     "start": "node index.js",
     "dev": "nodemon index.js"
   },
-  "keywords": [],
+  "keywords": [
+    "rest api",
+    "node",
+    "express",
+    "mongo",
+    "mongoose",
+    "manufacturing",
+    "production",
+    "rest",
+    "api"
+  ],
   "author": "",
   "license": "ISC",
   "dependencies": {
