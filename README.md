@@ -68,8 +68,10 @@ _**Feature:** allows user to add new production line_
 > Request Security Headers: `{authorization: validJsonWebTokenString}`
 >
 > Response: `{lines}`
->
-> _**Feature:** fetches all lines data_
+
+```
+Feature: fetches all lines data
+```
 
 ---
 
@@ -82,36 +84,38 @@ _**Feature:** allows user to add new production line_
 > Request Security Headers: `{authorization: validJsonWebTokenString}`
 >
 > Response: `{message: confirmationMessage}`
->
-> _**Feature:** changes chosen line ("lineId") status to lineStatus sent in the request&#39;s body_
+
+```
+Feature: changes chosen line ("lineId") status to lineStatus sent in the request&#39;s body
+```
 
 ---
 
 **Route (protected): `/api/user`**
 
-Request: `POST`
+> Request: `POST`
+>
+> Request Body: `{firstname, lastname, email, password, type}`
+>
+> Request Security Headers: `{authorization: validJsonWebTokenString}`
+>
+> Response: `{userType: user.type, userName: user.firstname, userId: user._id,}`
 
-Request Body: `{firstname, lastname, email, password, type}`
-
-Request Security Headers: `{authorization: validJsonWebTokenString}`
-
-Response: `{userType: user.type, userName: user.firstname, userId: user._id,}`
-
-_**Feature:** create a new user with data provided in the request&#39;s body (important! New users can be added only by managers/admins – standard user would get 422 error with message: **"You do not have privileges to add new user!"** )_
+_**Feature:** `create a new user with data provided in the request&#39;s body (important! New users can be added only by managers/admins – standard user would get 422 error with message: **"You do not have privileges to add new user!"** )`_
 
 ---
 
 **Route (protected): `/api/order`**
 
-Request: `POST`
+> Request: `POST`
+>
+> Request Body: `{orderNumber, quantity, partNumber, qrCode, customer, tactTime}`
+>
+> Request Security Headers: `{authorization: validJsonWebTokenString}`
+>
+> Response: `{order}`
 
-Request Body: `{orderNumber, quantity, partNumber, qrCode, customer, tactTime}`
-
-Request Security Headers: `{authorization: validJsonWebTokenString}`
-
-Response: `{order}`
-
-_**Feature:** adds new order_
+_**Feature:** `adds new order`_
 
 ---
 
