@@ -7,24 +7,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.1.0] - 2020-09-17
 
-### Added 🔥
-
-- README.md
-- CHANGELOG.md
-
-### Changed 💪
-
-- updated scan error validation to omitt date in the part of the scan string
-- updated package.json
-
-## [1.0.0] - 2020-09-04
-
-### Added 🔥
-
-- initial release
-
-## [1.1.0] - 2020-09-17
-
 ### 🔥 Added
 
 - README.md
