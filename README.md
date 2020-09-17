@@ -1,4 +1,4 @@
-# NodeJS/ExpressJS REST API for LEM (Line Efficiency Monitoring) System
+# REST API for LEM (Line Efficiency Monitoring) System
 
 The app is meant to work with some kind of frontend. In this particular system, there is SPA (Single Page Application) in React created for this job (here).
 
@@ -27,7 +27,9 @@ The "config" directory should have three files:
 - Dev.js (UNCOMMITTED! – you have to create it yourself and put there MongoDB connection string and secret string (long, random string is needed to properly generate JWTs). Please add this file to your ".gitignore" and never send or commit it anywhere!)
 
 <div style="text-align:center"><img src="assets/uncommitted_on_backend.png" /></div>
-
+<p align="center">
+  <img src="assets/uncommitted_on_backend.png" />
+</p>
 ---
 
 ### Usage (note: this is a REST API and it is supposed to be used by some kind of frontend, SPA preferably, or a mobile app):

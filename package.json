@@ -1,7 +1,7 @@
 {
   "name": "server",
   "version": "1.0.0",
-  "description": "",
+  "description": "NodeJS with ExpressJS REST API for LEM (Line Efficiency Monitoring) System",
   "main": "index.js",
   "engines": {
     "node": "12.13.1",
@@ -22,8 +22,17 @@
     "rest",
     "api"
   ],
-  "author": "",
+  "author": {
+    "name": "Michal Szumnarski",
+    "email": "michal.szumnarski@gmail.com"
+  },
   "license": "ISC",
+  "bugs": "https://github.com/thembones79/lem-server/issues",
+  "homepage": "https://github.com/thembones79/lem-server#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/thembones79/lem-server.git"
+  },
   "dependencies": {
     "bcrypt-nodejs": "0.0.3",
     "body-parser": "1.19.0",
