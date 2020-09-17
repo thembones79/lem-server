@@ -42,8 +42,8 @@ The "config" directory should have three files:
 > Request Body: `{email, password}`
 >
 > Response: `{token, userId, username, userType}`
->
-> _**Feature:** allows existing user to "sign in" - gives user a valid JSON Web Token that can be used to make other protected API requests_
+
+_**Feature:** allows existing user to "sign in" - gives user a valid JSON Web Token that can be used to make other protected API requests_
 
 ---
 
@@ -56,8 +56,8 @@ The "config" directory should have three files:
 > Request Security Headers: `{authorization: validJsonWebTokenString}`
 >
 > Response: `{message: confirmationMessage}`
->
-> _**Feature:** allows user to add new production line_
+
+_**Feature:** allows user to add new production line_
 
 ---
 
