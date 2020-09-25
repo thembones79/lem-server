@@ -1,40 +1,41 @@
 # REST API for LEM (Line Efficiency Monitoring) System
 
-[**LEM System**](https://riverdi-lem.netlify.app/) is an internal tool for measuring and monitoring manufacturing/production lines.
+[**LEM System**](https://riverdi-lem.netlify.app/) is an internal tool for measuring and monitoring manufacturing/production lines **[app overview](https://github.com/thembones79/cs50x/tree/master/project#readme)**.
 
 The project was created as the [final project](https://cs50.harvard.edu/x/2020/project/) to graduate [Harvard&#39;s CS50](https://cs50.harvard.edu/x/2020/) for benefit of my colleagues at Manufacturing Department of [Unisystem](https://www.unisystem-displays.com/en/) and [Riverdi](https://riverdi.com/) (Industrial display and touch screen manufacturer).
 
 The application has to solve some issues that my folks have to tackle on daily basis.
 
-## The main features of LEM System:
+## The main features of **[LEM System](https://github.com/thembones79/cs50x/tree/master/project#readme)**:
 
 **The software has to:**
 
 1. Utilize bar-code scanners (in fact, it is not a bar code but [Data Matrix](https://en.wikipedia.org/wiki/Data_Matrix) – it&#39;s 2D code, somewhat similar to QR Code) that the company bought for scanning newly developed stickers that are placed on ready made products (as input data)
-2. Read MS Excel file with production schedule and part number details and retrieve data about tact times, part numbers and orders to work with.
-3. Give an instant feedback about MCT LCT efficiency, estimated duration of the order and estimated time of order completion. (also with colors - GREEN and RED so people can instantly see if they are winning or losing)
-4. Give an information about Order, customer, manufactured piece (part number), ordered quantity
-5. Give an information about missing pieces
+2. Read MS Excel file with production schedule and part number details and retrieve data about `tact times`, `part numbers` and `orders` to work with.
+3. Give an instant feedback about `MCT` (Mean Cycle Time), `LCT` (Last Cycle Time), `Efficiency`, estimated `order duration` and estimated `time of order completion`. (also with colors - GREEN and RED so people can instantly see if they are winning or losing)
+4. Give an information about `order`, `customer`, manufactured piece (part number), ordered `quantity`
+5. Give an information about `missing pieces`
 6. Give an information of mixed up pieces (for example the same part number but form another order from same or another client
 7. Give feedback about counting one piece more than once
 8. Give information about how many pieces (of current order) was done on current line and on all the lines and how many pieces are to do
-9. Give ability to have brakes during completion the given order
-10. Give ability to work on more than one line
-11. Give ability to start an order on one line and finish it on another
-12. Give ability work on more than one order simultaneously
-13. Give ability to work on the same (big) order on more than one line at the same time
-14. Handle users (production workers, service, foremen and managers) accounts (with authorization and authentication)
+9. Give ability to have `breaks` during completion the given order
+10. Give ability to `work on more than one line`
+11. Give ability to `start an order on one line and finish it on another`
+12. Give ability to work on `more than one order simultaneously`
+13. Give ability to work on `the same (big) order on more than one line at the same time`
+14. Handle users (production workers, service, foremen and managers) accounts (with `authorization` and `authentication`)
 15. When user reserves a line, the line has to be unavailable to another user until it is released
 
 **Future:**
 
-1. Manager dashboard with:
-2. Statistics: orders, users, lines, errors, times, partnumbers
-3. User account management
-4. Line management
-5. Order and work scheduling (← that one, can be implemented only when the application will be independent form this huge excel spreadsheet that is currently a bread and butter of all department and everything is based on it)
+Manager dashboard with:
 
-The app is meant to work with some kind of frontend. In this particular system, there is SPA (Single Page Application) in React created for this job ([app](https://riverdi-lem.netlify.app/)), [code](https://github.com/thembones79/lem-client#readme)).
+1. Statistics: orders, users, lines, errors, times, partnumbers
+1. User account management
+1. Line management
+1. Order and work scheduling (← that one, can be implemented only when the application will be independent form this huge excel spreadsheet that is currently a bread and butter of all department and everything is based on it)
+
+The app is meant to work with some kind of frontend. In this particular system, there is SPA (Single Page Application) in React created for this job ([app](https://riverdi-lem.netlify.app/), [code](https://github.com/thembones79/lem-client#readme)).
 
 LEM System is meant to be an internal tool, so there is no "sign up" feature. Users can not add themselves to the system, they can be added only by admin/manager.
 
@@ -50,22 +51,22 @@ npm install
 npm run dev
 ```
 
-The app listens on port 3090 if PORT is not provided in environmental variable.
+The app listens on port **`3090`** if PORT is not provided as a environmental variable.
 
 #### Please note that the application has "config" directory.
 
 The "config" directory should have three files:
 
-- Keys.js (committed to the repository – consists of logic determining if the app is currently in production or development environment and uses one of described below config files accordingly)
-- Prod.js (all secrets, api keys, MongoDB connection strings are taken here from environmental variables. In this particular case I&#39;m using Heroku environment)
-- Dev.js (UNCOMMITTED! – you have to create it yourself and put there MongoDB connection string and secret string (long, random string is needed to properly generate JWTs). Please add this file to your ".gitignore" and never send or commit it anywhere!)
+- `Keys.js` (committed to the repository – consists of logic determining if the app is currently in production or development environment and uses one of described below config files accordingly)
+- `Prod.js` (all secrets, api keys, MongoDB connection strings are taken here from environmental variables. In this particular case I&#39;m using Heroku environment)
+- `Dev.js` (UNCOMMITTED! – you have to create it yourself and put there MongoDB connection string and secret string (long, random string is needed to properly generate JWTs). Please add this file to your ".gitignore" and never send or commit it anywhere!)
 <p align="center">
   <img src="assets/uncommitted_on_backend.png" />
 </p>
 
 ---
 
-### Usage _(note: this is a REST API and it is supposed to be used by some kind of frontend, SPA preferably, or a mobile app)_:
+### Usage _(note: this is a REST API and it is supposed to be consumed by some kind of frontend, SPA preferably, or a mobile app)_:
 
 ---
 
@@ -288,3 +289,15 @@ Error codes will be used in the future for statistical purposes.
 Besides time efficiency, there are going to be statistics about errors on particular line, particular user, particular order, particular part number and all permutation of the above.
 
 So it would be easier to estimate, for example, which partnumber is "harder" to make, or who needs some more training, or which line has mixed up components, or which line needs extra help from quality department or from other line to deliver on time, etc.
+
+---
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/thembones79/cs50x/master/project/assets/RiverdiLEM_stack2.png" />
+</p>
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/thembones79/cs50x/master/project/assets/RiverdiLEM_datamodel.png" />
+</p>
+
+## [ > Detailed Project Overview < ](https://github.com/thembones79/cs50x/tree/master/project#readme)
