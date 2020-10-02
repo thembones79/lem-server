@@ -58,16 +58,28 @@ exports.addScan = function (req, res, next) {
     if (qrCodeWithoutDate !== qrCodeFromScan) {
       errorCode = "e003";
     }
-
+    const scansWithoutErrors = scans.filter(
+      (scan) => scan.errorCode === "e000" || scan.errorCode === "e004"
+    );
     // checks if scan is first then if this scan is 00001
-    if (scans.length === 0 && serialNumber !== 1 && errorCode !== "e003") {
+    if (
+      scansWithoutErrors.length === 0 &&
+      serialNumber !== 1 &&
+      errorCode !== "e003"
+    ) {
       errorCode = "e004";
     }
 
     // if scan is not first then if scan code equals first scan in the array + 1
-    if (scans.length > 0) {
-      const previousScanCode = parseInt(scans[0].scanContent.substr(-5));
-      if (errorCode !== "e003" && serialNumber !== previousScanCode + 1) {
+    if (scansWithoutErrors.length > 0) {
+      const previousScanCode = parseInt(
+        scansWithoutErrors[0].scanContent.substr(-5)
+      );
+      if (
+        errorCode !== "e003" &&
+        errorCode !== "e001" &&
+        serialNumber !== previousScanCode + 1
+      ) {
         errorCode = "e004";
       }
     }
