@@ -1,6 +1,5 @@
 const mongoose = require("mongoose");
 const Order = require("../models/order");
-const { pre } = require("../models/scan");
 const scanSchema = require("../models/scan");
 const Scan = mongoose.model("Scan", scanSchema);
 
