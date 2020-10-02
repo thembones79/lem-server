@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const Order = require("../models/order");
+const { pre } = require("../models/scan");
 const scanSchema = require("../models/scan");
 const Scan = mongoose.model("Scan", scanSchema);
 
@@ -57,6 +58,19 @@ exports.addScan = function (req, res, next) {
     const qrCodeWithoutDate = qrCode.substr(0, qrCode.length - 12);
     if (qrCodeWithoutDate !== qrCodeFromScan) {
       errorCode = "e003";
+    }
+
+    // checks if scan is first then if this scan is 00001
+    if (scans.length === 0 && serialNumber !== 1 && errorCode !== "e003") {
+      errorCode = "e004";
+    }
+
+    // if scan is not first then if scan code equals first scan in the array + 1
+    if (scans.length > 0) {
+      const previousScanCode = parseInt(scans[0].scanContent.substr(-5));
+      if (errorCode !== "e003" && serialNumber !== previousScanCode + 1) {
+        errorCode = "e004";
+      }
     }
 
     const scan = new Scan({
