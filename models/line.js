@@ -6,6 +6,7 @@ const Schema = mongoose.Schema;
 const lineSchema = new Schema({
   lineNumber: { type: Number, required: true, unique: true, index: true },
   lineDescription: { type: String, default: "" },
+  lineOccupiedWith: { type: String, default: "" },
   lineStatus: {
     type: String,
     required: true,

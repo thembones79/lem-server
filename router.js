@@ -27,6 +27,11 @@ module.exports = function (app) {
   app.put("/api/order/close", requireAuth, OrderController.closeOrder);
   app.get("/api/orders", requireAuth, OrderController.getOrders);
   app.get(
+    "/api/aggregatedorders",
+    requireAuth,
+    OrderController.getAggregatedOrders
+  );
+  app.get(
     "/api/order/:dashedordernumber",
     requireAuth,
     OrderController.getOrder
