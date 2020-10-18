@@ -21,5 +21,7 @@ const orderSchema = new Schema({
 // Create the model class
 const Order = mongoose.model("Order", orderSchema);
 
+Order.watch().on("change", (data) => console.log(new Date(), data));
+
 // Export the model
 module.exports = Order;
