@@ -34,7 +34,7 @@ mongoose.connect(keys.dbAtlas, {
 // App setup
 app.use(morgan("combined")); // logging framework for debugging
 app.use(helmet());
-app.use(cors(corsOptions));
+app.use(cors());
 app.use(bodyParser.json({ type: "*/*" })); // parse all requests to JSON
 // forwarding to https on Heroku
 if (process.env.NODE_ENV === "production") {
