@@ -8,7 +8,7 @@ const router = require("./router");
 const sockets = require("./sockets");
 const mongoose = require("mongoose");
 const cors = require("cors");
-const whitelist = ["http://localhost:3000", "https://riverdi-lem.netlify.app"];
+const whitelist = ["https://riverdi-lem.netlify.app", "http://localhost:3000"];
 const corsOptions = {
   credentials: true, // This is important.
   origin: (origin, callback) => {
@@ -19,7 +19,8 @@ const corsOptions = {
 };
 const keys = require("./config/keys");
 const options = {
-  origins: whitelist,
+  origins: "*:*",
+  transports: ["websocket"],
 };
 
 require("dotenv").config();
