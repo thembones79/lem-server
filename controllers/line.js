@@ -83,3 +83,36 @@ exports.changeStatus = function (req, res, next) {
     });
   });
 };
+
+exports.occupyLineWith = function (req, res, next) {
+  const { lineId, orderNumber } = req.body;
+
+  if (!lineId || !orderNumber) {
+    return res.status(422).send({
+      error: "You must provide line number and order number!",
+    });
+  }
+
+  Line.findOne({ _id: lineId }, function (err, existingLine) {
+    if (err) {
+      return next(err);
+    }
+
+    if (!existingLine) {
+      return res.status(422).send({ error: "Line does not exist!" });
+    }
+
+    existingLine.lineOccupiedWith = orderNumber;
+
+    existingLine.save(function (err) {
+      if (err) {
+        return next(err);
+      }
+      const message = `Updated line: ${existingLine.lineDescription}, with order: ${existingLine.lineOccupiedWith}.`;
+      // Respond to request indicating the user was created
+      res.json({
+        message,
+      });
+    });
+  });
+};

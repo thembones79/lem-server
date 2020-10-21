@@ -5,6 +5,7 @@ const OrderController = require("./controllers/order");
 const ScanController = require("./controllers/scan");
 const BreakController = require("./controllers/break");
 const MenuController = require("./controllers/xlsxSource");
+const LiveViewController = require("./controllers/live");
 const passportService = require("./services/passport");
 const passport = require("passport");
 
@@ -22,10 +23,12 @@ module.exports = function (app) {
   app.post("/api/line", requireAuth, LineController.addLine);
   app.get("/api/lines", requireAuth, LineController.getLines);
   app.put("/api/line/status", requireAuth, LineController.changeStatus);
+  app.put("/api/line/occupiedwith", requireAuth, LineController.occupyLineWith);
   app.post("/api/user", requireAuth, UserController.addUser);
   app.post("/api/order", requireAuth, OrderController.addOrder);
   app.put("/api/order/close", requireAuth, OrderController.closeOrder);
   app.get("/api/orders", requireAuth, OrderController.getOrders);
+  app.get("/api/liveview", requireAuth, LiveViewController.getLiveView);
   app.get(
     "/api/aggregatedorders",
     requireAuth,

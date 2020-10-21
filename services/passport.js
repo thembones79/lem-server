@@ -59,6 +59,33 @@ const jwtLogin = new JwtStrategy(jwtOptions, function (payload, done) {
   });
 });
 
+// Setup options for JWT Strategy
+const jwtOptionsSockets = {
+  jwtFromRequest: ExtractJwt.fromUrlQueryParameter("authorization"),
+  secretOrKey: keys.secret,
+};
+
+// Create JWT strategy
+const jwtLoginSockets = new JwtStrategy(jwtOptionsSockets, function (
+  payload,
+  done
+) {
+  // See if the user ID in the payload exists in our database
+  // if it does, call 'done' with that user, otherwise,
+  // call done without a user object
+  User.findById(payload.sub, function (err, user) {
+    if (err) {
+      return done(err, false);
+    }
+    if (user) {
+      done(null, user);
+    } else {
+      done(null, false);
+    }
+  });
+});
+
 // Tell passport to use this strategy
 passport.use(jwtLogin);
+//passport.use(jwtLoginSockets);
 passport.use(localLogin);
