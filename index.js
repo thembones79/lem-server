@@ -5,9 +5,22 @@ const bodyParser = require("body-parser");
 const morgan = require("morgan");
 const app = express();
 const router = require("./router");
+const sockets = require("./sockets");
 const mongoose = require("mongoose");
 const cors = require("cors");
+const whitelist = ["http://localhost:3000", "https://riverdi-lem.netlify.app"];
+const corsOptions = {
+  credentials: true, // This is important.
+  origin: (origin, callback) => {
+    if (whitelist.includes(origin)) return callback(null, true);
+
+    callback(new Error("Not allowed by CORS"));
+  },
+};
 const keys = require("./config/keys");
+const options = {
+  origins: whitelist,
+};
 
 require("dotenv").config();
 
@@ -19,10 +32,9 @@ mongoose.connect(keys.dbAtlas, {
 });
 
 // App setup
-
 app.use(morgan("combined")); // logging framework for debugging
 app.use(helmet());
-app.use(cors());
+app.use(cors(corsOptions));
 app.use(bodyParser.json({ type: "*/*" })); // parse all requests to JSON
 // forwarding to https on Heroku
 if (process.env.NODE_ENV === "production") {
@@ -37,6 +49,12 @@ router(app);
 // Server setup
 const port = process.env.PORT || 3090;
 const server = http.createServer(app);
-//server.listen(port);
-app.listen(port);
+
+// WebSockets setup
+const io = require("socket.io")(server, options);
+
+sockets(io);
+
+server.listen(port);
+
 console.log("server is listening on: ", port);
