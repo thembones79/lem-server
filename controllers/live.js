@@ -2,8 +2,17 @@ const Order = require("../models/order");
 const Line = require("../models/line");
 const mongoose = require("mongoose");
 
-exports.databaseWatcher = function (socket) {
+const watchChangeOnOrderCollection = (socket) => {
   Order.watch().on("change", () => getLiveViewSockets(socket));
+};
+
+exports.databaseWatcher = function (socket, next) {
+  try {
+    watchChangeOnOrderCollection(socket);
+    Order.watch().on("error", () => watchChangeOnOrderCollection(socket));
+  } catch (error) {
+    return console.log(error);
+  }
 };
 
 exports.getLiveView = function (req, res, next) {
@@ -108,6 +117,18 @@ exports.getLiveView = function (req, res, next) {
               ? new Date(validScans[0].timeStamp).getTime()
               : 0;
 
+          const secondNewestScan =
+            validScans.length > 1
+              ? new Date(validScans[1].timeStamp).getTime()
+              : 0;
+
+          const lastCycleTimeInMilliseconds =
+            newestScan > 0 && secondNewestScan > 0
+              ? newestScan - secondNewestScan
+              : 0;
+
+          const lastCycleTime = millisToHhMmSs(lastCycleTimeInMilliseconds);
+
           const orderStart = new Date(orderAddedAt).getTime();
 
           const grossDurationInMilliseconds = newestScan - orderStart;
@@ -140,7 +161,7 @@ exports.getLiveView = function (req, res, next) {
             meanCycleTimeInMilliseconds > 0
               ? Math.floor(
                   ((tactTime * 1000) / meanCycleTimeInMilliseconds) * 100
-                ) + "%"
+                )
               : 0;
 
           const estimatedDurationInMilliseconds =
@@ -188,6 +209,9 @@ exports.getLiveView = function (req, res, next) {
             breakTimesInMilliseconds,
             finishedBreaks: finishedBreaks.length,
             meanCycleTime,
+            meanCycleTimeInMilliseconds,
+            lastCycleTime,
+            lastCycleTimeInMilliseconds,
             efficiency,
             estimatedDuration,
             estimatedCompletionTime,
@@ -307,6 +331,18 @@ const getLiveViewSockets = function (socket) {
               ? new Date(validScans[0].timeStamp).getTime()
               : 0;
 
+          const secondNewestScan =
+            validScans.length > 1
+              ? new Date(validScans[1].timeStamp).getTime()
+              : 0;
+
+          const lastCycleTimeInMilliseconds =
+            newestScan > 0 && secondNewestScan > 0
+              ? newestScan - secondNewestScan
+              : 0;
+
+          const lastCycleTime = millisToHhMmSs(lastCycleTimeInMilliseconds);
+
           const orderStart = new Date(orderAddedAt).getTime();
 
           const grossDurationInMilliseconds = newestScan - orderStart;
@@ -339,7 +375,7 @@ const getLiveViewSockets = function (socket) {
             meanCycleTimeInMilliseconds > 0
               ? Math.floor(
                   ((tactTime * 1000) / meanCycleTimeInMilliseconds) * 100
-                ) + "%"
+                )
               : 0;
 
           const estimatedDurationInMilliseconds =
@@ -349,8 +385,8 @@ const getLiveViewSockets = function (socket) {
             estimatedDurationInMilliseconds
           );
 
-          const orderAddedAtProcessed = millisToHhMmSs(orderStart);
-          const lastScan = millisToHhMmSs(newestScan);
+          const orderAddedAtProcessed = renderTime(orderStart);
+          const lastScan = renderTime(newestScan);
 
           const estimatedCompletionTime = renderTime(
             orderStart + estimatedDurationInMilliseconds
@@ -370,6 +406,7 @@ const getLiveViewSockets = function (socket) {
             orderNumber,
             orderAddedAt,
             orderAddedAtProcessed,
+            newestScan,
             lastScan,
             quantity,
             partNumber,
@@ -386,7 +423,10 @@ const getLiveViewSockets = function (socket) {
             breakTime,
             breakTimesInMilliseconds,
             finishedBreaks: finishedBreaks.length,
+            meanCycleTimeInMilliseconds,
             meanCycleTime,
+            lastCycleTimeInMilliseconds,
+            lastCycleTime,
             efficiency,
             estimatedDuration,
             estimatedCompletionTime,
@@ -396,7 +436,7 @@ const getLiveViewSockets = function (socket) {
         console.log("************************");
         console.log({ liveView });
         console.log("************************");
-        socket.emit("LiveView", liveView);
+        socket.emit("LiveView", { liveView });
       }
     );
   });
