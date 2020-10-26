@@ -21,11 +21,11 @@ exports.getLiveView = function (req, res, next) {
       return next(err);
     }
     const filteredLines = lines.filter((line) => line.lineOccupiedWith !== "");
-    console.log({ filteredLines });
+
     const orderNumbers = filteredLines.map((line) => {
       return { orderNumber: line.lineOccupiedWith };
     });
-    console.log({ orderNumbers });
+
     Order.find(
       {
         $or: orderNumbers,
@@ -54,6 +54,8 @@ exports.getLiveView = function (req, res, next) {
               meanCycleTime: "00:00:00",
               lastCycleTime: "00:00:00",
               efficiency: "0%",
+              quantity: 0,
+              validScans: 0,
             };
           }
 
@@ -270,7 +272,6 @@ const getLiveViewSockets = function (socket) {
           const existingOrder = orders.filter(
             (order) => order.orderNumber === lineOccupiedWith
           );
-
           if (!existingOrder[0]) {
             return {
               orderNumber: lineOccupiedWith,
@@ -284,6 +285,8 @@ const getLiveViewSockets = function (socket) {
               meanCycleTime: "00:00:00",
               lastCycleTime: "00:00:00",
               efficiency: "0%",
+              quantity: 0,
+              validScans: 0,
             };
           }
 
