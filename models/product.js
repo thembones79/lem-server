@@ -9,7 +9,7 @@ const productSchema = new Schema({
       url: { type: String, required: true },
     },
   ],
-  tactTime: { type: Number },
+  tactTime: { type: Number, default: 0 },
   linksToRedirs: [
     {
       _redirection: { type: Schema.Types.ObjectId, ref: "Redirection" },
