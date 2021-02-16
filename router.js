@@ -6,6 +6,7 @@ const ScanController = require("./controllers/scan");
 const BreakController = require("./controllers/break");
 const MenuController = require("./controllers/xlsxSource");
 const LiveViewController = require("./controllers/live");
+const RedirectionController = require("./controllers/redirection");
 const passportService = require("./services/passport");
 const passport = require("passport");
 
@@ -28,6 +29,12 @@ module.exports = function (app) {
   app.post("/api/order", requireAuth, OrderController.addOrder);
   app.put("/api/order/close", requireAuth, OrderController.closeOrder);
   app.get("/api/orders", requireAuth, OrderController.getOrders);
+  app.post(
+    "/api/redirection",
+    requireAuth,
+    RedirectionController.addRedirection
+  );
+  app.get("/api/redirection/:redirRoute", RedirectionController.redirectTo);
   app.get("/api/liveview", requireAuth, LiveViewController.getLiveView);
   app.get(
     "/api/aggregatedorders",
