@@ -10,11 +10,7 @@ const productSchema = new Schema({
     },
   ],
   tactTime: { type: Number, default: 0 },
-  linksToRedirs: [
-    {
-      _redirection: { type: Schema.Types.ObjectId, ref: "Redirection" },
-    },
-  ],
+  linksToRedirs: [{ type: Schema.Types.ObjectId, ref: "Redirection" }],
 });
 
 const Product = mongoose.model("Product", productSchema);

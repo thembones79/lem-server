@@ -5,11 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.7.0] - 2021-02-18
+
+### 🔥 Added
+
+- adding Redirections to Product (via POST `/api/product/redirection` route) feature
+- adding Links do Documentation to Product (via POST `/api/product/link` route) feature
+- changing Product data (via PUT `/api/product` route) - allows: adding, removing, changing links and redirections within a Product (and thanks to db populate allows cascading/clean removing related redirection from separate collection)
+
 ## [1.6.0] - 2021-02-17
 
 ### 🔥 Added
 
-- Adding New Product (via POST "/api/product" route) feature
+- Adding New Product (via POST `/api/product` route) feature
 
 ## [1.6.0] - 2021-02-16
 

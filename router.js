@@ -37,6 +37,13 @@ module.exports = function (app) {
   );
   app.get("/api/redirection/:redirRoute", RedirectionController.redirectTo);
   app.post("/api/product", requireAuth, ProductController.addProduct);
+  app.post("/api/product/link", requireAuth, ProductController.addLink);
+  app.post(
+    "/api/product/redirection",
+    requireAuth,
+    ProductController.addRedirection
+  );
+  app.put("/api/product", requireAuth, ProductController.changeProduct);
   app.get("/api/liveview", requireAuth, LiveViewController.getLiveView);
   app.get(
     "/api/aggregatedorders",
