@@ -1,17 +1,18 @@
 const Redirection = require("../models/redirection");
 
 exports.addRedirection = function (req, res, next) {
-  const description = req.body.description;
-  let redirRoute = req.body.redirRoute;
-  const targetUrl = `https://riverdi.sharepoint.com/sites/Produkcja/Shared%20Documents/Instrukcje/${req.body.fileName}.pdf`;
+  let { redirRoute, description, fileName } = req.body;
 
-  if (!description || !redirRoute || !req.body.fileName) {
+  redirRoute = redirRoute.trim();
+  description = description.trim();
+  fileName = fileName.trim();
+
+  if (!description || !redirRoute || !fileName) {
     return res.status(422).send({
       error: "You must provide description, redirection route and file name!",
     });
   }
-
-  redirRoute = redirRoute.trim();
+  const targetUrl = `https://riverdi.sharepoint.com/sites/Produkcja/Shared%20Documents/Instrukcje/${fileName}.pdf`;
 
   Redirection.findOne({ redirRoute }, function (err, existingRedirection) {
     if (err) {
