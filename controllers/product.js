@@ -1,3 +1,5 @@
+const { SHAREPOINT_PATH, FILE_EXTENSION } = require("../config/config");
+
 const Product = require("../models/product");
 
 exports.addProduct = function (req, res, next) {
@@ -32,10 +34,7 @@ exports.addProduct = function (req, res, next) {
       }
 
       res.json({
-        partNumber: product.partNumber,
-        linksToDocs: product.linksToDocs,
-        linksToRedirs: product.linksToRedirs,
-        productId: product._id,
+        product,
       });
     });
   });
@@ -54,7 +53,7 @@ exports.addLink = function (req, res, next) {
   description = description.trim();
   fileName = fileName.trim();
 
-  const url = `https://riverdi.sharepoint.com/sites/Produkcja/Shared%20Documents/Instrukcje/${fileName}.pdf`;
+  const url = SHAREPOINT_PATH + fileName + FILE_EXTENSION;
 
   Product.findOne({ partNumber }, function (err, existingProduct) {
     if (err) {
@@ -66,7 +65,7 @@ exports.addLink = function (req, res, next) {
       return res.status(422).send({ error: "Product does not exist!" });
     }
 
-    existingProduct.linksToDocs.push({ description, url });
+    existingProduct.linksToDocs.push({ description, url, fileName });
 
     existingProduct.save(function (err) {
       if (err) {
@@ -74,10 +73,7 @@ exports.addLink = function (req, res, next) {
       }
 
       res.json({
-        partNumber: existingProduct.partNumber,
-        linksToDocs: existingProduct.linksToDocs,
-        linksToRedirs: existingProduct.linksToRedirs,
-        productId: existingProduct._id,
+        existingProduct,
       });
     });
   });
@@ -117,10 +113,7 @@ exports.addRedirection = function (req, res, next) {
           }
 
           res.json({
-            partNumber: existingProduct.partNumber,
-            linksToDocs: existingProduct.linksToDocs,
-            linksToRedirs: existingProduct.linksToRedirs,
-            productId: existingProduct._id,
+            existingProduct,
           });
         });
       } catch (error) {
@@ -167,10 +160,7 @@ exports.changeProduct = function (req, res, next) {
       }
 
       res.json({
-        partNumber: existingProduct.partNumber,
-        linksToDocs: existingProduct.linksToDocs,
-        linksToRedirs: existingProduct.linksToRedirs,
-        productId: existingProduct._id,
+        existingProduct,
       });
     });
   });

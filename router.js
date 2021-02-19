@@ -35,6 +35,16 @@ module.exports = function (app) {
     requireAuth,
     RedirectionController.addRedirection
   );
+  app.put(
+    "/api/redirection/:_id",
+    requireAuth,
+    RedirectionController.changeRedirection
+  );
+  app.delete(
+    "/api/redirection/:_id",
+    requireAuth,
+    RedirectionController.deleteRedirection
+  );
   app.get("/api/redirection/:redirRoute", RedirectionController.redirectTo);
   app.post("/api/product", requireAuth, ProductController.addProduct);
   app.post("/api/product/link", requireAuth, ProductController.addLink);

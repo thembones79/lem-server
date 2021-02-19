@@ -1,3 +1,5 @@
+const { SHAREPOINT_PATH, FILE_EXTENSION } = require("../config/config");
+
 const Redirection = require("../models/redirection");
 
 exports.addRedirection = function (req, res, next) {
@@ -12,7 +14,7 @@ exports.addRedirection = function (req, res, next) {
       error: "You must provide description, redirection route and file name!",
     });
   }
-  const targetUrl = `https://riverdi.sharepoint.com/sites/Produkcja/Shared%20Documents/Instrukcje/${fileName}.pdf`;
+  const targetUrl = SHAREPOINT_PATH + fileName + FILE_EXTENSION;
 
   Redirection.findOne({ redirRoute }, function (err, existingRedirection) {
     if (err) {
@@ -27,6 +29,7 @@ exports.addRedirection = function (req, res, next) {
       description,
       redirRoute,
       targetUrl,
+      fileName,
     });
 
     redirection.save(function (err) {
@@ -35,10 +38,7 @@ exports.addRedirection = function (req, res, next) {
       }
 
       res.json({
-        description: redirection.description,
-        redirRoute: redirection.redirRoute,
-        targetUrl: redirection.targetUrl,
-        redirId: redirection._id,
+        redirection,
       });
     });
   });
@@ -68,4 +68,88 @@ exports.redirectTo = function (req, res, next) {
 
     res.redirect(targetUrl);
   });
+};
+
+exports.changeRedirection = function (req, res, next) {
+  const _id = req.params._id;
+  let { redirRoute, description, fileName } = req.body;
+
+  redirRoute = redirRoute.trim();
+  description = description.trim();
+  fileName = fileName.trim();
+
+  if (!_id) {
+    return res.status(422).send({
+      error: "You must provide id!",
+    });
+  }
+
+  if (!description || !redirRoute || !fileName) {
+    return res.status(422).send({
+      error: "You must provide description, redirection route and file name!",
+    });
+  }
+
+  Redirection.findOne({ redirRoute }, function (err, anotherRedirection) {
+    if (err) {
+      return next(err);
+    }
+
+    if (anotherRedirection && anotherRedirection._id != _id) {
+      return res.status(422).send({ error: "Route already defined!" });
+    }
+
+    const targetUrl = SHAREPOINT_PATH + fileName + FILE_EXTENSION;
+
+    Redirection.findOne({ _id }, function (err, existingRedirection) {
+      if (err) {
+        return next(err);
+      }
+
+      if (!existingRedirection) {
+        return res.status(422).send({ error: "No redirection found!" });
+      }
+
+      existingRedirection.description = description;
+      existingRedirection.redirRoute = redirRoute;
+      existingRedirection.targetUrl = targetUrl;
+      existingRedirection.fileName = fileName;
+
+      existingRedirection.save(function (err) {
+        if (err) {
+          return next(err);
+        }
+
+        res.json(existingRedirection);
+      });
+    });
+  });
+};
+
+exports.deleteRedirection = function (req, res, next) {
+  try {
+    const _id = req.params._id;
+
+    if (!_id) {
+      return res.status(422).send({
+        error: "You must provide redirection id!",
+      });
+    }
+
+    Redirection.findOneAndRemove({ _id }, function (err, existingRedirection) {
+      if (err) {
+        return next(err);
+      } else if (!existingRedirection) {
+        return res.status(422).send({ error: "Redirection does not exist!" });
+      } else {
+        const message = `Deleted redirection from /${existingRedirection.redirRoute}`;
+
+        res.json({
+          message,
+        });
+      }
+    });
+  } catch (error) {
+    return next(error);
+  }
 };
