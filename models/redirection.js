@@ -11,6 +11,7 @@ const redirectionSchema = new Schema({
     lowercase: true,
   },
   targetUrl: { type: String, required: true },
+  fileName: { type: String },
 });
 
 const Redirection = mongoose.model("Redirection", redirectionSchema);
