@@ -5,6 +5,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.11.0] - 2021-02-20
+
+### 🔥 Added
+
+- added updating many products nested arrays (via PUT `/api/product/redirection/:_id` route) with one redirection (in one request without a loop)
+
+- added fetching redirection details with attached products (via GET `/api/redirwithprods/:_id` route)
+
+### 💪 Changed
+
+- updated delete redirection code to wipe out deleted redirection from arrays in products that have this redirection
+
 ## [1.10.0] - 2021-02-20
 
 ### 🔥 Added

@@ -1,7 +1,8 @@
 const ObjectId = require("mongoose").Types.ObjectId;
-const { SHAREPOINT_PATH, FILE_EXTENSION } = require("../config/config");
 
+const { SHAREPOINT_PATH, FILE_EXTENSION } = require("../config/config");
 const Redirection = require("../models/redirection");
+const Product = require("../models/product");
 
 exports.addRedirection = function (req, res, next) {
   let { redirRoute, description, fileName } = req.body;
@@ -143,19 +144,35 @@ exports.deleteRedirection = function (req, res, next) {
       });
     }
 
-    Redirection.findOneAndRemove({ _id }, function (err, existingRedirection) {
-      if (err) {
-        return next(err);
-      } else if (!existingRedirection) {
-        return res.status(422).send({ error: "Redirection does not exist!" });
-      } else {
-        const message = `Deleted redirection from /${existingRedirection.redirRoute}`;
+    Product.updateMany(
+      { linksToRedirs: { $in: _id } },
+      { $pull: { linksToRedirs: _id } },
+      { safe: true, upsert: true },
+      function (err, docs) {
+        if (err) {
+          console.log(err);
+        } else {
+          Redirection.findOneAndRemove(
+            { _id },
+            function (err, existingRedirection) {
+              if (err) {
+                return next(err);
+              } else if (!existingRedirection) {
+                return res
+                  .status(422)
+                  .send({ error: "Redirection does not exist!" });
+              } else {
+                const message = `Deleted redirection from /${existingRedirection.redirRoute}`;
 
-        res.json({
-          message,
-        });
+                res.json({
+                  message,
+                });
+              }
+            }
+          );
+        }
       }
-    });
+    );
   } catch (error) {
     return next(error);
   }
@@ -168,5 +185,47 @@ exports.getRedirections = function (req, res, next) {
     }
 
     res.json({ redirections });
+  });
+};
+
+exports.getRedirWithProds = function (req, res, next) {
+  const redirId = req.params._id;
+
+  console.log({ redirId });
+
+  if (!redirId) {
+    return res.status(422).send({
+      error: "You must provide redirection id!",
+    });
+  }
+
+  if (!ObjectId.isValid(redirId)) {
+    return res.status(422).send({
+      error: "Invalid id!",
+    });
+  }
+
+  Redirection.findOne({ _id: redirId }, function (err, existingRedirection) {
+    if (err) {
+      return next(err);
+    }
+
+    if (!existingRedirection) {
+      return res.status(422).send({ error: "Redirection not defined!" });
+    }
+
+    Product.find(
+      {
+        linksToRedirs: { $in: redirId },
+      },
+      "partNumber"
+    ).exec(function (err, prodsWithThisRedir) {
+      if (err) {
+        console.log({ err });
+        return next(err);
+      }
+
+      res.json({ existingRedirection, prodsWithThisRedir });
+    });
   });
 };

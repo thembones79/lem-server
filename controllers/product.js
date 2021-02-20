@@ -1,4 +1,5 @@
 const ObjectId = require("mongoose").Types.ObjectId;
+
 const { SHAREPOINT_PATH, FILE_EXTENSION } = require("../config/config");
 const Product = require("../models/product");
 
@@ -202,7 +203,7 @@ exports.getProduct = function (req, res, next) {
       if (!existingProduct) {
         return res.status(422).send({ error: "Product does not exist!" });
       }
-      res.json(existingProduct);
+      res.json({ existingProduct });
     });
 };
 
@@ -238,4 +239,61 @@ exports.deleteProduct = function (req, res, next) {
   } catch (error) {
     return next(error);
   }
+};
+
+exports.updateManyProdsWithOneRedir = function (req, res, next) {
+  const redirId = req.params._id;
+  const { productList } = req.body;
+
+  if (!redirId) {
+    return res.status(422).send({
+      error: "You must provide redirection id!",
+    });
+  }
+
+  if (!ObjectId.isValid(redirId)) {
+    return res.status(422).send({
+      error: "Invalid id!",
+    });
+  }
+
+  if (!productList) {
+    return res.status(422).send({
+      error: "No product list!",
+    });
+  }
+
+  if (!Array.isArray(productList)) {
+    return res.status(422).send({
+      error: "product list has to be an array!",
+    });
+  }
+
+  Product.updateMany(
+    { linksToRedirs: { $in: redirId } },
+    { $pull: { linksToRedirs: redirId } },
+    { safe: true, upsert: true },
+    function (err, docs) {
+      if (err) {
+        console.log(err);
+      } else {
+        Product.updateMany(
+          { partNumber: { $in: productList } },
+          { $push: { linksToRedirs: redirId } },
+          { safe: true, upsert: true },
+          function (err, docs) {
+            if (err) {
+              console.log(err);
+            } else {
+              const message = `Updated many products with one redirection`;
+
+              res.json({
+                message,
+              });
+            }
+          }
+        );
+      }
+    }
+  );
 };

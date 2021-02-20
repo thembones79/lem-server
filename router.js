@@ -52,12 +52,22 @@ module.exports = function (app) {
     requireAuth,
     RedirectionController.getRedirections
   );
+  app.get(
+    "/api/redirwithprods/:_id",
+    requireAuth,
+    RedirectionController.getRedirWithProds
+  );
   app.post("/api/product", requireAuth, ProductController.addProduct);
   app.post("/api/product/link", requireAuth, ProductController.addLink);
   app.post(
     "/api/product/redirection",
     requireAuth,
     ProductController.addRedirection
+  );
+  app.put(
+    "/api/product/redirection/:_id",
+    requireAuth,
+    ProductController.updateManyProdsWithOneRedir
   );
   app.put("/api/product", requireAuth, ProductController.changeProduct);
   app.get("/api/product", requireAuth, ProductController.getProducts);
