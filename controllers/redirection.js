@@ -1,6 +1,6 @@
 const ObjectId = require("mongoose").Types.ObjectId;
-const { SHAREPOINT_PATH, FILE_EXTENSION } = require("../config/config");
 
+const { SHAREPOINT_PATH, FILE_EXTENSION } = require("../config/config");
 const Redirection = require("../models/redirection");
 
 exports.addRedirection = function (req, res, next) {

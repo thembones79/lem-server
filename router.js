@@ -59,6 +59,11 @@ module.exports = function (app) {
     requireAuth,
     ProductController.addRedirection
   );
+  app.put(
+    "/api/product/redirection/:_id",
+    requireAuth,
+    ProductController.updateManyProdsWithOneRedir
+  );
   app.put("/api/product", requireAuth, ProductController.changeProduct);
   app.get("/api/product", requireAuth, ProductController.getProducts);
   app.get("/api/product/:_id", requireAuth, ProductController.getProduct);
