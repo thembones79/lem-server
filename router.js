@@ -26,6 +26,7 @@ module.exports = function (app) {
   app.get("/api/lines", requireAuth, LineController.getLines);
   app.put("/api/line/status", requireAuth, LineController.changeStatus);
   app.put("/api/line/occupiedwith", requireAuth, LineController.occupyLineWith);
+  app.get("/api/line/:_id", requireAuth, LineController.getProductFromLine);
   app.post("/api/user", requireAuth, UserController.addUser);
   app.post("/api/order", requireAuth, OrderController.addOrder);
   app.put("/api/order/close", requireAuth, OrderController.closeOrder);

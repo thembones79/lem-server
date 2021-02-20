@@ -1,4 +1,7 @@
+const ObjectId = require("mongoose").Types.ObjectId;
+const Order = require("../models/order");
 const Line = require("../models/line");
+const Product = require("../models/product");
 
 exports.addLine = function (req, res, next) {
   const lineNumber = parseInt(req.body.lineNumber, 10);
@@ -114,5 +117,67 @@ exports.occupyLineWith = function (req, res, next) {
         message,
       });
     });
+  });
+};
+
+exports.getProductFromLine = function (req, res, next) {
+  const _id = req.params._id;
+  if (!_id) {
+    return res.status(422).send({
+      error: "You must provide line id!",
+    });
+  }
+
+  if (!ObjectId.isValid(_id)) {
+    return res.status(422).send({
+      error: "Invalid id!",
+    });
+  }
+
+  Line.findOne({ _id }, function (err, line) {
+    if (err) {
+      return next(err);
+    }
+
+    if (!line) {
+      return res.status(422).send({ error: "Line does not exist" });
+    }
+
+    const orderNumber = line.lineOccupiedWith;
+    if (!orderNumber || orderNumber === "") {
+      return res.status(422).send({
+        error: "Line is free!",
+      });
+    }
+
+    Order.findOne(
+      {
+        orderNumber,
+      },
+      function (err, order) {
+        if (err) {
+          return next(err);
+        }
+        if (!order) {
+          return res.status(422).send({ error: "Order does not exist" });
+        }
+
+        const { partNumber } = order;
+
+        Product.findOne({ partNumber })
+          .populate("linksToRedirs")
+          .exec(function (err, existingProduct) {
+            if (err) {
+              console.log({ err });
+              return next(err);
+            }
+
+            if (!existingProduct) {
+              return res.status(422).send({ error: "Product does not exist!" });
+            }
+            res.json({ existingProduct, orderNumber });
+          });
+      }
+    );
   });
 };
