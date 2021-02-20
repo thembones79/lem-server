@@ -1,3 +1,4 @@
+const ObjectId = require("mongoose").Types.ObjectId;
 const { SHAREPOINT_PATH, FILE_EXTENSION } = require("../config/config");
 
 const Redirection = require("../models/redirection");
@@ -136,6 +137,12 @@ exports.deleteRedirection = function (req, res, next) {
       });
     }
 
+    if (!ObjectId.isValid(_id)) {
+      return res.status(422).send({
+        error: "Invalid id!",
+      });
+    }
+
     Redirection.findOneAndRemove({ _id }, function (err, existingRedirection) {
       if (err) {
         return next(err);
@@ -152,4 +159,14 @@ exports.deleteRedirection = function (req, res, next) {
   } catch (error) {
     return next(error);
   }
+};
+
+exports.getRedirections = function (req, res, next) {
+  Redirection.find({}, function (err, redirections) {
+    if (err) {
+      return next(err);
+    }
+
+    res.json({ redirections });
+  });
 };
