@@ -9,7 +9,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### 🔥 Added
 
-- added
+- added updating many products nested arrays (via PUT `/api/product/redirection/:_id` route) with one redirection (in one request without a loop)
+
+- added fetching redirection details with attached products (via GET `/api/redirwithprods/:_id` route)
+
+### 💪 Changed
+
+- updated delete redirection code to wipe out deleted redirection from arrays in products that have this redirection
 
 ## [1.10.0] - 2021-02-20
 

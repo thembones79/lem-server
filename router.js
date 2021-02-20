@@ -52,6 +52,11 @@ module.exports = function (app) {
     requireAuth,
     RedirectionController.getRedirections
   );
+  app.get(
+    "/api/redirwithprods/:_id",
+    requireAuth,
+    RedirectionController.getRedirWithProds
+  );
   app.post("/api/product", requireAuth, ProductController.addProduct);
   app.post("/api/product/link", requireAuth, ProductController.addLink);
   app.post(
