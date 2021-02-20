@@ -1,6 +1,5 @@
 const ObjectId = require("mongoose").Types.ObjectId;
 const { SHAREPOINT_PATH, FILE_EXTENSION } = require("../config/config");
-
 const Product = require("../models/product");
 
 exports.addProduct = function (req, res, next) {
