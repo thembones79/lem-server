@@ -1,3 +1,4 @@
+const ObjectId = require("mongoose").Types.ObjectId;
 const { SHAREPOINT_PATH, FILE_EXTENSION } = require("../config/config");
 
 const Product = require("../models/product");
@@ -164,4 +165,78 @@ exports.changeProduct = function (req, res, next) {
       });
     });
   });
+};
+
+exports.getProducts = function (req, res, next) {
+  Product.find({}, "partNumber", function (err, products) {
+    if (err) {
+      return next(err);
+    }
+
+    res.json({ products });
+  });
+};
+
+exports.getProduct = function (req, res, next) {
+  const { _id } = req.params;
+
+  if (!_id) {
+    return res.status(422).send({
+      error: "You must provide product id!",
+    });
+  }
+
+  if (!ObjectId.isValid(_id)) {
+    return res.status(422).send({
+      error: "Invalid id!",
+    });
+  }
+
+  Product.findOne({ _id })
+    .populate("linksToRedirs")
+    .exec(function (err, existingProduct) {
+      if (err) {
+        console.log({ err });
+        return next(err);
+      }
+
+      if (!existingProduct) {
+        return res.status(422).send({ error: "Product does not exist!" });
+      }
+      res.json(existingProduct);
+    });
+};
+
+exports.deleteProduct = function (req, res, next) {
+  try {
+    const _id = req.params._id;
+
+    if (!_id) {
+      return res.status(422).send({
+        error: "You must provide product id!",
+      });
+    }
+
+    if (!ObjectId.isValid(_id)) {
+      return res.status(422).send({
+        error: "Invalid id!",
+      });
+    }
+
+    Product.findOneAndRemove({ _id }, function (err, existingProduct) {
+      if (err) {
+        return next(err);
+      } else if (!existingProduct) {
+        return res.status(422).send({ error: "Product does not exist!" });
+      } else {
+        const message = `Deleted ${existingProduct.partNumber}`;
+
+        res.json({
+          message,
+        });
+      }
+    });
+  } catch (error) {
+    return next(error);
+  }
 };

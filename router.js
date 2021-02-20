@@ -46,6 +46,11 @@ module.exports = function (app) {
     RedirectionController.deleteRedirection
   );
   app.get("/api/redirection/:redirRoute", RedirectionController.redirectTo);
+  app.get(
+    "/api/redirection",
+    requireAuth,
+    RedirectionController.getRedirections
+  );
   app.post("/api/product", requireAuth, ProductController.addProduct);
   app.post("/api/product/link", requireAuth, ProductController.addLink);
   app.post(
@@ -54,6 +59,9 @@ module.exports = function (app) {
     ProductController.addRedirection
   );
   app.put("/api/product", requireAuth, ProductController.changeProduct);
+  app.get("/api/product", requireAuth, ProductController.getProducts);
+  app.get("/api/product/:_id", requireAuth, ProductController.getProduct);
+  app.delete("/api/product/:_id", requireAuth, ProductController.deleteProduct);
   app.get("/api/liveview", requireAuth, LiveViewController.getLiveView);
   app.get(
     "/api/aggregatedorders",

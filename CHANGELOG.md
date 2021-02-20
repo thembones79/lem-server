@@ -5,12 +5,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.9.0] - 2021-02-20
+
+### 🔥 Added
+
+- added Redirections list feature (via GET `/api/redirection/` route)
+- added Products list feature (via GET `/api/product/` route)
+- added get Product details feature (via GET `/api/product/:_id` route)
+- added Product delete feature (via DELETE `/api/product/:_id` route)
+
 ## [1.8.0] - 2021-02-19
 
 ### 🔥 Added
 
-- added Redirection update feature (via PUT `/api/redirection/:id` route)
-- added Redirection delete feature (via DELETE `/api/redirection/:id` route)
+- added Redirection update feature (via PUT `/api/redirection/:_id` route)
+- added Redirection delete feature (via DELETE `/api/redirection/:_id` route)
 
 ### 💪 Changed
 
