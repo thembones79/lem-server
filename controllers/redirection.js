@@ -149,28 +149,24 @@ exports.deleteRedirection = function (req, res, next) {
       { $pull: { linksToRedirs: _id } },
       { safe: true, upsert: true },
       function (err, docs) {
-        if (err) {
-          console.log(err);
-        } else {
-          Redirection.findOneAndRemove(
-            { _id },
-            function (err, existingRedirection) {
-              if (err) {
-                return next(err);
-              } else if (!existingRedirection) {
-                return res
-                  .status(422)
-                  .send({ error: "Redirection does not exist!" });
-              } else {
-                const message = `Deleted redirection from /${existingRedirection.redirRoute}`;
+        Redirection.findOneAndRemove(
+          { _id },
+          function (err, existingRedirection) {
+            if (err) {
+              return next(err);
+            } else if (!existingRedirection) {
+              return res
+                .status(422)
+                .send({ error: "Redirection does not exist!" });
+            } else {
+              const message = `Deleted redirection from /${existingRedirection.redirRoute}`;
 
-                res.json({
-                  message,
-                });
-              }
+              res.json({
+                message,
+              });
             }
-          );
-        }
+          }
+        );
       }
     );
   } catch (error) {
