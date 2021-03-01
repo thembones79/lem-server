@@ -1,6 +1,6 @@
 {
   "name": "lem-api-server",
-  "version": "1.11.1",
+  "version": "1.11.2",
   "description": "NodeJS with ExpressJS REST API for LEM (Line Efficiency Monitoring) System",
   "main": "index.js",
   "engines": {

@@ -56,28 +56,30 @@ exports.addLink = function (req, res, next) {
 
   const url = SHAREPOINT_PATH + fileName + FILE_EXTENSION;
 
-  Product.findOne({ partNumber }, function (err, existingProduct) {
-    if (err) {
-      console.log({ err });
-      return next(err);
-    }
-
-    if (!existingProduct) {
-      return res.status(422).send({ error: "Product does not exist!" });
-    }
-
-    existingProduct.linksToDocs.push({ description, url, fileName });
-
-    existingProduct.save(function (err) {
+  Product.findOne({ partNumber })
+    .populate("linksToRedirs")
+    .exec(function (err, existingProduct) {
       if (err) {
+        console.log({ err });
         return next(err);
       }
 
-      res.json({
-        existingProduct,
+      if (!existingProduct) {
+        return res.status(422).send({ error: "Product does not exist!" });
+      }
+
+      existingProduct.linksToDocs.push({ description, url, fileName });
+
+      existingProduct.save(function (err) {
+        if (err) {
+          return next(err);
+        }
+
+        res.json({
+          existingProduct,
+        });
       });
     });
-  });
 };
 
 exports.addRedirection = function (req, res, next) {
