@@ -144,29 +144,31 @@ exports.changeProduct = function (req, res, next) {
 
   partNumber = partNumber.trim();
 
-  Product.findOne({ partNumber }, function (err, existingProduct) {
-    if (err) {
-      console.log({ err });
-      return next(err);
-    }
-
-    if (!existingProduct) {
-      return res.status(422).send({ error: "Product does not exist!" });
-    }
-
-    existingProduct.linksToDocs = linksToDocs;
-    existingProduct.linksToRedirs = linksToRedirs;
-
-    existingProduct.save(function (err) {
+  Product.findOne({ partNumber })
+    .populate("linksToRedirs")
+    .exec(function (err, existingProduct) {
       if (err) {
+        console.log({ err });
         return next(err);
       }
 
-      res.json({
-        existingProduct,
+      if (!existingProduct) {
+        return res.status(422).send({ error: "Product does not exist!" });
+      }
+
+      existingProduct.linksToDocs = linksToDocs;
+      existingProduct.linksToRedirs = linksToRedirs;
+
+      existingProduct.save(function (err) {
+        if (err) {
+          return next(err);
+        }
+
+        res.json({
+          existingProduct,
+        });
       });
     });
-  });
 };
 
 exports.getProducts = function (req, res, next) {
