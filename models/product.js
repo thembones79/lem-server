@@ -14,6 +14,16 @@ const productSchema = new Schema({
   linksToRedirs: [{ type: Schema.Types.ObjectId, ref: "Redirection" }],
 });
 
+// `populate()` after saving.
+productSchema.post("save", function (doc, next) {
+  doc
+    .populate("linksToRedirs")
+    .execPopulate()
+    .then(function () {
+      next();
+    });
+});
+
 const Product = mongoose.model("Product", productSchema);
 
 module.exports = Product;

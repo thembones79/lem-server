@@ -187,8 +187,6 @@ exports.getRedirections = function (req, res, next) {
 exports.getRedirWithProds = function (req, res, next) {
   const redirId = req.params._id;
 
-  console.log({ redirId });
-
   if (!redirId) {
     return res.status(422).send({
       error: "You must provide redirection id!",
