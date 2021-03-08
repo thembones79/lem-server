@@ -278,26 +278,22 @@ exports.updateManyProdsWithOneRedir = function (req, res, next) {
     { $pull: { linksToRedirs: redirId } },
     { safe: true, upsert: true },
     function (err, docs) {
-      if (err) {
-        console.log(err);
-      } else {
-        Product.updateMany(
-          { partNumber: { $in: productList } },
-          { $push: { linksToRedirs: redirId } },
-          { safe: true, upsert: true },
-          function (err, docs) {
-            if (err) {
-              console.log(err);
-            } else {
-              const message = `Updated many products with one redirection`;
+      Product.updateMany(
+        { partNumber: { $in: productList } },
+        { $push: { linksToRedirs: redirId } },
+        { safe: true, upsert: true },
+        function (err, docs) {
+          if (err) {
+            console.log(err);
+          } else {
+            const message = `Updated many products with one redirection`;
 
-              res.json({
-                message,
-              });
-            }
+            res.json({
+              message,
+            });
           }
-        );
-      }
+        }
+      );
     }
   );
 };
