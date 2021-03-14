@@ -1,12 +1,14 @@
-const Order = require("../models/order");
-const Line = require("../models/line");
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
+import { Router, Request, Response, NextFunction } from "express";
+import ioserver, { Socket, ServerOptions, Server } from "socket.io";
+import { Order } from "../models/order";
+import { Line } from "../models/line";
 
-const watchChangeOnOrderCollection = (socket) => {
+const watchChangeOnOrderCollection = (socket: Socket) => {
   Order.watch().on("change", () => getLiveViewSockets(socket));
 };
 
-exports.databaseWatcher = function (socket, next) {
+export const databaseWatcher = function (socket: Socket, next: NextFunction) {
   try {
     watchChangeOnOrderCollection(socket);
     Order.watch().on("error", () => watchChangeOnOrderCollection(socket));
@@ -15,7 +17,11 @@ exports.databaseWatcher = function (socket, next) {
   }
 };
 
-exports.getLiveView = function (req, res, next) {
+export const getLiveView = function (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): void {
   Line.find({}, function (err, lines) {
     if (err) {
       return next(err);
@@ -55,6 +61,7 @@ exports.getLiveView = function (req, res, next) {
               lastCycleTime: "00:00:00",
               efficiency: "0%",
               quantity: 0,
+              orderAddedAt: 0,
               validScans: 0,
             };
           }
@@ -71,11 +78,11 @@ exports.getLiveView = function (req, res, next) {
             orderAddedAt,
           } = existingOrder[0];
 
-          const concatenateZeroIfLessThanTen = (number) => {
-            return number < 10 ? "0" + number : number;
+          const concatenateZeroIfLessThanTen = (number: number) => {
+            return number < 10 ? "0" + number : number + "";
           };
 
-          const renderTime = (time) => {
+          const renderTime = (time: number) => {
             if (!time) {
               return;
             }
@@ -96,7 +103,7 @@ exports.getLiveView = function (req, res, next) {
             return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
           };
 
-          const millisToHhMmSs = (millis) => {
+          const millisToHhMmSs = (millis: number) => {
             if (!millis) {
               return 0;
             }
@@ -148,7 +155,7 @@ exports.getLiveView = function (req, res, next) {
 
           const lastCycleTime = millisToHhMmSs(lastCycleTimeInMilliseconds);
 
-          const orderStart = new Date(orderAddedAt).getTime();
+          const orderStart = new Date(orderAddedAt!).getTime();
 
           const grossDurationInMilliseconds = newestScan - orderStart;
 
@@ -159,7 +166,7 @@ exports.getLiveView = function (req, res, next) {
               new Date(item.breakEnd).getTime() -
               new Date(item.breakStart).getTime()
           );
-          const arrSum = (arr) => arr.reduce((a, b) => a + b, 0);
+          const arrSum = (arr: number[]) => arr.reduce((a, b) => a + b, 0);
           const breakTimesInMilliseconds = arrSum(individualBreakTimes);
           const netDurationInMilliseconds =
             grossDurationInMilliseconds - breakTimesInMilliseconds;
@@ -177,7 +184,7 @@ exports.getLiveView = function (req, res, next) {
           const meanCycleTime = millisToHhMmSs(meanCycleTimeInMilliseconds);
 
           const efficiency =
-            meanCycleTimeInMilliseconds > 0
+            meanCycleTimeInMilliseconds > 0 && tactTime
               ? Math.floor(
                   ((tactTime * 1000) / meanCycleTimeInMilliseconds) * 100
                 )
@@ -215,7 +222,7 @@ exports.getLiveView = function (req, res, next) {
             quantity,
             partNumber,
             customer,
-            tactTime: millisToHhMmSs(tactTime * 1000),
+            tactTime: tactTime ? millisToHhMmSs(tactTime * 1000) : 0,
             breaks: (breaks && breaks.length) || 0,
             validScans: validScans.length,
             duplicatedScans: duplicatedScans.length,
@@ -248,7 +255,7 @@ exports.getLiveView = function (req, res, next) {
   });
 };
 
-const getLiveViewSockets = function (socket) {
+const getLiveViewSockets = function (socket: Socket) {
   Line.find({}, function (err, lines) {
     if (err) {
       return [];
@@ -281,10 +288,10 @@ const getLiveViewSockets = function (socket) {
               _id,
               orderStatus: "not started",
               partNumber: "",
-              tactTime: "00:00:00",
-              meanCycleTime: "00:00:00",
-              lastCycleTime: "00:00:00",
-              efficiency: "0%",
+              tactTime: 0,
+              meanCycleTime: 0,
+              lastCycleTime: 0,
+              efficiency: 0,
               quantity: 0,
               validScans: 0,
             };
@@ -302,11 +309,11 @@ const getLiveViewSockets = function (socket) {
             orderAddedAt,
           } = existingOrder[0];
 
-          const concatenateZeroIfLessThanTen = (number) => {
-            return number < 10 ? "0" + number : number;
+          const concatenateZeroIfLessThanTen = (number: number) => {
+            return number < 10 ? "0" + number : number + "";
           };
 
-          const renderTime = (time) => {
+          const renderTime = (time: number) => {
             if (!time) {
               return;
             }
@@ -327,7 +334,7 @@ const getLiveViewSockets = function (socket) {
             return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
           };
 
-          const millisToHhMmSs = (millis) => {
+          const millisToHhMmSs = (millis: number) => {
             if (!millis) {
               return 0;
             }
@@ -390,7 +397,7 @@ const getLiveViewSockets = function (socket) {
               new Date(item.breakEnd).getTime() -
               new Date(item.breakStart).getTime()
           );
-          const arrSum = (arr) => arr.reduce((a, b) => a + b, 0);
+          const arrSum = (arr: number[]) => arr.reduce((a, b) => a + b, 0);
           const breakTimesInMilliseconds = arrSum(individualBreakTimes);
           const netDurationInMilliseconds =
             grossDurationInMilliseconds - breakTimesInMilliseconds;
@@ -408,7 +415,7 @@ const getLiveViewSockets = function (socket) {
           const meanCycleTime = millisToHhMmSs(meanCycleTimeInMilliseconds);
 
           const efficiency =
-            meanCycleTimeInMilliseconds > 0
+            meanCycleTimeInMilliseconds > 0 && tactTime
               ? Math.floor(
                   ((tactTime * 1000) / meanCycleTimeInMilliseconds) * 100
                 )
@@ -447,7 +454,7 @@ const getLiveViewSockets = function (socket) {
             quantity,
             partNumber,
             customer,
-            tactTime: millisToHhMmSs(tactTime * 1000),
+            tactTime: tactTime ? millisToHhMmSs(tactTime * 1000) : 0,
             breaks: (breaks && breaks.length) || 0,
             validScans: validScans.length,
             duplicatedScans: duplicatedScans.length,

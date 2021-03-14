@@ -1,15 +1,23 @@
-const ObjectId = require("mongoose").Types.ObjectId;
-const Order = require("../models/order");
-const Line = require("../models/line");
-const Product = require("../models/product");
+import { Router, Request, Response, NextFunction } from "express";
+import mongoose, { Types } from "mongoose";
+import { Order } from "../models/order";
+import { Line, LineAttrs } from "../models/line";
+import { Product } from "../models/product";
 
-exports.addLine = function (req, res, next) {
+const ObjectId = Types.ObjectId;
+
+export const addLine = function (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): void {
   const lineNumber = parseInt(req.body.lineNumber, 10);
 
   if (!lineNumber) {
-    return res.status(422).send({
+    res.status(422).send({
       error: "You must provide line number",
     });
+    return;
   }
 
   // See if a line with given number exists
@@ -41,42 +49,54 @@ exports.addLine = function (req, res, next) {
   });
 };
 
-exports.getLines = function (req, res, next) {
+export const getLines = function (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): void {
   Line.find({}, function (err, lines) {
     if (err) {
-      return next(err);
+      next(err);
+      return;
     }
-
     res.json({
       lines,
     });
   });
 };
 
-exports.changeStatus = function (req, res, next) {
+export const changeStatus = function (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): void {
   const lineId = req.body.lineId;
-  const lineStatus = req.body.lineStatus;
+  const lineStatus: string = req.body.lineStatus;
 
   if (!lineId || !lineStatus) {
-    return res.status(422).send({
+    res.status(422).send({
       error: "You must provide line number and line status!",
     });
+    return;
   }
 
   Line.findOne({ _id: lineId }, function (err, existingLine) {
     if (err) {
-      return next(err);
+      next(err);
+      return;
     }
 
     if (!existingLine) {
-      return res.status(422).send({ error: "Line does not exist!" });
+      res.status(422).send({ error: "Line does not exist!" });
+      return;
     }
 
     existingLine.lineStatus = lineStatus;
 
     existingLine.save(function (err) {
       if (err) {
-        return next(err);
+        next(err);
+        return;
       }
       const message = `Updated line with id: ${existingLine._id} status to: ${existingLine.lineStatus}`;
       // Respond to request indicating the user was created
@@ -87,29 +107,40 @@ exports.changeStatus = function (req, res, next) {
   });
 };
 
-exports.occupyLineWith = function (req, res, next) {
-  const { lineId, orderNumber } = req.body;
+export const occupyLineWith = function (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): void {
+  const {
+    lineId,
+    orderNumber,
+  }: { lineId: string; orderNumber: string } = req.body;
 
   if (!lineId || !orderNumber) {
-    return res.status(422).send({
+    res.status(422).send({
       error: "You must provide line number and order number!",
     });
+    return;
   }
 
-  Line.findOne({ _id: lineId }, function (err, existingLine) {
+  Line.findById(lineId, function (err, existingLine) {
     if (err) {
-      return next(err);
+      next(err);
+      return;
     }
 
     if (!existingLine) {
-      return res.status(422).send({ error: "Line does not exist!" });
+      res.status(422).send({ error: "Line does not exist!" });
+      return;
     }
 
     existingLine.lineOccupiedWith = orderNumber;
 
     existingLine.save(function (err) {
       if (err) {
-        return next(err);
+        next(err);
+        return;
       }
       const message = `Updated line: ${existingLine.lineDescription}, with order: ${existingLine.lineOccupiedWith}.`;
       // Respond to request indicating the user was created
@@ -120,34 +151,43 @@ exports.occupyLineWith = function (req, res, next) {
   });
 };
 
-exports.getProductFromLine = function (req, res, next) {
+export const getProductFromLine = function (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): void {
   const _id = req.params._id;
   if (!_id) {
-    return res.status(422).send({
+    res.status(422).send({
       error: "You must provide line id!",
     });
+    return;
   }
 
   if (!ObjectId.isValid(_id)) {
-    return res.status(422).send({
+    res.status(422).send({
       error: "Invalid id!",
     });
+    return;
   }
 
-  Line.findOne({ _id }, function (err, line) {
+  Line.findById(_id, function (err: Error, line: LineAttrs) {
     if (err) {
-      return next(err);
+      next(err);
+      return;
     }
 
     if (!line) {
-      return res.status(422).send({ error: "Line does not exist" });
+      res.status(422).send({ error: "Line does not exist" });
+      return;
     }
 
     const orderNumber = line.lineOccupiedWith;
     if (!orderNumber || orderNumber === "") {
-      return res.status(422).send({
+      res.status(422).send({
         error: "Line is free!",
       });
+      return;
     }
 
     Order.findOne(
@@ -156,10 +196,12 @@ exports.getProductFromLine = function (req, res, next) {
       },
       function (err, order) {
         if (err) {
-          return next(err);
+          next(err);
+          return;
         }
         if (!order) {
-          return res.status(422).send({ error: "Order does not exist" });
+          res.status(422).send({ error: "Order does not exist" });
+          return;
         }
 
         const { partNumber } = order;
@@ -169,11 +211,12 @@ exports.getProductFromLine = function (req, res, next) {
           .exec(function (err, existingProduct) {
             if (err) {
               console.log({ err });
-              return next(err);
+              next(err);
+              return;
             }
-
             if (!existingProduct) {
-              return res.status(422).send({ error: "Product does not exist!" });
+              res.status(422).send({ error: "Product does not exist!" });
+              return;
             }
             res.json({ existingProduct, orderNumber });
           });

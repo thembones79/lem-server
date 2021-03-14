@@ -1,3 +1,4 @@
+import { Router, Request, Response, NextFunction, Express } from "express";
 const Auhentication = require("./controllers/authentication");
 const LineController = require("./controllers/line");
 const UserController = require("./controllers/user");
@@ -9,13 +10,17 @@ const LiveViewController = require("./controllers/live");
 const RedirectionController = require("./controllers/redirection");
 const ProductController = require("./controllers/product");
 const passportService = require("./services/passport");
-const passport = require("passport");
+import passport from "passport";
 
 const requireAuth = passport.authenticate("jwt", { session: false });
 const requireSignin = passport.authenticate("local", { session: false });
 
-module.exports = function (app) {
-  app.get("/", requireAuth, function (req, res) {
+interface RequestWithUser extends Request {
+  user: { [key: string]: string | undefined };
+}
+
+export const router = function (app: Express) {
+  app.get("/", requireAuth, function (req: Request, res: Response): void {
     res.send({
       message: "Hello ",
       user: req.user,

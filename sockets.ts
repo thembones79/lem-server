@@ -1,44 +1,40 @@
 const jwt = require("jwt-simple");
+import ioserver, { Socket, ServerOptions, Server } from "socket.io";
+import { Router, Request, Response, NextFunction } from "express";
 const LiveController = require("./controllers/live");
 
-const keys = require("./config/keys");
+import { keys } from "./config/keys";
 
-module.exports = function (io) {
+interface ISocketWithId extends Socket {
+  _id: string;
+}
+
+export const sockets = function (io: Server) {
   try {
     // middleware
-    io.use((socket, next) => {
+    io.use((socket: Socket, next: NextFunction) => {
       let token = socket.handshake.query.authorization;
 
       const decoded = jwt.decode(token, keys.secret);
 
       if (decoded) {
-        socket._id = decoded.sub;
-        return next();
+        //// socket._id = decoded.sub;
+        next();
+        return;
       }
-
-      return next(new Error("authentication error"));
+      next(new Error("authentication error"));
+      return;
     });
 
     // then
     io.on("connection", (socket) => {
       console.log("New client connected");
       LiveController.databaseWatcher(socket);
-      //   if (interval) {
-      //     clearInterval(interval);
-      //   }
-      //   interval = setInterval(() => getApiAndEmit(socket), 1000);
-
       socket.on("disconnect", () => {
         console.log("Client disconnected");
-        //     clearInterval(interval);
       });
     });
   } catch (err) {
     return console.log(err);
   }
-};
-let interval;
-const getApiAndEmit = (socket) => {
-  const response = new Date();
-  socket.emit("FromAPI", response);
 };

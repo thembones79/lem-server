@@ -1,29 +1,35 @@
-const express = require("express");
-const http = require("http");
-const helmet = require("helmet");
-const bodyParser = require("body-parser");
-const morgan = require("morgan");
-const app = express();
-const router = require("./router");
-const sockets = require("./sockets");
-const mongoose = require("mongoose");
-const cors = require("cors");
-const whitelist = ["https://riverdi-lem.netlify.app", "http://localhost:3000"];
-const corsOptions = {
-  credentials: true, // This is important.
-  origin: (origin, callback) => {
-    if (whitelist.includes(origin)) return callback(null, true);
+import express from "express";
+import http from "http";
+import helmet from "helmet";
+import bodyParser from "body-parser";
+import morgan from "morgan";
+import mongoose from "mongoose";
+import ioserver, { Socket, Server, ServerOptions } from "socket.io";
+import cors from "cors";
+import dotenv from "dotenv";
 
-    callback(new Error("Not allowed by CORS"));
-  },
-};
-const keys = require("./config/keys");
-const options = {
+import { router } from "./router";
+import { sockets } from "./sockets";
+import { keys } from "./config/keys";
+
+const app = express();
+dotenv.config();
+
+// const whitelist = ["https://riverdi-lem.netlify.app", "http://localhost:3000"];
+
+// const corsOptions = {
+//   credentials: true, // This is important.
+//   origin: (origin, callback) => {
+//     if (whitelist.includes(origin)) return callback(null, true);
+//
+//     callback(new Error("Not allowed by CORS"));
+//   },
+// };
+
+const options: ServerOptions = {
   origins: "*:*",
   transports: ["websocket"],
 };
-
-require("dotenv").config();
 
 // DB setup
 mongoose.connect(keys.dbAtlas, {
@@ -53,10 +59,8 @@ const port = process.env.PORT || 3090;
 const server = http.createServer(app);
 
 // WebSockets setup
-const io = require("socket.io")(server, options);
-
+const io: Server = ioserver(server, options);
 sockets(io);
 
 server.listen(port);
-
 console.log("server is listening on: ", port);

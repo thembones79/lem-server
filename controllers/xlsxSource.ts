@@ -1,6 +1,11 @@
-const XlsxSource = require("../models/xlsxSource");
+import { Router, Request, Response, NextFunction } from "express";
+import { XlsxSource } from "../models/xlsxSource";
 
-exports.updateMenu = function (req, res, next) {
+exports.updateMenu = function (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): void {
   const idCode = "menu";
   const menuContent = req.body.menuContent;
   const timeStamp = req.body.timeStamp;
@@ -12,6 +17,10 @@ exports.updateMenu = function (req, res, next) {
 
     if (!menuContent) {
       return res.status(422).send({ error: "Menu content is missing" });
+    }
+
+    if (!existingMenu) {
+      return res.status(422).send({ error: "Menu not found" });
     }
 
     existingMenu.menuContent = menuContent;
@@ -31,13 +40,22 @@ exports.updateMenu = function (req, res, next) {
   });
 };
 
-exports.getMenu = function (req, res, next) {
+exports.getMenu = function (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): void {
   const idCode = "menu";
 
   XlsxSource.findOne({ idCode: idCode }, function (err, existingMenu) {
     if (err) {
       return next(err);
     }
+
+    if (!existingMenu) {
+      return res.status(422).send({ error: "Menu not found" });
+    }
+
     res.json({
       timestamp: existingMenu.timeStamp,
       menuContent: existingMenu.menuContent,

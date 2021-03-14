@@ -1,15 +1,22 @@
-const ObjectId = require("mongoose").Types.ObjectId;
+import { Router, Request, Response, NextFunction } from "express";
+import { Types } from "mongoose";
+import { SHAREPOINT_PATH, FILE_EXTENSION } from "../config/config";
+import { Product } from "../models/product";
 
-const { SHAREPOINT_PATH, FILE_EXTENSION } = require("../config/config");
-const Product = require("../models/product");
+const ObjectId = Types.ObjectId;
 
-exports.addProduct = function (req, res, next) {
+export const addProduct = function (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): void {
   let { partNumber } = req.body;
 
   if (!partNumber) {
-    return res.status(422).send({
+    res.status(422).send({
       error: "You must provide part number!",
     });
+    return;
   }
 
   partNumber = partNumber.trim();
@@ -41,13 +48,18 @@ exports.addProduct = function (req, res, next) {
   });
 };
 
-exports.addLink = function (req, res, next) {
+export const addLink = function (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): void {
   let { partNumber, description, fileName } = req.body;
 
-  if (!partNumber | !description | !fileName) {
-    return res.status(422).send({
+  if (!partNumber || !description || !fileName) {
+    res.status(422).send({
       error: "You must provide part number, link description and file name!",
     });
+    return;
   }
 
   partNumber = partNumber.trim();
@@ -68,7 +80,8 @@ exports.addLink = function (req, res, next) {
         return res.status(422).send({ error: "Product does not exist!" });
       }
 
-      existingProduct.linksToDocs.push({ description, url, fileName });
+      let { linksToDocs } = existingProduct;
+      linksToDocs.push({ description, url, fileName });
 
       existingProduct.save(function (err) {
         if (err) {
@@ -82,13 +95,18 @@ exports.addLink = function (req, res, next) {
     });
 };
 
-exports.addRedirection = function (req, res, next) {
+export const addRedirection = function (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): void {
   let { partNumber, _redirection } = req.body;
 
-  if (!partNumber | !_redirection) {
-    return res.status(422).send({
+  if (!partNumber || !_redirection) {
+    res.status(422).send({
       error: "You must provide part number and redirection id!",
     });
+    return;
   }
 
   partNumber = partNumber.trim();
@@ -105,7 +123,8 @@ exports.addRedirection = function (req, res, next) {
         return res.status(422).send({ error: "Product does not exist!" });
       }
 
-      existingProduct.linksToRedirs.push(_redirection);
+      const { linksToRedirs } = existingProduct;
+      linksToRedirs.push(_redirection);
 
       try {
         await existingProduct.save(function (err) {
@@ -127,19 +146,25 @@ exports.addRedirection = function (req, res, next) {
     });
 };
 
-exports.changeProduct = function (req, res, next) {
+export const changeProduct = function (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): void {
   let { partNumber, linksToDocs, linksToRedirs } = req.body;
 
-  if (!partNumber | !linksToDocs | !linksToRedirs) {
-    return res.status(422).send({
+  if (!partNumber || !linksToDocs || !linksToRedirs) {
+    res.status(422).send({
       error: "You must provide part number, link array and redirection array!",
     });
+    return;
   }
 
-  if (!Array.isArray(linksToDocs) | !Array.isArray(linksToRedirs)) {
-    return res.status(422).send({
+  if (!Array.isArray(linksToDocs) || !Array.isArray(linksToRedirs)) {
+    res.status(422).send({
       error: "linksToDocs and linksToRedirs have to be arrays!",
     });
+    return;
   }
 
   partNumber = partNumber.trim();
@@ -171,7 +196,11 @@ exports.changeProduct = function (req, res, next) {
     });
 };
 
-exports.getProducts = function (req, res, next) {
+export const getProducts = function (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): void {
   Product.find({}, "partNumber", function (err, products) {
     if (err) {
       return next(err);
@@ -181,22 +210,28 @@ exports.getProducts = function (req, res, next) {
   });
 };
 
-exports.getProduct = function (req, res, next) {
+export const getProduct = function (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): void {
   const { _id } = req.params;
 
   if (!_id) {
-    return res.status(422).send({
+    res.status(422).send({
       error: "You must provide product id!",
     });
+    return;
   }
 
   if (!ObjectId.isValid(_id)) {
-    return res.status(422).send({
+    res.status(422).send({
       error: "Invalid id!",
     });
+    return;
   }
 
-  Product.findOne({ _id })
+  Product.findById(_id)
     .populate("linksToRedirs")
     .exec(function (err, existingProduct) {
       if (err) {
@@ -211,23 +246,29 @@ exports.getProduct = function (req, res, next) {
     });
 };
 
-exports.deleteProduct = function (req, res, next) {
+export const deleteProduct = function (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): void {
   try {
     const _id = req.params._id;
 
     if (!_id) {
-      return res.status(422).send({
+      res.status(422).send({
         error: "You must provide product id!",
       });
+      return;
     }
 
     if (!ObjectId.isValid(_id)) {
-      return res.status(422).send({
+      res.status(422).send({
         error: "Invalid id!",
       });
+      return;
     }
 
-    Product.findOneAndRemove({ _id }, function (err, existingProduct) {
+    Product.findByIdAndRemove(_id, function (err, existingProduct) {
       if (err) {
         return next(err);
       } else if (!existingProduct) {
@@ -245,41 +286,51 @@ exports.deleteProduct = function (req, res, next) {
   }
 };
 
-exports.updateManyProdsWithOneRedir = function (req, res, next) {
+export const updateManyProdsWithOneRedir = function (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): void {
   const redirId = req.params._id;
   const { productList } = req.body;
 
   if (!redirId) {
-    return res.status(422).send({
+    res.status(422).send({
       error: "You must provide redirection id!",
     });
+    return;
   }
 
   if (!ObjectId.isValid(redirId)) {
-    return res.status(422).send({
+    res.status(422).send({
       error: "Invalid id!",
     });
+    return;
   }
 
   if (!productList) {
-    return res.status(422).send({
+    res.status(422).send({
       error: "No product list!",
     });
+    return;
   }
 
   if (!Array.isArray(productList)) {
-    return res.status(422).send({
+    res.status(422).send({
       error: "product list has to be an array!",
     });
+    return;
   }
 
   Product.updateMany(
+    //@ts-ignore
     { linksToRedirs: { $in: redirId } },
     { $pull: { linksToRedirs: redirId } },
     { safe: true, upsert: true },
     function (err, docs) {
       Product.updateMany(
         { partNumber: { $in: productList } },
+        //@ts-ignore
         { $push: { linksToRedirs: redirId } },
         { safe: true, upsert: true },
         function (err, docs) {

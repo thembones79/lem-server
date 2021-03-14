@@ -1,7 +1,12 @@
-const Order = require("../models/order");
-const mongoose = require("mongoose");
+import { Router, Request, Response, NextFunction } from "express";
+import mongoose, { Types } from "mongoose";
+import { Order } from "../models/order";
 
-exports.addOrder = function (req, res, next) {
+export const addOrder = function (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): void {
   const orderNumber = req.body.orderNumber;
   const quantity = req.body.quantity;
   const partNumber = req.body.partNumber;
@@ -9,8 +14,6 @@ exports.addOrder = function (req, res, next) {
   const tactTime = req.body.tactTime || 36000;
   const customer = req.body.customer;
   const orderStatus = "open";
-  const breaks = [];
-  const scans = [];
 
   if (
     !orderNumber ||
@@ -20,9 +23,10 @@ exports.addOrder = function (req, res, next) {
     !tactTime ||
     !customer
   ) {
-    return res.status(422).send({
+    res.status(422).send({
       error: "Not enough values!",
     });
+    return;
   }
   Order.findOne({ orderNumber: orderNumber }, function (err, existingOrder) {
     if (err) {
@@ -41,8 +45,8 @@ exports.addOrder = function (req, res, next) {
       customer,
       tactTime,
       orderStatus,
-      breaks,
-      scans,
+      breaks: [],
+      scans: [],
     });
 
     order.save(function (err) {
@@ -56,13 +60,18 @@ exports.addOrder = function (req, res, next) {
   });
 };
 
-exports.getOrder = function (req, res, next) {
+export const getOrder = function (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): void {
   const orderNumber = req.params.dashedordernumber.replace(/-/g, "/");
 
   if (!orderNumber) {
-    return res.status(422).send({
+    res.status(422).send({
       error: "You have to provide order number!",
     });
+    return;
   }
   Order.findOne({ orderNumber: orderNumber }, function (err, existingOrder) {
     if (err) {
@@ -75,7 +84,11 @@ exports.getOrder = function (req, res, next) {
   });
 };
 
-exports.getOrders = function (req, res, next) {
+export const getOrders = function (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): void {
   Order.find({}, function (err, orders) {
     if (err) {
       return next(err);
@@ -87,14 +100,19 @@ exports.getOrders = function (req, res, next) {
   });
 };
 
-exports.closeOrder = function (req, res, next) {
+export const closeOrder = function (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): void {
   try {
     const orderNumber = req.body.orderNumber;
 
     if (!orderNumber) {
-      return res.status(422).send({
+      res.status(422).send({
         error: "You must provide order number!",
       });
+      return;
     }
 
     Order.findOne({ orderNumber }, function (err, existingOrder) {
@@ -136,14 +154,19 @@ exports.closeOrder = function (req, res, next) {
   }
 };
 
-exports.deleteOrder = function (req, res, next) {
+export const deleteOrder = function (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): void {
   try {
     const orderNumber = req.params.dashedordernumber.replace(/-/g, "/");
 
     if (!orderNumber) {
-      return res.status(422).send({
+      res.status(422).send({
         error: "You must provide order number!",
       });
+      return;
     }
 
     Order.findOneAndRemove({ orderNumber }, function (err, existingOrder) {
@@ -164,7 +187,11 @@ exports.deleteOrder = function (req, res, next) {
   }
 };
 
-exports.getAggregatedOrders = function (req, res, next) {
+export const getAggregatedOrders = function (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): void {
   Order.find({}, function (err, orders) {
     if (err) {
       return next(err);
@@ -183,11 +210,11 @@ exports.getAggregatedOrders = function (req, res, next) {
         orderAddedAt,
       } = order;
 
-      const concatenateZeroIfLessThanTen = (number) => {
+      const concatenateZeroIfLessThanTen = (number: number) => {
         return number < 10 ? "0" + number : number;
       };
 
-      const renderTime = (time) => {
+      const renderTime = (time: number) => {
         if (!time) {
           return;
         }
@@ -202,7 +229,7 @@ exports.getAggregatedOrders = function (req, res, next) {
         return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
       };
 
-      const millisToHhMmSs = (millis) => {
+      const millisToHhMmSs = (millis: number) => {
         if (!millis) {
           return 0;
         }
@@ -243,7 +270,7 @@ exports.getAggregatedOrders = function (req, res, next) {
           new Date(item.breakEnd).getTime() -
           new Date(item.breakStart).getTime()
       );
-      const arrSum = (arr) => arr.reduce((a, b) => a + b, 0);
+      const arrSum = (arr: number[]) => arr.reduce((a, b) => a + b, 0);
       const breakTimesInMilliseconds = arrSum(individualBreakTimes);
       const netDurationInMilliseconds =
         grossDurationInMilliseconds - breakTimesInMilliseconds;
@@ -261,7 +288,7 @@ exports.getAggregatedOrders = function (req, res, next) {
       const meanCycleTime = millisToHhMmSs(meanCycleTimeInMilliseconds);
 
       const efficiency =
-        meanCycleTimeInMilliseconds > 0
+        meanCycleTimeInMilliseconds > 0 && tactTime
           ? Math.floor(
               ((tactTime * 1000) / meanCycleTimeInMilliseconds) * 100
             ) + "%"
@@ -291,7 +318,7 @@ exports.getAggregatedOrders = function (req, res, next) {
         quantity,
         partNumber,
         customer,
-        tactTime: millisToHhMmSs(tactTime * 1000),
+        tactTime: tactTime ? millisToHhMmSs(tactTime * 1000) : 0,
         breaks: breaks.length,
         validScans: validScans.length,
         duplicatedScans: duplicatedScans.length,
@@ -317,13 +344,18 @@ exports.getAggregatedOrders = function (req, res, next) {
   });
 };
 
-exports.getLiveView = function (req, res, next) {
+export const getLiveView = function (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): void {
   const orderNumber = req.params.dashedordernumber.replace(/-/g, "/");
 
   if (!orderNumber) {
-    return res.status(422).send({
+    res.status(422).send({
       error: "You have to provide order number!",
     });
+    return;
   }
   Order.findOne({ orderNumber: orderNumber }, function (err, existingOrder) {
     if (err) {

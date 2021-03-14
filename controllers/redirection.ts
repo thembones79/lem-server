@@ -1,10 +1,16 @@
-const ObjectId = require("mongoose").Types.ObjectId;
+import { Router, Request, Response, NextFunction } from "express";
+import { Types } from "mongoose";
+import { SHAREPOINT_PATH, FILE_EXTENSION } from "../config/config";
+import { Product } from "../models/product";
+import { Redirection } from "../models/redirection";
 
-const { SHAREPOINT_PATH, FILE_EXTENSION } = require("../config/config");
-const Redirection = require("../models/redirection");
-const Product = require("../models/product");
+const ObjectId = Types.ObjectId;
 
-exports.addRedirection = function (req, res, next) {
+export const addRedirection = function (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): void {
   let { redirRoute, description, fileName } = req.body;
 
   redirRoute = redirRoute.trim();
@@ -12,9 +18,10 @@ exports.addRedirection = function (req, res, next) {
   fileName = fileName.trim();
 
   if (!description || !redirRoute || !fileName) {
-    return res.status(422).send({
+    res.status(422).send({
       error: "You must provide description, redirection route and file name!",
     });
+    return;
   }
   const targetUrl = SHAREPOINT_PATH + fileName + FILE_EXTENSION;
 
@@ -46,13 +53,18 @@ exports.addRedirection = function (req, res, next) {
   });
 };
 
-exports.redirectTo = function (req, res, next) {
+export const redirectTo = function (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): void {
   let redirRoute = req.params.redirRoute;
 
   if (!redirRoute) {
-    return res.status(422).send({
+    res.status(422).send({
       error: "You must provide redirection route!",
     });
+    return;
   }
 
   redirRoute = redirRoute.trim();
@@ -72,7 +84,11 @@ exports.redirectTo = function (req, res, next) {
   });
 };
 
-exports.changeRedirection = function (req, res, next) {
+export const changeRedirection = function (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): void {
   const _id = req.params._id;
   let { redirRoute, description, fileName } = req.body;
 
@@ -81,15 +97,17 @@ exports.changeRedirection = function (req, res, next) {
   fileName = fileName.trim();
 
   if (!_id) {
-    return res.status(422).send({
+    res.status(422).send({
       error: "You must provide id!",
     });
+    return;
   }
 
   if (!description || !redirRoute || !fileName) {
-    return res.status(422).send({
+    res.status(422).send({
       error: "You must provide description, redirection route and file name!",
     });
+    return;
   }
 
   Redirection.findOne({ redirRoute }, function (err, anotherRedirection) {
@@ -128,23 +146,30 @@ exports.changeRedirection = function (req, res, next) {
   });
 };
 
-exports.deleteRedirection = function (req, res, next) {
+export const deleteRedirection = function (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): void {
   try {
     const _id = req.params._id;
 
     if (!_id) {
-      return res.status(422).send({
+      res.status(422).send({
         error: "You must provide redirection id!",
       });
+      return;
     }
 
     if (!ObjectId.isValid(_id)) {
-      return res.status(422).send({
+      res.status(422).send({
         error: "Invalid id!",
       });
+      return;
     }
 
     Product.updateMany(
+      //@ts-ignore
       { linksToRedirs: { $in: _id } },
       { $pull: { linksToRedirs: _id } },
       { safe: true, upsert: true },
@@ -174,7 +199,11 @@ exports.deleteRedirection = function (req, res, next) {
   }
 };
 
-exports.getRedirections = function (req, res, next) {
+export const getRedirections = function (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): void {
   Redirection.find({}, function (err, redirections) {
     if (err) {
       return next(err);
@@ -184,19 +213,25 @@ exports.getRedirections = function (req, res, next) {
   });
 };
 
-exports.getRedirWithProds = function (req, res, next) {
+export const getRedirWithProds = function (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): void {
   const redirId = req.params._id;
 
   if (!redirId) {
-    return res.status(422).send({
+    res.status(422).send({
       error: "You must provide redirection id!",
     });
+    return;
   }
 
   if (!ObjectId.isValid(redirId)) {
-    return res.status(422).send({
+    res.status(422).send({
       error: "Invalid id!",
     });
+    return;
   }
 
   Redirection.findOne({ _id: redirId }, function (err, existingRedirection) {
@@ -210,6 +245,7 @@ exports.getRedirWithProds = function (req, res, next) {
 
     Product.find(
       {
+        //@ts-ignore
         linksToRedirs: { $in: redirId },
       },
       "partNumber"

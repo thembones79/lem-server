@@ -1,9 +1,13 @@
-const mongoose = require("mongoose");
-const Order = require("../models/order");
-const scanSchema = require("../models/scan");
-const Scan = mongoose.model("Scan", scanSchema);
+import { Router, Request, Response, NextFunction } from "express";
+import mongoose, { Types } from "mongoose";
+import { Order } from "../models/order";
+import { Scan } from "../models/scan";
 
-exports.addScan = function (req, res, next) {
+export const addScan = function (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): void {
   const orderNumber = req.body.orderNumber;
   const scanContent = req.body.scanContent;
   let errorCode = req.body.errorCode || "e000";
@@ -11,9 +15,10 @@ exports.addScan = function (req, res, next) {
   const _user = req.body._user;
 
   if (!orderNumber || !scanContent || !errorCode || !_line || !_user) {
-    return res.status(422).send({
+    res.status(422).send({
       error: "Not enough values!",
     });
+    return;
   }
   Order.findOne({ orderNumber: orderNumber }, function (err, existingOrder) {
     if (err) {

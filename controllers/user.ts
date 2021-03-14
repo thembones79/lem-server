@@ -1,24 +1,31 @@
-const jwt = require("jwt-simple");
-const User = require("../models/user");
-const keys = require("../config/keys");
+import { Router, Request, Response, NextFunction } from "express";
+import { User } from "../models/user";
+import { RequestWithUser } from "./authentication";
 
-function tokenForUser(user) {
-  const timestamp = new Date().getTime();
-  return jwt.encode({ sub: user.id, iat: timestamp }, keys.secret);
-}
-
-exports.signup = function (req, res, next) {
+export const addUser = function (
+  req: RequestWithUser,
+  res: Response,
+  next: NextFunction
+): void {
   const firstname = req.body.firstname;
   const lastname = req.body.lastname;
   const email = req.body.email;
   const password = req.body.password;
   const type = req.body.type;
 
+  if (req.user.type !== "manager") {
+    res.status(422).send({
+      error: "You do not have privileges to add new user!",
+    });
+    return;
+  }
+
   if (!email || !firstname || !lastname || !password || !type) {
-    return res.status(422).send({
+    res.status(422).send({
       error:
         "You must provide firstname, lastname, email, password and user type",
     });
+    return;
   }
 
   // See if a user with given email exists
@@ -47,23 +54,10 @@ exports.signup = function (req, res, next) {
       }
       // Respond to request indicating the user was created
       res.json({
-        token: tokenForUser(user),
         userType: user.type,
         userName: user.firstname,
         userId: user._id,
       });
     });
-  });
-};
-
-exports.signin = function (req, res, next) {
-  // User has already had their email and password auth'd
-  // Just need to give them a token (because of requireSignin middleware)
-
-  res.send({
-    token: tokenForUser(req.user),
-    userType: req.user.type,
-    userName: req.user.firstname,
-    userId: req.user._id,
   });
 };
