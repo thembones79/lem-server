@@ -1,9 +1,9 @@
-import { Router, Request, Response, NextFunction } from "express";
-import { User } from "../models/user";
-import { RequestWithUser } from "./authentication";
+import { Request, Response, NextFunction } from "express";
+import { User } from "../../models/user";
+import { assertIRequestWithUser } from "../../services/assertIRequestWithUser";
 
 export const addUser = function (
-  req: RequestWithUser,
+  req: Request,
   res: Response,
   next: NextFunction
 ): void {
@@ -12,6 +12,8 @@ export const addUser = function (
   const email = req.body.email;
   const password = req.body.password;
   const type = req.body.type;
+
+  assertIRequestWithUser(req);
 
   if (req.user.type !== "manager") {
     res.status(422).send({

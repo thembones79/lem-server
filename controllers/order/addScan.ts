@@ -1,7 +1,6 @@
-import { Router, Request, Response, NextFunction } from "express";
-import mongoose, { Types } from "mongoose";
-import { Order } from "../models/order";
-import { Scan } from "../models/scan";
+import { Request, Response, NextFunction } from "express";
+import { Order } from "../../models/order";
+import { Scan } from "../../models/scan";
 
 export const addScan = function (
   req: Request,

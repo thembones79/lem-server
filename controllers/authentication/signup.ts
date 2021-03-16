@@ -1,11 +1,7 @@
-import { Router, Request, Response, NextFunction } from "express";
+import { Request, Response, NextFunction } from "express";
 import jwt from "jwt-simple";
-import { User, UserAttrs } from "../models/user";
-import { keys } from "../config/keys";
-
-export interface RequestWithUser extends Request {
-  user: { [key: string]: string | undefined };
-}
+import { User, UserAttrs } from "../../models/user";
+import { keys } from "../../config/keys";
 
 function tokenForUser(user: UserAttrs) {
   const timestamp = new Date().getTime();
@@ -63,21 +59,5 @@ export const signup = function (
         userId: user._id,
       });
     });
-  });
-};
-
-export const signin = function (
-  req: RequestWithUser,
-  res: Response,
-  next: NextFunction
-) {
-  // User has already had their email and password auth'd
-  // Just need to give them a token (because of requireSignin middleware)
-
-  res.send({
-    token: tokenForUser(req.user),
-    userType: req.user.type,
-    userName: req.user.firstname,
-    userId: req.user._id,
   });
 };

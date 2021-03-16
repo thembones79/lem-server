@@ -8,23 +8,12 @@ import ioserver, { Socket, Server, ServerOptions } from "socket.io";
 import cors from "cors";
 import dotenv from "dotenv";
 
-import { router } from "./router";
+import router from "./router";
 import { sockets } from "./sockets";
 import { keys } from "./config/keys";
 
 const app = express();
 dotenv.config();
-
-// const whitelist = ["https://riverdi-lem.netlify.app", "http://localhost:3000"];
-
-// const corsOptions = {
-//   credentials: true, // This is important.
-//   origin: (origin, callback) => {
-//     if (whitelist.includes(origin)) return callback(null, true);
-//
-//     callback(new Error("Not allowed by CORS"));
-//   },
-// };
 
 const options: ServerOptions = {
   origins: "*:*",

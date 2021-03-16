@@ -1,4 +1,4 @@
-import mongoose = require("mongoose");
+import mongoose from "mongoose";
 import bcrypt from "bcrypt-nodejs";
 
 // interface to create new User
@@ -35,7 +35,6 @@ interface UserDoc extends mongoose.Document {
 // Define user model
 
 export const userSchema = new mongoose.Schema({
-  _id: mongoose.Schema.Types.ObjectId,
   firstname: { type: String, required: true },
   lastname: { type: String, required: true },
   email: {

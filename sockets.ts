@@ -1,7 +1,7 @@
-const jwt = require("jwt-simple");
+import jwt from "jwt-simple";
 import ioserver, { Socket, ServerOptions, Server } from "socket.io";
 import { Router, Request, Response, NextFunction } from "express";
-const LiveController = require("./controllers/live");
+import { databaseWatcher } from "./controllers/live";
 
 import { keys } from "./config/keys";
 
@@ -11,14 +11,12 @@ interface ISocketWithId extends Socket {
 
 export const sockets = function (io: Server) {
   try {
-    // middleware
     io.use((socket: Socket, next: NextFunction) => {
       let token = socket.handshake.query.authorization;
 
       const decoded = jwt.decode(token, keys.secret);
 
       if (decoded) {
-        //// socket._id = decoded.sub;
         next();
         return;
       }
@@ -26,10 +24,9 @@ export const sockets = function (io: Server) {
       return;
     });
 
-    // then
     io.on("connection", (socket) => {
       console.log("New client connected");
-      LiveController.databaseWatcher(socket);
+      databaseWatcher(socket);
       socket.on("disconnect", () => {
         console.log("Client disconnected");
       });

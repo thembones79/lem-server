@@ -1,23 +1,21 @@
-import { Router, Request, Response, NextFunction, Express } from "express";
-const Auhentication = require("./controllers/authentication");
-const LineController = require("./controllers/line");
-const UserController = require("./controllers/user");
-const OrderController = require("./controllers/order");
-const ScanController = require("./controllers/scan");
-const BreakController = require("./controllers/break");
-const MenuController = require("./controllers/xlsxSource");
-const LiveViewController = require("./controllers/live");
-const RedirectionController = require("./controllers/redirection");
-const ProductController = require("./controllers/product");
-const passportService = require("./services/passport");
+import { Request, Response, Express } from "express";
+import {
+  LineController,
+  Authentication,
+  BreakController,
+  LiveViewController,
+  OrderController,
+  ProductController,
+  RedirectionController,
+  MenuController,
+  UserController,
+} from "./controllers";
+
+import "./services/passport";
 import passport from "passport";
 
 const requireAuth = passport.authenticate("jwt", { session: false });
 const requireSignin = passport.authenticate("local", { session: false });
-
-interface RequestWithUser extends Request {
-  user: { [key: string]: string | undefined };
-}
 
 export const router = function (app: Express) {
   app.get("/", requireAuth, function (req: Request, res: Response): void {
@@ -26,7 +24,7 @@ export const router = function (app: Express) {
       user: req.user,
     });
   });
-  app.post("/signin", requireSignin, Auhentication.signin);
+  app.post("/signin", requireSignin, Authentication.signin);
   app.post("/api/line", requireAuth, LineController.addLine);
   app.get("/api/lines", requireAuth, LineController.getLines);
   app.put("/api/line/status", requireAuth, LineController.changeStatus);
@@ -80,11 +78,6 @@ export const router = function (app: Express) {
   app.delete("/api/product/:_id", requireAuth, ProductController.deleteProduct);
   app.get("/api/liveview", requireAuth, LiveViewController.getLiveView);
   app.get(
-    "/api/aggregatedorders",
-    requireAuth,
-    OrderController.getAggregatedOrders
-  );
-  app.get(
     "/api/order/:dashedordernumber",
     requireAuth,
     OrderController.getOrder
@@ -94,7 +87,7 @@ export const router = function (app: Express) {
     requireAuth,
     OrderController.deleteOrder
   );
-  app.post("/api/scan", requireAuth, ScanController.addScan);
+  app.post("/api/scan", requireAuth, OrderController.addScan);
   app.post("/api/menu", requireAuth, MenuController.updateMenu);
   app.get("/api/menu", requireAuth, MenuController.getMenu);
   app.post("/api/break/start", requireAuth, BreakController.addBreakStart);
