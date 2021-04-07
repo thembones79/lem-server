@@ -148,7 +148,7 @@ export const getLiveView = function (
             (breaks && breaks.filter((item) => item.breakEnd)) || [];
           const individualBreakTimes = finishedBreaks.map(
             (item) =>
-              new Date(item.breakEnd).getTime() -
+              new Date(item.breakEnd!).getTime() -
               new Date(item.breakStart).getTime()
           );
           const arrSum = (arr: number[]) => arr.reduce((a, b) => a + b, 0);

@@ -3,7 +3,7 @@ import { Order } from "../../models/order";
 import { Line } from "../../models/line";
 
 export const getLiveViewSockets = function (socket: Socket) {
-  Line.find({}, function (err, lines) {
+  Line.find({}, { timeout: false }, function (err, lines) {
     if (err) {
       return [];
     }
@@ -141,7 +141,7 @@ export const getLiveViewSockets = function (socket: Socket) {
             (breaks && breaks.filter((item) => item.breakEnd)) || [];
           const individualBreakTimes = finishedBreaks.map(
             (item) =>
-              new Date(item.breakEnd).getTime() -
+              new Date(item.breakEnd!).getTime() -
               new Date(item.breakStart).getTime()
           );
           const arrSum = (arr: number[]) => arr.reduce((a, b) => a + b, 0);

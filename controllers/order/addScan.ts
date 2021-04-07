@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import { Order } from "../../models/order";
 import { Scan } from "../../models/scan";
+import { Break } from "../../models/break";
 
 export const addScan = function (
   req: Request,
@@ -96,7 +97,18 @@ export const addScan = function (
     });
 
     scans.unshift(scan);
-
+    const updatedScansLength = scans.filter(
+      (scan) => scan.errorCode === "e000" || scan.errorCode === "e004"
+    ).length;
+    if (quantity === updatedScansLength && orderStatus === "open") {
+      const breakStart = new Date();
+      const newBreak = new Break({
+        breakStart,
+        _line,
+      });
+      breaks.push(newBreak);
+      existingOrder.orderStatus = "closed";
+    }
     existingOrder.save(function (err) {
       if (err) {
         return next(err);

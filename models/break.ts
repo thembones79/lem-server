@@ -4,9 +4,8 @@ const Schema = mongoose.Schema;
 export interface BreakAttrs {
   _id?: mongoose.Schema.Types.ObjectId;
   _line?: mongoose.Schema.Types.ObjectId;
-  firstname?: string;
   breakStart: Date;
-  breakEnd: Date;
+  breakEnd?: Date | string | number;
 }
 
 interface BreakModel extends mongoose.Model<BreakDoc> {
@@ -16,9 +15,8 @@ interface BreakModel extends mongoose.Model<BreakDoc> {
 interface BreakDoc extends mongoose.Document {
   _id: mongoose.Schema.Types.ObjectId;
   _line?: mongoose.Schema.Types.ObjectId;
-  firstname?: string;
   breakStart: Date;
-  breakEnd: Date;
+  breakEnd?: Date;
 }
 
 export const breakSchema = new Schema({
