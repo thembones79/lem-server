@@ -12,11 +12,7 @@ export const orderRouter = function (app: Express) {
     requireAuth,
     OrderController.getOrder
   );
-  app.get(
-    "/api/order/details/:id",
-    requireAuth,
-    OrderController.getOrderDetails
-  );
+  app.get("/api/order/stats/:id", requireAuth, OrderController.getOrderStats);
   app.delete(
     "/api/order/:dashedordernumber",
     requireAuth,

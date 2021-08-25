@@ -13,7 +13,7 @@ interface ScanModel extends mongoose.Model<ScanDoc> {
   build(attrs: ScanAttrs): ScanDoc;
 }
 
-interface ScanDoc extends mongoose.Document {
+export interface ScanDoc extends mongoose.Document {
   _id: mongoose.Schema.Types.ObjectId;
   scanContent: string;
   timeStamp: Date;

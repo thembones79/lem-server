@@ -12,7 +12,7 @@ interface LineModel extends mongoose.Model<LineDoc> {
   build(attrs: LineAttrs): LineDoc;
 }
 
-interface LineDoc extends mongoose.Document {
+export interface LineDoc extends mongoose.Document {
   _id: mongoose.Schema.Types.ObjectId;
   lineNumber?: number;
   lineDescription?: string;
