@@ -1,6 +1,7 @@
 import { OrderDoc } from "../models/order";
 import { LineDoc } from "../models/line";
 import { getUsedLinesDescriptions } from "./getUsedLinesDescriptions";
+import { getNetTime } from "./getNetTime";
 
 export const getOrderDetails = (order: OrderDoc, lines: LineDoc[]) => {
   const orderStats = () => {
@@ -19,6 +20,8 @@ export const getOrderDetails = (order: OrderDoc, lines: LineDoc[]) => {
       (scan) => scan.errorCode === "e000" || scan.errorCode === "e004"
     );
 
+    const netTime = () => getNetTime(order);
+
     return {
       orderNumber,
       _id,
@@ -32,7 +35,7 @@ export const getOrderDetails = (order: OrderDoc, lines: LineDoc[]) => {
       scansAlready: scans.length,
       validScans: scansWithoutErrors.length,
       linesUsed: getUsedLinesDescriptions(scans, lines),
-      netTime: "TODO",
+      netTime,
       meanCycleTime: "TODO",
       meanHourlyRate: "TODO",
       standardHourlyRate: "---",
