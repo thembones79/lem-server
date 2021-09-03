@@ -1,5 +1,11 @@
 import { OrderDoc } from "../models/order";
+import { millisToHhMmSs } from "./millisToHhMmSs";
+import { getNetDurationInMilliseconds } from "./getNetDurationInMilliseconds";
 
 export const getNetTime = (order: OrderDoc) => {
-  return 45575487547574885;
+  const netDurationInMilliseconds = getNetDurationInMilliseconds(order);
+
+  return netDurationInMilliseconds > 0
+    ? millisToHhMmSs(netDurationInMilliseconds)
+    : "not started";
 };

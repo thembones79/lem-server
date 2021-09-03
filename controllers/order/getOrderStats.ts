@@ -33,7 +33,43 @@ export const getOrderStats = function (
         return;
       }
 
-      res.json(getOrderDetails(existingOrder, lines));
+      const {
+        orderNumber,
+        _id,
+        partNumber,
+        orderStatus,
+        quantity,
+        orderAddedAt,
+        lastValidScan,
+        scansAlready,
+        validScans,
+        linesUsed,
+        netTime,
+        meanCycleTime,
+        meanHourlyRate,
+        meanGrossHourlyRate,
+        standardHourlyRate,
+        hourlyRates,
+      } = getOrderDetails(existingOrder, lines);
+
+      res.json({
+        orderNumber,
+        _id,
+        partNumber,
+        orderStatus,
+        quantity,
+        orderAddedAt,
+        lastValidScan,
+        scansAlready,
+        validScans,
+        linesUsed,
+        netTime: netTime(),
+        meanCycleTime: meanCycleTime(),
+        meanHourlyRate: meanHourlyRate(),
+        meanGrossHourlyRate: meanGrossHourlyRate(),
+        standardHourlyRate,
+        hourlyRates: hourlyRates(),
+      });
     });
   });
 };

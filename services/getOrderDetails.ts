@@ -2,6 +2,11 @@ import { OrderDoc } from "../models/order";
 import { LineDoc } from "../models/line";
 import { getUsedLinesDescriptions } from "./getUsedLinesDescriptions";
 import { getNetTime } from "./getNetTime";
+import { getMeanCycleTime } from "./getMeanCycleTime";
+import { getMeanHourlyRate } from "./getMeanHourlyRate";
+import { getMeanGrossHourlyRate } from "./getMeanGrossHourlyRate";
+import { getValidScans } from "./getValidScans";
+import { getHourlyRates } from "./getHourlyRates";
 
 export const getOrderDetails = (order: OrderDoc, lines: LineDoc[]) => {
   const orderStats = () => {
@@ -13,14 +18,14 @@ export const getOrderDetails = (order: OrderDoc, lines: LineDoc[]) => {
       quantity,
       orderAddedAt,
       scans,
-      breaks,
     } = order;
 
-    const scansWithoutErrors = scans.filter(
-      (scan) => scan.errorCode === "e000" || scan.errorCode === "e004"
-    );
-
+    const scansWithoutErrors = getValidScans(scans);
     const netTime = () => getNetTime(order);
+    const meanCycleTime = () => getMeanCycleTime(order);
+    const meanHourlyRate = () => getMeanHourlyRate(order);
+    const meanGrossHourlyRate = () => getMeanGrossHourlyRate(order);
+    const hourlyRates = () => getHourlyRates(order);
 
     return {
       orderNumber,
@@ -36,17 +41,11 @@ export const getOrderDetails = (order: OrderDoc, lines: LineDoc[]) => {
       validScans: scansWithoutErrors.length,
       linesUsed: getUsedLinesDescriptions(scans, lines),
       netTime,
-      meanCycleTime: "TODO",
-      meanHourlyRate: "TODO",
+      meanCycleTime,
+      meanHourlyRate,
+      meanGrossHourlyRate,
       standardHourlyRate: "---",
-      hourlyRates: [
-        {
-          date: "2021.12.07",
-          hour: "13",
-          scansSum: 31,
-          scansTimestamps: ["2021.12.07 13:06:22"],
-        },
-      ],
+      hourlyRates,
     };
   };
 
