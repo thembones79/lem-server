@@ -7,6 +7,7 @@ import { getMeanHourlyRate } from "./getMeanHourlyRate";
 import { getMeanGrossHourlyRate } from "./getMeanGrossHourlyRate";
 import { getValidScans } from "./getValidScans";
 import { getHourlyRates } from "./getHourlyRates";
+import { getDate } from "./getDate";
 
 export const getOrderDetails = (order: OrderDoc, lines: LineDoc[]) => {
   const orderStats = () => {
@@ -25,7 +26,7 @@ export const getOrderDetails = (order: OrderDoc, lines: LineDoc[]) => {
     const meanCycleTime = () => getMeanCycleTime(order);
     const meanHourlyRate = () => getMeanHourlyRate(order);
     const meanGrossHourlyRate = () => getMeanGrossHourlyRate(order);
-    const hourlyRates = () => getHourlyRates(order);
+    const hourlyRates = () => getHourlyRates(order, lines);
 
     return {
       orderNumber,
@@ -33,9 +34,9 @@ export const getOrderDetails = (order: OrderDoc, lines: LineDoc[]) => {
       partNumber,
       orderStatus,
       quantity,
-      orderAddedAt,
+      orderAddedAt: getDate(orderAddedAt),
       lastValidScan: scansWithoutErrors[0]
-        ? scansWithoutErrors[0].timeStamp
+        ? getDate(scansWithoutErrors[0].timeStamp)
         : "",
       scansAlready: scans.length,
       validScans: scansWithoutErrors.length,

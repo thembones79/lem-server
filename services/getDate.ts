@@ -1,6 +1,6 @@
 import { concatenateZeroIfLessThanTen } from "./concatenateZeroIfLessThanTen";
 
-export const renderTime = (time: number | Date) => {
+export const getDate = (time: number | Date) => {
   if (!time) {
     return;
   }
@@ -8,9 +8,6 @@ export const renderTime = (time: number | Date) => {
   const year = concatenateZeroIfLessThanTen(localTime.getFullYear());
   const month = concatenateZeroIfLessThanTen(localTime.getMonth() + 1);
   const day = concatenateZeroIfLessThanTen(localTime.getDate());
-  const hours = concatenateZeroIfLessThanTen(localTime.getHours());
-  const minutes = concatenateZeroIfLessThanTen(localTime.getMinutes());
-  const seconds = concatenateZeroIfLessThanTen(localTime.getSeconds());
 
-  return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+  return `${year}.${month}.${day}`;
 };

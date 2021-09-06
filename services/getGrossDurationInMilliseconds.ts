@@ -1,15 +1,23 @@
 import { OrderDoc } from "../models/order";
 import { getValidScans } from "./getValidScans";
+import { getUsedLines } from "./getUsedLines";
+import { getGrossTimeFromOneLine } from "./getGrossTimeFromOneLine";
+import { getScansFromLine } from "./getScansFromLine";
 
 export const getGrossDurationInMilliseconds = (order: OrderDoc) => {
-  const { scans, orderAddedAt } = order;
+  const { scans } = order;
 
   const validScans = getValidScans(scans);
+  const usedLines = getUsedLines(scans);
 
-  const newestScan =
-    validScans.length > 0 ? new Date(validScans[0].timeStamp).getTime() : 0;
+  let sum = 0;
 
-  const orderStart = new Date(orderAddedAt).getTime();
+  for (let i = 0; i < usedLines.length; i++) {
+    const scansFromLine = getScansFromLine(validScans, usedLines[i]);
+    const grossTimeInMillis = getGrossTimeFromOneLine(scansFromLine);
 
-  return newestScan - orderStart;
+    sum = sum + grossTimeInMillis;
+  }
+
+  return sum;
 };
