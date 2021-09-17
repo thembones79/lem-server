@@ -14,7 +14,7 @@ interface BreakModel extends mongoose.Model<BreakDoc> {
 
 interface BreakDoc extends mongoose.Document {
   _id: mongoose.Schema.Types.ObjectId;
-  _line?: mongoose.Schema.Types.ObjectId;
+  _line: mongoose.Schema.Types.ObjectId;
   breakStart: Date;
   breakEnd?: Date;
 }
