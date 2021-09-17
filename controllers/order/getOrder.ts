@@ -14,6 +14,7 @@ export const getOrder = function (
     });
     return;
   }
+
   Order.findOne({ orderNumber: orderNumber }, function (err, existingOrder) {
     if (err) {
       return next(err);
