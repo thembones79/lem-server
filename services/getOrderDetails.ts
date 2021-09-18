@@ -27,6 +27,11 @@ export const getOrderDetails = (order: OrderDoc, lines: LineDoc[]) => {
     const meanHourlyRate = () => getMeanHourlyRate(order);
     const meanGrossHourlyRate = () => getMeanGrossHourlyRate(order);
     const hourlyRates = () => getHourlyRates(order, lines);
+    const scansAlready = () => scans.length;
+    const validScans = () => scansWithoutErrors.length;
+    const linesUsed = () => getUsedLinesDescriptions(scans, lines);
+    const lastValidScan = () =>
+      scansWithoutErrors[0] ? getDate(scansWithoutErrors[0].timeStamp) : "";
 
     return {
       orderNumber,
@@ -35,12 +40,10 @@ export const getOrderDetails = (order: OrderDoc, lines: LineDoc[]) => {
       orderStatus,
       quantity,
       orderAddedAt: getDate(orderAddedAt),
-      lastValidScan: scansWithoutErrors[0]
-        ? getDate(scansWithoutErrors[0].timeStamp)
-        : "",
-      scansAlready: scans.length,
-      validScans: scansWithoutErrors.length,
-      linesUsed: getUsedLinesDescriptions(scans, lines),
+      lastValidScan,
+      scansAlready,
+      validScans,
+      linesUsed,
       netTime,
       meanCycleTime,
       meanHourlyRate,

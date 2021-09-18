@@ -12,40 +12,36 @@ export const getOrdersWithStats = function (
     if (err) {
       return next(err);
     }
-    Order.find({}, function (err, orders) {
-      if (err) {
-        return next(err);
+    Order.find(
+      {},
+      "orderNumber orderStatus _id quantity partNumber qrCode orderAddedAt customer",
+      function (err, orders) {
+        if (err) {
+          return next(err);
+        }
+
+        const ordersWithStats = orders.map((order) => {
+          const {
+            orderNumber,
+            _id,
+            partNumber,
+            orderStatus,
+            quantity,
+            orderAddedAt,
+          } = getOrderDetails(order, lines);
+
+          return {
+            orderNumber,
+            _id,
+            partNumber,
+            orderStatus,
+            quantity,
+            orderAddedAt,
+          };
+        });
+
+        res.json(ordersWithStats);
       }
-
-      const ordersWithStats = orders.map((order) => {
-        const {
-          orderNumber,
-          _id,
-          partNumber,
-          orderStatus,
-          quantity,
-          orderAddedAt,
-          lastValidScan,
-          scansAlready,
-          validScans,
-          linesUsed,
-        } = getOrderDetails(order, lines);
-
-        return {
-          orderNumber,
-          _id,
-          partNumber,
-          orderStatus,
-          quantity,
-          orderAddedAt,
-          lastValidScan,
-          scansAlready,
-          validScans,
-          linesUsed,
-        };
-      });
-
-      res.json(ordersWithStats);
-    });
+    ).sort({ orderAddedAt: -1 });
   });
 };

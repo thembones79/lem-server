@@ -6,13 +6,17 @@ export const getOrders = function (
   res: Response,
   next: NextFunction
 ): void {
-  Order.find({}, function (err, orders) {
-    if (err) {
-      return next(err);
-    }
+  Order.find(
+    {},
+    "orderNumber orderStatus _id quantity partNumber qrCode orderAddedAt customer",
+    function (err, orders) {
+      if (err) {
+        return next(err);
+      }
 
-    res.json({
-      orders,
-    });
-  });
+      res.json({
+        orders,
+      });
+    }
+  );
 };

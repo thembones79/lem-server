@@ -15,12 +15,12 @@ export const updateMenu = function (
       return next(err);
     }
 
-    if (!menuContent) {
-      return res.status(422).send({ error: "Menu content is missing" });
-    }
-
     if (!existingMenu) {
       return res.status(422).send({ error: "Menu not found" });
+    }
+
+    if (!menuContent) {
+      return res.status(422).send({ error: "Menu content is missing" });
     }
 
     existingMenu.menuContent = menuContent;
