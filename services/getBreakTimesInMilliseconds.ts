@@ -28,9 +28,10 @@ export const getBreakTimesInMilliseconds = (order: OrderDoc) => {
 
   const validScans = getValidScans(scans);
 
-  const firstValidScan = new Date(
-    validScans[validScans.length - 1].timeStamp
-  ).getTime();
+  const firstValidScan =
+    validScans.length >= 1
+      ? new Date(validScans[validScans.length - 1].timeStamp).getTime()
+      : 0;
 
   const finishedBreaksWithinValidScans =
     (finishedBreaks &&
