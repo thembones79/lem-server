@@ -223,9 +223,7 @@ export const getLiveViewSockets = function (socket: Socket) {
             realCompletionTime,
           };
         });
-        console.log("************************");
-        console.log({ liveView });
-        console.log("************************");
+
         socket.emit("LiveView", { liveView });
       }
     );

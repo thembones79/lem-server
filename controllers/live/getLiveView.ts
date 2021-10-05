@@ -229,9 +229,7 @@ export const getLiveView = function (
             realCompletionTime,
           };
         });
-        console.log("************************");
-        console.log({ liveView });
-        console.log("************************");
+
         res.json({
           liveView,
         });
