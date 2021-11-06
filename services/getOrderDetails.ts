@@ -48,7 +48,7 @@ export const getOrderDetails = (order: OrderDoc, lines: LineDoc[]) => {
       meanCycleTime,
       meanHourlyRate,
       meanGrossHourlyRate,
-      standardHourlyRate: 0,
+      setHourlyRate: 1,
       hourlyRates,
     };
   };
