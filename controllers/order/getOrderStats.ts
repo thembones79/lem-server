@@ -48,7 +48,7 @@ export const getOrderStats = function (
         meanCycleTime,
         meanHourlyRate,
         meanGrossHourlyRate,
-        setHourlyRate,
+        givenHourlyRate,
         hourlyRates,
       } = getOrderDetails(existingOrder, lines);
 
@@ -67,7 +67,7 @@ export const getOrderStats = function (
         meanCycleTime: meanCycleTime(),
         meanHourlyRate: meanHourlyRate(),
         meanGrossHourlyRate: meanGrossHourlyRate(),
-        setHourlyRate,
+        givenHourlyRate,
         hourlyRates: hourlyRates(),
       });
     });

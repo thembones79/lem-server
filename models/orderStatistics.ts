@@ -10,7 +10,7 @@ export interface OrderStatisticsAttrs {
   meanCycleTime: string;
   meanHourlyRate: number;
   meanGrossHourlyRate: number;
-  setHourlyRate: number;
+  givenHourlyRate: number;
   orderNumber?: string;
   quantity: number;
   partNumber?: string;
@@ -32,7 +32,7 @@ export interface OrderStatisticsDoc extends mongoose.Document {
   meanCycleTime: string;
   meanHourlyRate: number;
   meanGrossHourlyRate: number;
-  setHourlyRate: number;
+  givenHourlyRate: number;
   orderNumber?: string;
   quantity: number;
   partNumber?: string;
@@ -49,7 +49,7 @@ export const orderStatisticsSchema = new mongoose.Schema({
   meanCycleTime: { type: String },
   meanHourlyRate: { type: Number },
   meanGrossHourlyRate: { type: Number },
-  setHourlyRate: { type: Number },
+  givenHourlyRate: { type: Number },
   orderNumber: { type: String, required: true, unique: true, index: true },
   quantity: { type: Number, required: true },
   partNumber: { type: String, required: true, index: true },

@@ -1,8 +1,32 @@
 import { ProductStatistics } from "../../models/productStatistics";
 
-export const addOneProductStatistics = function (partNumber: string): void {
+interface IProductStatistics {
+  givenHourlyRate: number;
+  suggestedHourlyRate: number;
+  automatic: boolean;
+  partNumber: string;
+}
+
+export const updateOneProductStatistics = function ({
+  givenHourlyRate,
+  suggestedHourlyRate,
+  automatic,
+  partNumber,
+}: IProductStatistics): void {
   if (!partNumber) {
     throw new Error("You must provide part number!");
+  }
+
+  if (!automatic) {
+    throw new Error("You must provide automatic flag (boolean)");
+  }
+
+  if (!suggestedHourlyRate) {
+    throw new Error("You must provide suggested hourly rate!");
+  }
+
+  if (!givenHourlyRate) {
+    throw new Error("You must provide given hourly rate!");
   }
 
   partNumber = partNumber.trim();
@@ -18,17 +42,18 @@ export const addOneProductStatistics = function (partNumber: string): void {
         throw new Error("Product does not exist!");
       }
 
-      const productStatistics = new ProductStatistics({
-        partNumber,
-      });
+      existingProductStatistics.partNumber = partNumber;
+      existingProductStatistics.automatic = automatic;
+      existingProductStatistics.suggestedHourlyRate = suggestedHourlyRate;
+      existingProductStatistics.givenHourlyRate = givenHourlyRate;
 
-      productStatistics.save(function (err) {
+      existingProductStatistics.save(function (err) {
         if (err) {
           throw new Error(err);
         }
 
         return {
-          productStatistics,
+          existingProductStatistics,
         };
       });
     }
