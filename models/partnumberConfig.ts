@@ -1,7 +1,8 @@
 import mongoose from "mongoose";
 
 export interface PartnumberConfigAttrs {
-  menusourceOfthuth: string;
+  sourceOfthuth: string;
+  computationsBase: string;
 }
 
 interface PartnumberConfigModel extends mongoose.Model<PartnumberConfigDoc> {
@@ -10,11 +11,17 @@ interface PartnumberConfigModel extends mongoose.Model<PartnumberConfigDoc> {
 
 interface PartnumberConfigDoc extends mongoose.Document {
   _id: mongoose.Schema.Types.ObjectId;
-  menusourceOfthuth: string;
+  sourceOfthuth: string;
+  computationsBase: string;
 }
 
 export const partnumberConfigSchema = new mongoose.Schema({
   sourceOfthuth: {
+    type: String,
+    required: true,
+    default: "internal",
+  },
+  computationsBase: {
     type: String,
     required: true,
     default: "tact time",
