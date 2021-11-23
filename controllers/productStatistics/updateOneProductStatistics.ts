@@ -1,35 +1,29 @@
 import { ProductStatistics } from "../../models/productStatistics";
 
 interface IProductStatistics {
-  givenHourlyRate: number;
-  suggestedHourlyRate: number;
-  automatic: boolean;
+  givenHourlyRate?: number;
+  shownComputedTactTime?: number;
+  suggestedHourlyRate?: number;
+  givenTactTime?: number;
+  shownComputedHourlyRate?: number;
+  suggestedTactTime?: number;
+  automatic?: boolean;
   partNumber: string;
 }
 
 export const updateOneProductStatistics = function ({
   givenHourlyRate,
+  shownComputedTactTime,
   suggestedHourlyRate,
+  givenTactTime,
+  shownComputedHourlyRate,
+  suggestedTactTime,
   automatic,
   partNumber,
 }: IProductStatistics): void {
   if (!partNumber) {
     throw new Error("You must provide part number!");
   }
-
-  if (!automatic) {
-    throw new Error("You must provide automatic flag (boolean)");
-  }
-
-  if (!suggestedHourlyRate) {
-    throw new Error("You must provide suggested hourly rate!");
-  }
-
-  if (!givenHourlyRate) {
-    throw new Error("You must provide given hourly rate!");
-  }
-
-  partNumber = partNumber.trim();
 
   ProductStatistics.findOne(
     { partNumber },
@@ -42,10 +36,34 @@ export const updateOneProductStatistics = function ({
         throw new Error("Product does not exist!");
       }
 
-      existingProductStatistics.partNumber = partNumber;
-      existingProductStatistics.automatic = automatic;
-      existingProductStatistics.suggestedHourlyRate = suggestedHourlyRate;
-      existingProductStatistics.givenHourlyRate = givenHourlyRate;
+      if (automatic) {
+        existingProductStatistics.automatic = automatic;
+      }
+
+      if (suggestedHourlyRate) {
+        existingProductStatistics.suggestedHourlyRate = suggestedHourlyRate;
+      }
+
+      if (givenHourlyRate) {
+        existingProductStatistics.givenHourlyRate = givenHourlyRate;
+      }
+
+      if (shownComputedTactTime) {
+        existingProductStatistics.shownComputedTactTime = shownComputedTactTime;
+      }
+
+      if (givenTactTime) {
+        existingProductStatistics.givenTactTime = givenTactTime;
+      }
+
+      if (shownComputedHourlyRate) {
+        existingProductStatistics.shownComputedHourlyRate =
+          shownComputedHourlyRate;
+      }
+
+      if (suggestedTactTime) {
+        existingProductStatistics.suggestedTactTime = suggestedTactTime;
+      }
 
       existingProductStatistics.save(function (err) {
         if (err) {
