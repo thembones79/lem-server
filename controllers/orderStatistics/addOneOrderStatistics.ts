@@ -1,5 +1,7 @@
-import { OrderStatistics } from "../../models/orderStatistics";
-import { OrderStatisticsAttrs } from "../../models/orderStatistics";
+import {
+  OrderStatistics,
+  OrderStatisticsAttrs,
+} from "../../models/orderStatistics";
 
 export const addOneOrderStatistics = function ({
   _orderId,
