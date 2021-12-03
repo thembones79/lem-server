@@ -1,8 +1,17 @@
 import mongoose from "mongoose";
 
+enum SourceOfTruth {
+  internal = "internal",
+  excel = "excel",
+}
+
+enum ComputationsBase {
+  tactTime = "tactTime",
+  hourlyPace = "hourlyPace",
+}
 export interface PartnumberConfigAttrs {
-  sourceOfthuth: string;
-  computationsBase: string;
+  sourceOftruth: SourceOfTruth;
+  computationsBase: ComputationsBase;
 }
 
 interface PartnumberConfigModel extends mongoose.Model<PartnumberConfigDoc> {
@@ -11,20 +20,22 @@ interface PartnumberConfigModel extends mongoose.Model<PartnumberConfigDoc> {
 
 interface PartnumberConfigDoc extends mongoose.Document {
   _id: mongoose.Schema.Types.ObjectId;
-  sourceOfthuth: string;
-  computationsBase: string;
+  sourceOftruth: SourceOfTruth;
+  computationsBase: ComputationsBase;
 }
 
 export const partnumberConfigSchema = new mongoose.Schema({
-  sourceOfthuth: {
+  sourceOftruth: {
     type: String,
+    enum: SourceOfTruth,
     required: true,
-    default: "internal",
+    default: SourceOfTruth.internal,
   },
   computationsBase: {
     type: String,
+    enum: ComputationsBase,
     required: true,
-    default: "tact time",
+    default: ComputationsBase.tactTime,
   },
 });
 
