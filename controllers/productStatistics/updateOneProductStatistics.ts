@@ -2,10 +2,8 @@ import { ProductStatistics } from "../../models/productStatistics";
 
 interface IProductStatistics {
   givenHourlyRate?: number;
-  shownComputedTactTime?: number;
   suggestedHourlyRate?: number;
   givenTactTime?: number;
-  shownComputedHourlyRate?: number;
   suggestedTactTime?: number;
   automatic?: boolean;
   partNumber: string;
@@ -13,10 +11,8 @@ interface IProductStatistics {
 
 export const updateOneProductStatistics = function ({
   givenHourlyRate,
-  shownComputedTactTime,
   suggestedHourlyRate,
   givenTactTime,
-  shownComputedHourlyRate,
   suggestedTactTime,
   automatic,
   partNumber,
@@ -48,17 +44,8 @@ export const updateOneProductStatistics = function ({
         existingProductStatistics.givenHourlyRate = givenHourlyRate;
       }
 
-      if (shownComputedTactTime) {
-        existingProductStatistics.shownComputedTactTime = shownComputedTactTime;
-      }
-
       if (givenTactTime) {
         existingProductStatistics.givenTactTime = givenTactTime;
-      }
-
-      if (shownComputedHourlyRate) {
-        existingProductStatistics.shownComputedHourlyRate =
-          shownComputedHourlyRate;
       }
 
       if (suggestedTactTime) {

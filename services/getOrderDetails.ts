@@ -49,6 +49,8 @@ export const getOrderDetails = (order: OrderDoc, lines: LineDoc[]) => {
       meanHourlyRate,
       meanGrossHourlyRate,
       givenHourlyRate: 1,
+      givenTactTime: 3600,
+      xlsxTactTime: 36000,
       hourlyRates,
     };
   };

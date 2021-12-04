@@ -7,11 +7,12 @@ enum SourceOfTruth {
 
 enum ComputationsBase {
   tactTime = "tactTime",
-  hourlyPace = "hourlyPace",
+  hourlyRate = "hourlyRate",
 }
 export interface PartnumberConfigAttrs {
   sourceOftruth: SourceOfTruth;
   computationsBase: ComputationsBase;
+  whatToShow: ComputationsBase;
 }
 
 interface PartnumberConfigModel extends mongoose.Model<PartnumberConfigDoc> {
@@ -22,6 +23,7 @@ interface PartnumberConfigDoc extends mongoose.Document {
   _id: mongoose.Schema.Types.ObjectId;
   sourceOftruth: SourceOfTruth;
   computationsBase: ComputationsBase;
+  whatToShow: ComputationsBase;
 }
 
 export const partnumberConfigSchema = new mongoose.Schema({
@@ -32,6 +34,12 @@ export const partnumberConfigSchema = new mongoose.Schema({
     default: SourceOfTruth.internal,
   },
   computationsBase: {
+    type: String,
+    enum: ComputationsBase,
+    required: true,
+    default: ComputationsBase.tactTime,
+  },
+  whatToShow: {
     type: String,
     enum: ComputationsBase,
     required: true,
