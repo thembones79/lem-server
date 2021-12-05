@@ -29,19 +29,16 @@ interface PartnumberConfigDoc extends mongoose.Document {
 export const partnumberConfigSchema = new mongoose.Schema({
   sourceOftruth: {
     type: String,
-    enum: SourceOfTruth,
     required: true,
     default: SourceOfTruth.internal,
   },
   computationsBase: {
     type: String,
-    enum: ComputationsBase,
     required: true,
     default: ComputationsBase.tactTime,
   },
   whatToShow: {
     type: String,
-    enum: ComputationsBase,
     required: true,
     default: ComputationsBase.tactTime,
   },

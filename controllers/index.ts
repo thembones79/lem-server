@@ -7,3 +7,4 @@ export * as ProductController from "./product";
 export * as RedirectionController from "./redirection";
 export * as MenuController from "./xlsxSource";
 export * as UserController from "./user";
+export * as PartnumberConfigController from "./partnumberConfig";
