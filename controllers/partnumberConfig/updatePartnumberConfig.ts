@@ -14,7 +14,7 @@ export const updatePartNumberConfig = function (
     }
 
     if (!existingConfig) {
-      res.status(422).send({ error: "Line does not exist!" });
+      res.status(422).send({ error: "Config does not exist!" });
       return;
     }
 

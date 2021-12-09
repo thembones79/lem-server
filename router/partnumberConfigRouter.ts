@@ -8,4 +8,14 @@ export const partnumberConfigRouter = function (app: Express) {
     requireAuth,
     PartnumberConfigController.addPartNumberConfig
   );
+  app.put(
+    "/api/pnconfig",
+    requireAuth,
+    PartnumberConfigController.updatePartNumberConfig
+  );
+  app.get(
+    "/api/pnconfig",
+    requireAuth,
+    PartnumberConfigController.getPartNumberConfig
+  );
 };
