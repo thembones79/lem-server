@@ -6,6 +6,7 @@ interface IProductStatistics {
   givenTactTime?: number;
   suggestedTactTime?: number;
   automatic?: boolean;
+  xlsxTactTime: number;
   partNumber: string;
 }
 
@@ -14,6 +15,7 @@ export const updateOneProductStatistics = function ({
   suggestedHourlyRate,
   givenTactTime,
   suggestedTactTime,
+  xlsxTactTime,
   automatic,
   partNumber,
 }: IProductStatistics): void {
@@ -50,6 +52,10 @@ export const updateOneProductStatistics = function ({
 
       if (suggestedTactTime) {
         existingProductStatistics.suggestedTactTime = suggestedTactTime;
+      }
+
+      if (xlsxTactTime) {
+        existingProductStatistics.xlsxTactTime = xlsxTactTime;
       }
 
       existingProductStatistics.save(function (err) {

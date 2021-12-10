@@ -16,6 +16,7 @@ export const updateOneOrderStatistics = function ({
   givenHourlyRate,
   givenTactTime,
   orderNumber,
+  xlsxTactTime,
   quantity,
   partNumber,
   orderStatus,
