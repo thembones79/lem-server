@@ -8,6 +8,16 @@ export const orderRouter = function (app: Express) {
   app.get("/api/orders", requireAuth, OrderController.getOrders);
   app.get("/api/orders/stats", requireAuth, OrderController.getOrdersWithStats);
   app.get(
+    "/api/orders/ordernumbers",
+    requireAuth,
+    OrderController.getAllOrderNumbers
+  );
+  app.get(
+    "/api/orders/partnumbers",
+    requireAuth,
+    OrderController.getAllPartNumbers
+  );
+  app.get(
     "/api/order/:dashedordernumber",
     requireAuth,
     OrderController.getOrder

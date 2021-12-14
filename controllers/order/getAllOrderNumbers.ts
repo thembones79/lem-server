@@ -3,18 +3,14 @@
 import { Request, Response, NextFunction } from "express";
 import { Order } from "../../models/order";
 
-export const getSuggestedTimesForPartnumber = function (
+export const getAllOrderNumbers = function (
   req: Request,
   res: Response,
   next: NextFunction
 ): void {
-  Order.aggregate(
-    [
-      {
-        $group: { orderNumber: "$orderNumber", average: { $avg: "quantity" } },
-      },
-    ],
-    function (err: any, orders: any) {
+  Order.find({}, "orderNumber ")
+    .distinct("orderNumber")
+    .exec(function (err, orders) {
       if (err) {
         return next(err);
       }
@@ -22,6 +18,5 @@ export const getSuggestedTimesForPartnumber = function (
       res.json({
         orders,
       });
-    }
-  );
+    });
 };
