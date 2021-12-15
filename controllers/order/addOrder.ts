@@ -10,7 +10,7 @@ export const addOrder = function (
   const quantity = req.body.quantity;
   const partNumber = req.body.partNumber;
   const qrCode = req.body.qrCode;
-  const tactTime = req.body.tactTime || 36000;
+  const tactTime = req.body.tactTime || 36000; // 10 hours
   const customer = req.body.customer;
   const orderStatus = "open";
 

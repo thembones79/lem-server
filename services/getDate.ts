@@ -2,7 +2,7 @@ import { concatenateZeroIfLessThanTen } from "./concatenateZeroIfLessThanTen";
 
 export const getDate = (time: number | Date) => {
   if (!time) {
-    return;
+    return "";
   }
   const localTime = new Date(time);
   const year = concatenateZeroIfLessThanTen(localTime.getFullYear());
