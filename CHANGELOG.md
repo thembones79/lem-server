@@ -19,7 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - added `addOrUpdateOneProductStatistics` controller
 - added `updateOneOrderStatistics` controller
 - added `updateOneProductStatistics` controller
-- created `getSuggestedTimesForPartnumber` controller STUB
+- created `getSuggestedTimesForPartnumber` controller STUB (WIP)
 - added `addPartnumberConfig` controller
 - added `getPartnumberConfig` controller
 - added `updatePartnumberConfig` controller
