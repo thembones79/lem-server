@@ -9,7 +9,7 @@ export const addScan = function (
   next: NextFunction
 ): void {
   const orderNumber = req.body.orderNumber;
-  const scanContent = req.body.scanContent;
+  const scanContent: string = req.body.scanContent;
   let errorCode = req.body.errorCode || "e000";
   const _line = req.body._line;
   const _user = req.body._user;

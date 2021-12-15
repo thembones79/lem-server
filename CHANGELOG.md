@@ -5,6 +5,30 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.3.0] - 2021-12-15
+
+### 🔥 Added
+
+- added `orderStatistics` model
+- added `productStatistics` model
+- added `partnumberConfig` model
+- added `getAllOrderNumbers` controller
+- added `getAllPartNumbers` controller
+- added `addOneOrderStatistics` controller
+- added `addOneProductStatistics` controller
+- added `addOrUpdateOneProductStatistics` controller
+- added `updateOneOrderStatistics` controller
+- added `updateOneProductStatistics` controller
+- created `getSuggestedTimesForPartnumber` controller STUB
+- added `addPartnumberConfig` controller
+- added `getPartnumberConfig` controller
+- added `updatePartnumberConfig` controller
+- added GET `/api/orders/ordernumbers` route
+- added GET `/api/orders/partnumbers` route
+- added GET `/api/pnconfig` route
+- added PUT `/api/pnconfig` route
+- added POST `/api/pnconfig` route
+
 ## [2.2.0] - 2021-09-22
 
 ### 🔥 Added
