@@ -3,6 +3,7 @@ import { Order } from "../../models/order";
 import { Line } from "../../models/line";
 import { getOrderDetails } from "../../services/getOrderDetails";
 import { addOneOrderStatistics } from "../orderStatistics/addOneOrderStatistics";
+import { getSuggestedTimesForPartnumber } from "../orderStatistics/getSuggestedTimesForPartnumber";
 
 export const addOrder = function (
   req: Request,
@@ -83,6 +84,7 @@ export const addOrder = function (
             givenTactTime,
             xlsxTactTime,
           } = orderDetails;
+          console.log({ orderDetails });
           const orderStats = await addOneOrderStatistics({
             orderNumber,
             _orderId: _id,
@@ -102,10 +104,12 @@ export const addOrder = function (
             givenTactTime,
             xlsxTactTime,
           });
+          await console.log({ orderStats });
+          await getSuggestedTimesForPartnumber();
 
-          res.json({
-            order,
+          await res.json({
             orderStats,
+            order,
           });
         }
 

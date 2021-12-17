@@ -9,5 +9,5 @@ export const getMeanHourlyRate = (order: OrderDoc) => {
 
   const netDurationInHours = netDurationInMilliseconds / (1000 * 60 * 60);
 
-  return dividerForAllLines / netDurationInHours;
+  return dividerForAllLines / netDurationInHours || 0;
 };

@@ -1,27 +1,26 @@
 // TODO!!!!!!!
 
-import { Request, Response, NextFunction } from "express";
-import { Order } from "../../models/order";
+import { OrderStatistics } from "../../models/orderStatistics";
 
-export const getSuggestedTimesForPartnumber = function (
-  req: Request,
-  res: Response,
-  next: NextFunction
-): void {
-  Order.aggregate(
+export const getSuggestedTimesForPartnumber = function (): void {
+  OrderStatistics.aggregate(
     [
       {
-        $group: { orderNumber: "$orderNumber", average: { $avg: "quantity" } },
+        $group: {
+          _id: "$partNumber",
+          averageMCT: { $avg: "$quantity" },
+          averageMHR: { $avg: "$meanHourlyRate" },
+        },
       },
     ],
-    function (err: any, orders: any) {
+    function (err: any, pns: any) {
       if (err) {
-        return next(err);
+        console.error(err);
+        throw new Error(err);
       }
+      console.log({ pns });
 
-      res.json({
-        orders,
-      });
+      return pns;
     }
   );
 };

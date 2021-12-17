@@ -32,10 +32,12 @@ export const addOneOrderStatistics = function ({
     { orderNumber },
     function (err, existingOrderStatistics) {
       if (err) {
+        console.error(err);
         throw new Error(err);
       }
 
       if (existingOrderStatistics) {
+        console.warn("EXISTS");
         throw new Error("Order already exists!");
       }
 
@@ -59,10 +61,14 @@ export const addOneOrderStatistics = function ({
         orderAddedAt,
       });
 
+      console.log({ orderStatistics1: orderStatistics });
+
       orderStatistics.save(function (err) {
         if (err) {
           throw new Error(err);
         }
+
+        console.log({ orderStatistics2: orderStatistics });
 
         return {
           orderStatistics,
