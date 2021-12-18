@@ -2,14 +2,17 @@ import {
   OrderStatistics,
   OrderStatisticsAttrs,
 } from "../../models/orderStatistics";
+import { getSuggestedTimesForPartnumber } from "./getSuggestedTimesForPartnumber";
+import { addOrUpdateOneProductStatistics } from "../productStatistics/addOrUpdateOneProductStatistics";
 
-export const updateOneOrderStatistics = function ({
+export const updateOneOrderStatistics = async function ({
   _orderId,
   lastValidScan,
   scansAlready,
   validScans,
   linesUsed,
   netTime,
+  meanCycleTimeInMilliseconds,
   meanCycleTime,
   meanHourlyRate,
   meanGrossHourlyRate,
@@ -21,12 +24,12 @@ export const updateOneOrderStatistics = function ({
   partNumber,
   orderStatus,
   orderAddedAt,
-}: OrderStatisticsAttrs): void {
+}: OrderStatisticsAttrs) {
   if (!orderNumber) {
     throw new Error("You must provide order number!");
   }
 
-  OrderStatistics.findOne(
+  await OrderStatistics.findOne(
     { orderNumber },
     function (err, existingOrderStatistics) {
       if (err) {
@@ -69,18 +72,44 @@ export const updateOneOrderStatistics = function ({
         existingOrderStatistics.meanCycleTime = meanCycleTime;
       }
 
+      if (meanCycleTimeInMilliseconds) {
+        existingOrderStatistics.meanCycleTimeInMilliseconds =
+          meanCycleTimeInMilliseconds;
+      }
+
       if (meanHourlyRate) {
         existingOrderStatistics.meanHourlyRate = meanHourlyRate;
+      }
+
+      if (orderStatus) {
+        existingOrderStatistics.orderStatus = orderStatus;
       }
 
       if (meanGrossHourlyRate) {
         existingOrderStatistics.meanGrossHourlyRate = meanGrossHourlyRate;
       }
 
-      existingOrderStatistics.save(function (err) {
+      if (xlsxTactTime) {
+        existingOrderStatistics.xlsxTactTime = xlsxTactTime;
+      }
+
+      existingOrderStatistics.save(async function (err) {
         if (err) {
           throw new Error(err);
         }
+
+        console.log({ existingOrderStatistics });
+        const statsy2 = await getSuggestedTimesForPartnumber(partNumber);
+        console.log({ statsy2 });
+
+        const { suggestedTactTime, suggestedHourlyRate } = statsy2;
+
+        await addOrUpdateOneProductStatistics({
+          partNumber,
+          xlsxTactTime,
+          suggestedHourlyRate,
+          suggestedTactTime,
+        });
 
         return {
           existingOrderStatistics,

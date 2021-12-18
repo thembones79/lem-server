@@ -78,6 +78,7 @@ export const addOrder = function (
             linesUsed,
             netTime,
             meanCycleTime,
+            meanCycleTimeInMilliseconds,
             meanHourlyRate,
             meanGrossHourlyRate,
             givenHourlyRate,
@@ -98,18 +99,23 @@ export const addOrder = function (
             linesUsed: linesUsed(),
             netTime: netTime(),
             meanCycleTime: meanCycleTime(),
+            meanCycleTimeInMilliseconds: meanCycleTimeInMilliseconds(),
             meanHourlyRate: meanHourlyRate(),
             meanGrossHourlyRate: meanGrossHourlyRate(),
             givenHourlyRate,
             givenTactTime,
             xlsxTactTime,
           });
-          await console.log({ orderStats });
-          await getSuggestedTimesForPartnumber();
+          const nt = orderStats?.netTime;
+          console.log({ nt });
+          console.log({ orderStats });
+          const suggested = await getSuggestedTimesForPartnumber(partNumber);
+          console.log({ suggested });
 
           await res.json({
             orderStats,
             order,
+            x: "y",
           });
         }
 

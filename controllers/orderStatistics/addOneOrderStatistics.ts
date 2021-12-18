@@ -2,8 +2,10 @@ import {
   OrderStatistics,
   OrderStatisticsAttrs,
 } from "../../models/orderStatistics";
+import { getSuggestedTimesForPartnumber } from "./getSuggestedTimesForPartnumber";
+import { addOrUpdateOneProductStatistics } from "../productStatistics/addOrUpdateOneProductStatistics";
 
-export const addOneOrderStatistics = function ({
+export const addOneOrderStatistics = async function ({
   _orderId,
   lastValidScan,
   scansAlready,
@@ -11,6 +13,7 @@ export const addOneOrderStatistics = function ({
   linesUsed,
   netTime,
   meanCycleTime,
+  meanCycleTimeInMilliseconds,
   meanHourlyRate,
   meanGrossHourlyRate,
   givenHourlyRate,
@@ -21,14 +24,33 @@ export const addOneOrderStatistics = function ({
   partNumber,
   orderStatus,
   orderAddedAt,
-}: OrderStatisticsAttrs): void {
+}: OrderStatisticsAttrs) {
   if (!orderNumber) {
     throw new Error("You must provide order number!");
   }
 
-  orderNumber = orderNumber.trim();
+  const stats = {
+    _orderId,
+    lastValidScan,
+    scansAlready,
+    validScans,
+    linesUsed,
+    netTime,
+    meanCycleTime,
+    meanCycleTimeInMilliseconds,
+    meanHourlyRate,
+    meanGrossHourlyRate,
+    givenHourlyRate,
+    givenTactTime,
+    orderNumber,
+    xlsxTactTime,
+    quantity,
+    partNumber,
+    orderStatus,
+    orderAddedAt,
+  };
 
-  OrderStatistics.findOne(
+  await OrderStatistics.findOne(
     { orderNumber },
     function (err, existingOrderStatistics) {
       if (err) {
@@ -41,34 +63,21 @@ export const addOneOrderStatistics = function ({
         throw new Error("Order already exists!");
       }
 
-      const orderStatistics = new OrderStatistics({
-        _orderId,
-        lastValidScan,
-        scansAlready,
-        validScans,
-        linesUsed,
-        netTime,
-        meanCycleTime,
-        meanHourlyRate,
-        meanGrossHourlyRate,
-        givenHourlyRate,
-        givenTactTime,
-        orderNumber,
-        xlsxTactTime,
-        quantity,
-        partNumber,
-        orderStatus,
-        orderAddedAt,
-      });
+      const orderStatistics = new OrderStatistics(stats);
 
       console.log({ orderStatistics1: orderStatistics });
 
-      orderStatistics.save(function (err) {
+      orderStatistics.save(async function (err) {
         if (err) {
           throw new Error(err);
         }
 
         console.log({ orderStatistics2: orderStatistics });
+
+        const statsy = await getSuggestedTimesForPartnumber(partNumber);
+        console.log({ statsy });
+
+        await addOrUpdateOneProductStatistics({ partNumber, xlsxTactTime });
 
         return {
           orderStatistics,
@@ -76,4 +85,6 @@ export const addOneOrderStatistics = function ({
       });
     }
   );
+
+  return stats;
 };

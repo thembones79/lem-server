@@ -6,11 +6,11 @@ interface IProductStatistics {
   givenTactTime?: number;
   suggestedTactTime?: number;
   automatic?: boolean;
-  xlsxTactTime: number;
+  xlsxTactTime?: number;
   partNumber: string;
 }
 
-export const addOrUpdateOneProductStatistics = function ({
+export const addOrUpdateOneProductStatistics = async function ({
   givenHourlyRate,
   suggestedHourlyRate,
   givenTactTime,
@@ -18,12 +18,12 @@ export const addOrUpdateOneProductStatistics = function ({
   xlsxTactTime,
   automatic,
   partNumber,
-}: IProductStatistics): void {
+}: IProductStatistics) {
   if (!partNumber) {
     throw new Error("You must provide part number!");
   }
 
-  ProductStatistics.findOne(
+  await ProductStatistics.findOne(
     { partNumber },
     function (err, existingProductStatistics) {
       if (err) {
@@ -33,6 +33,7 @@ export const addOrUpdateOneProductStatistics = function ({
       if (!existingProductStatistics) {
         const productStatistics = new ProductStatistics({
           partNumber,
+          xlsxTactTime,
         });
 
         productStatistics.save(function (err) {

@@ -8,6 +8,7 @@ export interface OrderStatisticsAttrs {
   linesUsed: string;
   netTime: string;
   meanCycleTime: string;
+  meanCycleTimeInMilliseconds: number;
   meanHourlyRate: number;
   meanGrossHourlyRate: number;
   givenHourlyRate: number;
@@ -32,6 +33,7 @@ export interface OrderStatisticsDoc extends mongoose.Document {
   linesUsed: string;
   netTime: string;
   meanCycleTime: string;
+  meanCycleTimeInMilliseconds: number;
   meanHourlyRate: number;
   meanGrossHourlyRate: number;
   givenHourlyRate: number;
@@ -53,6 +55,7 @@ export const orderStatisticsSchema = new mongoose.Schema({
   meanCycleTime: { type: String },
   meanHourlyRate: { type: Number },
   meanGrossHourlyRate: { type: Number },
+  meanCycleTimeInMilliseconds: { type: Number },
   givenHourlyRate: { type: Number },
   givenTactTime: { type: Number },
   xlsxTactTime: { type: Number },
