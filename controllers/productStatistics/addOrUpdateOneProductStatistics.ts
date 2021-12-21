@@ -74,7 +74,7 @@ export const addOrUpdateOneProductStatistics = async function ({
           if (err) {
             throw new Error(err);
           }
-
+          console.log({ existingProductStatistics });
           return {
             existingProductStatistics,
           };
