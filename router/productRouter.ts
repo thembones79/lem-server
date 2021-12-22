@@ -1,5 +1,6 @@
 import { Express } from "express";
 import { ProductController } from "../controllers";
+import { ProductStatisticsController } from "../controllers";
 import { requireAuth } from "../services/requireAuth";
 
 export const productRouter = function (app: Express) {
@@ -17,6 +18,16 @@ export const productRouter = function (app: Express) {
   );
   app.put("/api/product", requireAuth, ProductController.changeProduct);
   app.get("/api/product", requireAuth, ProductController.getProducts);
+  app.get(
+    "/api/product/statistics",
+    requireAuth,
+    ProductStatisticsController.getAllProductsStats
+  );
   app.get("/api/product/:_id", requireAuth, ProductController.getProduct);
+  app.get(
+    "/api/product/statistics/:_id",
+    requireAuth,
+    ProductStatisticsController.getOneProductStats
+  );
   app.delete("/api/product/:_id", requireAuth, ProductController.deleteProduct);
 };

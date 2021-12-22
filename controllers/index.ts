@@ -8,3 +8,5 @@ export * as RedirectionController from "./redirection";
 export * as MenuController from "./xlsxSource";
 export * as UserController from "./user";
 export * as PartnumberConfigController from "./partnumberConfig";
+export * as ProductStatisticsController from "./productStatistics";
+export * as OrderStatisticsController from "./orderStatistics";

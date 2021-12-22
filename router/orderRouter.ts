@@ -1,5 +1,5 @@
 import { Express } from "express";
-import { OrderController } from "../controllers";
+import { OrderController, OrderStatisticsController } from "../controllers";
 import { requireAuth } from "../services/requireAuth";
 
 export const orderRouter = function (app: Express) {
@@ -7,6 +7,11 @@ export const orderRouter = function (app: Express) {
   app.put("/api/order/close", requireAuth, OrderController.closeOrder);
   app.get("/api/orders", requireAuth, OrderController.getOrders);
   app.get("/api/orders/stats", requireAuth, OrderController.getOrdersWithStats);
+  app.get(
+    "/api/orders/statistics",
+    requireAuth,
+    OrderStatisticsController.getAllOrdersStats
+  );
   app.get(
     "/api/orders/ordernumbers",
     requireAuth,
@@ -23,6 +28,11 @@ export const orderRouter = function (app: Express) {
     OrderController.getOrder
   );
   app.get("/api/order/stats/:id", requireAuth, OrderController.getOrderStats);
+  app.get(
+    "/api/order/statistics/:id",
+    requireAuth,
+    OrderStatisticsController.getOneOrderStats
+  );
   app.delete(
     "/api/order/:dashedordernumber",
     requireAuth,
