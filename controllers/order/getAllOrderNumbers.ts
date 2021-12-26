@@ -1,20 +1,16 @@
-import { Request, Response, NextFunction } from "express";
 import { Order } from "../../models/order";
 
-export const getAllOrderNumbers = function (
-  req: Request,
-  res: Response,
-  next: NextFunction
-): void {
+export const getAllOrderNumbers = () =>
   Order.find({}, "orderNumber ")
     .distinct("orderNumber")
-    .exec(function (err, orders) {
+    .exec(async (err, orders) => {
       if (err) {
-        return next(err);
+        return console.log(err);
       }
 
-      res.json({
-        orders,
+      console.log({
+        Y: orders,
       });
+
+      return orders;
     });
-};

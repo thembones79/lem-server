@@ -33,6 +33,11 @@ export const orderRouter = function (app: Express) {
     requireAuth,
     OrderStatisticsController.getOneOrderStats
   );
+  app.post(
+    "/api/orders/statistics/batch",
+    requireAuth,
+    OrderStatisticsController.batchAddAllOrdersStats
+  );
   app.delete(
     "/api/order/:dashedordernumber",
     requireAuth,
