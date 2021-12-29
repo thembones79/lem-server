@@ -7,12 +7,13 @@ export const getSuggestedTimesForPartnumber = async function (
 ) {
   const stats = await OrderStatistics.aggregate(
     [
-      { $match: { partNumber } },
+      { $match: { partNumber, validScans: { $gt: 1 } } },
       {
         $group: {
           _id: "$partNumber",
           suggestedTactTime: { $avg: "$meanCycleTimeInMilliseconds" },
           suggestedHourlyRate: { $avg: "$meanHourlyRate" },
+          existsInHowManyOrders: { $sum: 1 },
         },
       },
     ],
@@ -28,9 +29,28 @@ export const getSuggestedTimesForPartnumber = async function (
 
   if (!stats[0]) {
     console.warn("kupa", { stats });
-    return { suggestedTactTime: 69, suggestedHourlyRate: 69 };
+    return {
+      suggestedTactTime: 69,
+      suggestedHourlyRate: 69,
+      existsInHowManyOrders: 69,
+      partNumber,
+    };
   }
-  const { suggestedTactTime, suggestedHourlyRate } = stats[0];
-  console.log({ suggestedTactTime, suggestedHourlyRate, aaa: "bbb" });
-  return { suggestedTactTime, suggestedHourlyRate };
+  const { suggestedTactTime, suggestedHourlyRate, existsInHowManyOrders } =
+    stats[0];
+  const ttInSeconds = Math.floor(suggestedTactTime / 1000);
+  const roundedHr = Math.ceil(suggestedHourlyRate);
+  console.log({
+    suggestedTactTime: ttInSeconds,
+    suggestedHourlyRate: roundedHr,
+    existsInHowManyOrders,
+    aaa: "bbb",
+    partNumber,
+  });
+  return {
+    suggestedTactTime: ttInSeconds,
+    suggestedHourlyRate: roundedHr,
+    existsInHowManyOrders,
+    partNumber,
+  };
 };

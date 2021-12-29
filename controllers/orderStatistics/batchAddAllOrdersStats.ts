@@ -92,7 +92,9 @@ export const batchAddAllOrdersStats = function (
                     xlsxTactTime,
                   });
                   console.log(
-                    `${orderNumber} is ${i + 1} of ${orderNumbers.length}`
+                    `${orderNumber} with ${partNumber} is ${i + 1} of ${
+                      orderNumbers.length
+                    }`
                   );
                 });
               }

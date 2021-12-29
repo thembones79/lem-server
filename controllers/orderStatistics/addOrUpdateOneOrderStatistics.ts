@@ -72,7 +72,13 @@ export const addOrUpdateOneOrderStatistics = async function ({
           const statsy = await getSuggestedTimesForPartnumber(partNumber);
           // console.log({ statsy });
 
-          await addOrUpdateOneProductStatistics({ partNumber, xlsxTactTime });
+          const { suggestedTactTime, suggestedHourlyRate } = statsy;
+          await addOrUpdateOneProductStatistics({
+            partNumber,
+            suggestedHourlyRate,
+            suggestedTactTime,
+            xlsxTactTime,
+          });
 
           return {
             orderStatistics,
@@ -139,7 +145,7 @@ export const addOrUpdateOneOrderStatistics = async function ({
 
           // console.log({ existingOrderStatistics });
           const statsy2 = await getSuggestedTimesForPartnumber(partNumber);
-          // console.log({ statsy2 });
+          console.log({ statsy2 });
 
           const { suggestedTactTime, suggestedHourlyRate } = statsy2;
 
