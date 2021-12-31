@@ -4,9 +4,7 @@ import { Scan } from "../../models/scan";
 import { Break } from "../../models/break";
 import { Line } from "../../models/line";
 import { getOrderDetails } from "../../services/getOrderDetails";
-import { addOneOrderStatistics } from "../orderStatistics/addOneOrderStatistics";
-import { updateOneOrderStatistics } from "../orderStatistics/updateOneOrderStatistics";
-import { getSuggestedTimesForPartnumber } from "../orderStatistics/getSuggestedTimesForPartnumber";
+import { addOrUpdateOneOrderStatistics } from "../orderStatistics";
 
 export const addScan = function (
   req: Request,
@@ -152,8 +150,8 @@ export const addScan = function (
             givenTactTime,
             xlsxTactTime,
           } = orderDetails;
-          console.log({ orderDetails });
-          const orderStats = await updateOneOrderStatistics({
+
+          const orderStats = await addOrUpdateOneOrderStatistics({
             orderNumber,
             _orderId: _id,
             partNumber,
@@ -173,16 +171,10 @@ export const addScan = function (
             givenTactTime,
             xlsxTactTime,
           });
-          const nt = orderStats?.netTime;
-          console.log({ nt });
-          console.log({ orderStats });
-          const suggested = await getSuggestedTimesForPartnumber(partNumber);
-          console.log({ suggested });
 
           await res.json({
             orderStats,
             existingOrder,
-            x: "z",
           });
         }
 

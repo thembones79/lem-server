@@ -17,7 +17,7 @@ export const batchAddAllOrdersStats = function (
     try {
       Order.find({}, "orderNumber ")
         .distinct("orderNumber")
-        .exec(async (err, orderNumbers) => {
+        .exec(async (err, orderNumbers: string[]) => {
           if (err) {
             return console.log(err);
           }
@@ -44,59 +44,53 @@ export const batchAddAllOrdersStats = function (
                     .send({ error: "Order does not exist" });
                 }
 
-                existingOrder.save(async function (err) {
-                  if (err) {
-                    return next(err);
-                  }
+                const orderDetails = getOrderDetails(existingOrder, lines);
 
-                  const orderDetails = getOrderDetails(existingOrder, lines);
-
-                  const {
-                    orderNumber,
-                    _id,
-                    partNumber,
-                    orderStatus,
-                    quantity,
-                    orderAddedAt,
-                    lastValidScan,
-                    scansAlready,
-                    validScans,
-                    linesUsed,
-                    netTime,
-                    meanCycleTime,
-                    meanCycleTimeInMilliseconds,
-                    meanHourlyRate,
-                    meanGrossHourlyRate,
-                    givenHourlyRate,
-                    givenTactTime,
-                    xlsxTactTime,
-                  } = orderDetails;
-                  const orderStats = await addOrUpdateOneOrderStatistics({
-                    orderNumber,
-                    _orderId: _id,
-                    partNumber,
-                    orderStatus,
-                    quantity,
-                    orderAddedAt,
-                    lastValidScan: lastValidScan(),
-                    scansAlready: scansAlready(),
-                    validScans: validScans(),
-                    linesUsed: linesUsed(),
-                    netTime: netTime(),
-                    meanCycleTime: meanCycleTime(),
-                    meanCycleTimeInMilliseconds: meanCycleTimeInMilliseconds(),
-                    meanHourlyRate: meanHourlyRate(),
-                    meanGrossHourlyRate: meanGrossHourlyRate(),
-                    givenHourlyRate,
-                    givenTactTime,
-                    xlsxTactTime,
-                  });
-                  console.log(
-                    `${orderNumber} with ${partNumber} is ${i + 1} of ${
-                      orderNumbers.length
-                    }`
-                  );
+                const {
+                  orderNumber,
+                  _id,
+                  partNumber,
+                  orderStatus,
+                  quantity,
+                  orderAddedAt,
+                  lastValidScan,
+                  scansAlready,
+                  validScans,
+                  linesUsed,
+                  netTime,
+                  meanCycleTime,
+                  meanCycleTimeInMilliseconds,
+                  meanHourlyRate,
+                  meanGrossHourlyRate,
+                  givenHourlyRate,
+                  givenTactTime,
+                  xlsxTactTime,
+                } = orderDetails;
+                await addOrUpdateOneOrderStatistics({
+                  orderNumber,
+                  _orderId: _id,
+                  partNumber,
+                  orderStatus,
+                  quantity,
+                  orderAddedAt,
+                  lastValidScan: lastValidScan(),
+                  scansAlready: scansAlready(),
+                  validScans: validScans(),
+                  linesUsed: linesUsed(),
+                  netTime: netTime(),
+                  meanCycleTime: meanCycleTime(),
+                  meanCycleTimeInMilliseconds: meanCycleTimeInMilliseconds(),
+                  meanHourlyRate: meanHourlyRate(),
+                  meanGrossHourlyRate: meanGrossHourlyRate(),
+                  givenHourlyRate,
+                  givenTactTime,
+                  xlsxTactTime,
                 });
+                console.log(
+                  `${orderNumber} with ${partNumber} is ${i + 1} of ${
+                    orderNumbers.length
+                  }`
+                );
               }
             );
           }

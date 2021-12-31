@@ -2,8 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import { Order } from "../../models/order";
 import { Line } from "../../models/line";
 import { getOrderDetails } from "../../services/getOrderDetails";
-import { addOneOrderStatistics } from "../orderStatistics/addOneOrderStatistics";
-import { getSuggestedTimesForPartnumber } from "../orderStatistics/getSuggestedTimesForPartnumber";
+import { addOrUpdateOneOrderStatistics } from "../orderStatistics";
 
 export const addOrder = function (
   req: Request,
@@ -85,8 +84,8 @@ export const addOrder = function (
             givenTactTime,
             xlsxTactTime,
           } = orderDetails;
-          console.log({ orderDetails });
-          const orderStats = await addOneOrderStatistics({
+
+          const orderStats = await addOrUpdateOneOrderStatistics({
             orderNumber,
             _orderId: _id,
             partNumber,
@@ -106,16 +105,10 @@ export const addOrder = function (
             givenTactTime,
             xlsxTactTime,
           });
-          const nt = orderStats?.netTime;
-          console.log({ nt });
-          console.log({ orderStats });
-          const suggested = await getSuggestedTimesForPartnumber(partNumber);
-          console.log({ suggested });
 
           await res.json({
             orderStats,
             order,
-            x: "y",
           });
         }
 

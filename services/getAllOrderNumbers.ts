@@ -1,4 +1,4 @@
-import { Order } from "../../models/order";
+import { Order } from "../models/order";
 
 export const getAllOrderNumbers = () =>
   Order.find({}, "orderNumber ")
@@ -7,10 +7,6 @@ export const getAllOrderNumbers = () =>
       if (err) {
         return console.log(err);
       }
-
-      console.log({
-        Y: orders,
-      });
 
       return orders;
     });

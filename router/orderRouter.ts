@@ -13,11 +13,6 @@ export const orderRouter = function (app: Express) {
     OrderStatisticsController.getAllOrdersStats
   );
   app.get(
-    "/api/orders/ordernumbers",
-    requireAuth,
-    OrderController.getAllOrderNumbers
-  );
-  app.get(
     "/api/orders/partnumbers",
     requireAuth,
     OrderController.getAllPartNumbers

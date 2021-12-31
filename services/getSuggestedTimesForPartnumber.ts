@@ -1,6 +1,4 @@
-// TODO!!!!!!!
-
-import { OrderStatistics } from "../../models/orderStatistics";
+import { OrderStatistics } from "../models/orderStatistics";
 
 export const getSuggestedTimesForPartnumber = async function (
   partNumber: string
@@ -28,7 +26,9 @@ export const getSuggestedTimesForPartnumber = async function (
   );
 
   if (!stats[0]) {
-    console.warn("kupa", { stats });
+    console.warn(
+      `Not enough scans for ${partNumber} to generate real stats. Using default values for further processing`
+    );
     return {
       suggestedTactTime: 69,
       suggestedHourlyRate: 69,
@@ -40,13 +40,6 @@ export const getSuggestedTimesForPartnumber = async function (
     stats[0];
   const ttInSeconds = Math.floor(suggestedTactTime / 1000);
   const roundedHr = Math.ceil(suggestedHourlyRate);
-  console.log({
-    suggestedTactTime: ttInSeconds,
-    suggestedHourlyRate: roundedHr,
-    existsInHowManyOrders,
-    aaa: "bbb",
-    partNumber,
-  });
   return {
     suggestedTactTime: ttInSeconds,
     suggestedHourlyRate: roundedHr,

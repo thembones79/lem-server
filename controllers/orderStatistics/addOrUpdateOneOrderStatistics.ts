@@ -2,35 +2,18 @@ import {
   OrderStatistics,
   OrderStatisticsAttrs,
 } from "../../models/orderStatistics";
-import { getSuggestedTimesForPartnumber } from "./getSuggestedTimesForPartnumber";
+import { getSuggestedTimesForPartnumber } from "../../services/getSuggestedTimesForPartnumber";
 import { addOrUpdateOneProductStatistics } from "../productStatistics/addOrUpdateOneProductStatistics";
 
-export const addOrUpdateOneOrderStatistics = async function ({
-  _orderId,
-  lastValidScan,
-  scansAlready,
-  validScans,
-  linesUsed,
-  netTime,
-  meanCycleTimeInMilliseconds,
-  meanCycleTime,
-  meanHourlyRate,
-  meanGrossHourlyRate,
-  givenHourlyRate,
-  givenTactTime,
-  orderNumber,
-  xlsxTactTime,
-  quantity,
-  partNumber,
-  orderStatus,
-  orderAddedAt,
-}: OrderStatisticsAttrs) {
-  if (!orderNumber) {
-    throw new Error("You must provide order number!");
-  }
-
-  const stats = {
-    _orderId,
+export const addOrUpdateOneOrderStatistics = async function (
+  stats: OrderStatisticsAttrs
+) {
+  const {
+    orderNumber,
+    partNumber,
+    xlsxTactTime,
+    givenHourlyRate,
+    givenTactTime,
     lastValidScan,
     scansAlready,
     validScans,
@@ -38,19 +21,16 @@ export const addOrUpdateOneOrderStatistics = async function ({
     netTime,
     meanCycleTime,
     meanCycleTimeInMilliseconds,
-    meanHourlyRate,
     meanGrossHourlyRate,
-    givenHourlyRate,
-    givenTactTime,
-    orderNumber,
-    xlsxTactTime,
-    quantity,
-    partNumber,
+    meanHourlyRate,
     orderStatus,
-    orderAddedAt,
-  };
+  } = stats;
 
-  let vvvvvv = await OrderStatistics.findOne(
+  if (!orderNumber) {
+    throw new Error("You must provide order number!");
+  }
+
+  await OrderStatistics.findOne(
     { orderNumber },
     async function (err, existingOrderStatistics) {
       if (err) {
@@ -60,17 +40,12 @@ export const addOrUpdateOneOrderStatistics = async function ({
       if (!existingOrderStatistics) {
         const orderStatistics = new OrderStatistics(stats);
 
-        // console.log({ orderStatistics1: orderStatistics });
-
         orderStatistics.save(async function (err) {
           if (err) {
             throw new Error(err);
           }
 
-          // console.log({ orderStatistics2: orderStatistics });
-
           const statsy = await getSuggestedTimesForPartnumber(partNumber);
-          // console.log({ statsy });
 
           const { suggestedTactTime, suggestedHourlyRate } = statsy;
           await addOrUpdateOneProductStatistics({
@@ -79,7 +54,7 @@ export const addOrUpdateOneOrderStatistics = async function ({
             suggestedTactTime,
             xlsxTactTime,
           });
-
+          console.log({ orderStatistics });
           return {
             orderStatistics,
           };
@@ -138,34 +113,26 @@ export const addOrUpdateOneOrderStatistics = async function ({
           existingOrderStatistics.xlsxTactTime = xlsxTactTime;
         }
 
-        const bvbvbv = await existingOrderStatistics.save(async function (err) {
+        await existingOrderStatistics.save(async function (err) {
           if (err) {
             throw new Error(err);
           }
 
-          // console.log({ existingOrderStatistics });
           const statsy2 = await getSuggestedTimesForPartnumber(partNumber);
-          console.log({ statsy2 });
 
           const { suggestedTactTime, suggestedHourlyRate } = statsy2;
 
-          const productStats = await addOrUpdateOneProductStatistics({
+          await addOrUpdateOneProductStatistics({
             partNumber,
             xlsxTactTime,
             suggestedHourlyRate,
             suggestedTactTime,
           });
-
-          // console.log({ productStats });
-
+          console.log({ existingOrderStatistics });
           return {
             existingOrderStatistics,
           };
         });
-
-        vvvvvv = bvbvbv;
-
-        return bvbvbv;
       }
     }
   );
