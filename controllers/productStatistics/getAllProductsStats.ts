@@ -11,8 +11,6 @@ export const getAllProductsStats = function (
       return next(err);
     }
 
-    res.json({
-      productsStats,
-    });
+    res.send(productsStats);
   });
 };
