@@ -12,6 +12,8 @@ export const getBreakTimesInMilliseconds = (order: OrderDoc) => {
 
   let brakesOnUsedLines = [] as BreakAttrs[];
 
+  console.log({ boul1: brakesOnUsedLines });
+
   for (let i = 0; i < usedLines.length; i++) {
     brakesOnUsedLines = [
       ...brakesOnUsedLines,
@@ -21,11 +23,12 @@ export const getBreakTimesInMilliseconds = (order: OrderDoc) => {
       ),
     ];
   }
+  console.log({ boul2: brakesOnUsedLines });
 
   const finishedBreaks =
     (brakesOnUsedLines && brakesOnUsedLines.filter((item) => item.breakEnd)) ||
     [];
-
+  console.log({ finishedBreaks });
   const validScans = getValidScans(scans);
 
   const firstValidScan =
@@ -33,19 +36,33 @@ export const getBreakTimesInMilliseconds = (order: OrderDoc) => {
       ? new Date(validScans[validScans.length - 1].timeStamp).getTime()
       : 0;
 
+  const lastValidScan =
+    validScans.length >= 1 ? new Date(validScans[0].timeStamp).getTime() : 0;
+
+  console.log({ firstValidScan });
+
   const finishedBreaksWithinValidScans =
     (finishedBreaks &&
       finishedBreaks.filter(
-        (item) => new Date(item.breakStart).getTime() > firstValidScan
+        (item) =>
+          new Date(item.breakStart).getTime() > firstValidScan &&
+          // @ts-ignore
+          new Date(item.breakEnd).getTime() < lastValidScan
       )) ||
     [];
+
+  console.log({ finishedBreaksWithinValidScans });
 
   const individualBreakTimes = finishedBreaksWithinValidScans.map(
     (item) =>
       new Date(item.breakEnd!).getTime() - new Date(item.breakStart).getTime()
   );
 
+  console.log({ individualBreakTimes });
+
   const arrSum = (arr: number[]) => arr.reduce((a, b) => a + b, 0);
+
+  console.log({ sum: arrSum(individualBreakTimes) });
 
   return arrSum(individualBreakTimes);
 };

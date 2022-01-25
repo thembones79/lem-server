@@ -7,3 +7,4 @@ export * from "./getOrdersWithStats";
 export * from "./getOrderStats";
 export * from "./addScan";
 export * from "./getAllPartNumbers";
+export * from "./getFullOrders";
