@@ -7,6 +7,8 @@ export interface OrderStatisticsAttrs {
   validScans: number;
   linesUsed: string;
   netTime: string;
+  grossTime: string;
+  absoluteTime: string;
   meanCycleTime: string;
   meanCycleTimeInMilliseconds: number;
   meanHourlyRate: number;
@@ -32,6 +34,8 @@ export interface OrderStatisticsDoc extends mongoose.Document {
   validScans: number;
   linesUsed: string;
   netTime: string;
+  grossTime: string;
+  absoluteTime: string;
   meanCycleTime: string;
   meanCycleTimeInMilliseconds: number;
   meanHourlyRate: number;
@@ -52,6 +56,8 @@ export const orderStatisticsSchema = new mongoose.Schema({
   validScans: { type: Number },
   linesUsed: { type: String },
   netTime: { type: String },
+  grossTime: { type: String },
+  absoluteTime: { type: String },
   meanCycleTime: { type: String },
   meanHourlyRate: { type: Number },
   meanGrossHourlyRate: { type: Number },

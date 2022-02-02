@@ -19,6 +19,8 @@ export const addOrUpdateOneOrderStatistics = async function (
     validScans,
     linesUsed,
     netTime,
+    grossTime,
+    absoluteTime,
     meanCycleTime,
     meanCycleTimeInMilliseconds,
     meanGrossHourlyRate,
@@ -86,6 +88,14 @@ export const addOrUpdateOneOrderStatistics = async function (
 
         if (netTime) {
           existingOrderStatistics.netTime = netTime;
+        }
+
+        if (grossTime) {
+          existingOrderStatistics.grossTime = grossTime;
+        }
+
+        if (absoluteTime) {
+          existingOrderStatistics.absoluteTime = absoluteTime;
         }
 
         if (meanCycleTime) {

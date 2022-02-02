@@ -2,6 +2,8 @@ import { OrderDoc } from "../models/order";
 import { LineDoc } from "../models/line";
 import { getUsedLinesDescriptions } from "./getUsedLinesDescriptions";
 import { getNetTime } from "./getNetTime";
+import { getAbsoluteTime } from "./getAbsoluteTime";
+import { getGrossTime } from "./getGrossTime";
 import { getMeanCycleTime } from "./getMeanCycleTime";
 import { getMeanCycleTimeInMilliseconds } from "./getMeanCycleTimeInMilliseconds";
 import { getMeanHourlyRate } from "./getMeanHourlyRate";
@@ -25,6 +27,8 @@ export const getOrderDetails = (order: OrderDoc, lines: LineDoc[]) => {
 
     const scansWithoutErrors = getValidScans(scans);
     const netTime = () => getNetTime(order);
+    const grossTime = () => getGrossTime(order);
+    const absoluteTime = () => getAbsoluteTime(order);
     const meanCycleTime = () => getMeanCycleTime(order);
     const meanCycleTimeInMilliseconds = () =>
       getMeanCycleTimeInMilliseconds(order);
@@ -49,6 +53,8 @@ export const getOrderDetails = (order: OrderDoc, lines: LineDoc[]) => {
       validScans,
       linesUsed,
       netTime,
+      grossTime,
+      absoluteTime,
       meanCycleTime,
       meanCycleTimeInMilliseconds,
       meanHourlyRate,

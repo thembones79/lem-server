@@ -5,7 +5,7 @@ export const getSuggestedTimesForPartnumber = async function (
 ) {
   const stats = await OrderStatistics.aggregate(
     [
-      { $match: { partNumber, validScans: { $gt: 1 } } },
+      { $match: { partNumber, meanCycleTimeInMilliseconds: { $gt: 0 } } },
       {
         $group: {
           _id: "$partNumber",

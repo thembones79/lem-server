@@ -3,6 +3,7 @@ import { Order } from "../../models/order";
 import { getOrderDetails } from "../../services/getOrderDetails";
 import { Line } from "../../models/line";
 import { addOrUpdateOneOrderStatistics } from "./addOrUpdateOneOrderStatistics";
+import { getGrossTime } from "../../services/getGrossTime";
 
 export const batchAddAllOrdersStats = function (
   req: Request,
@@ -58,6 +59,8 @@ export const batchAddAllOrdersStats = function (
                   validScans,
                   linesUsed,
                   netTime,
+                  grossTime,
+                  absoluteTime,
                   meanCycleTime,
                   meanCycleTimeInMilliseconds,
                   meanHourlyRate,
@@ -78,6 +81,8 @@ export const batchAddAllOrdersStats = function (
                   validScans: validScans(),
                   linesUsed: linesUsed(),
                   netTime: netTime(),
+                  grossTime: grossTime(),
+                  absoluteTime: absoluteTime(),
                   meanCycleTime: meanCycleTime(),
                   meanCycleTimeInMilliseconds: meanCycleTimeInMilliseconds(),
                   meanHourlyRate: meanHourlyRate(),
