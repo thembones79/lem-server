@@ -29,5 +29,10 @@ export const productRouter = function (app: Express) {
     requireAuth,
     ProductStatisticsController.getOneProductStats
   );
+  app.put(
+    "/api/product/statistics/:_id",
+    requireAuth,
+    ProductStatisticsController.updateProdStatsForRouter
+  );
   app.delete("/api/product/:_id", requireAuth, ProductController.deleteProduct);
 };
