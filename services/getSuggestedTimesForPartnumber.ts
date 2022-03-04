@@ -30,9 +30,9 @@ export const getSuggestedTimesForPartnumber = async function (
       `Not enough scans for ${partNumber} to generate real stats. Using default values for further processing`
     );
     return {
-      suggestedTactTime: 69,
-      suggestedHourlyRate: 69,
-      existsInHowManyOrders: 69,
+      suggestedTactTime: 3600,
+      suggestedHourlyRate: 1,
+      existsInHowManyOrders: 0,
       partNumber,
     };
   }
