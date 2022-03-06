@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import { Order } from "../../models/order";
+import { OrderStatistics } from "../../models/orderStatistics";
 
 export const deleteOrder = function (
   req: Request,
@@ -22,6 +23,15 @@ export const deleteOrder = function (
       } else if (!existingOrder) {
         return res.status(422).send({ error: "Order does not exist!" });
       } else {
+        OrderStatistics.findOneAndRemove(
+          { orderNumber },
+          function (error, existingOrderStats) {
+            if (error) {
+              return next(error);
+            }
+          }
+        );
+
         const message = `Deleted order no. ${existingOrder.orderNumber}`;
 
         res.json({

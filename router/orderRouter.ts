@@ -1,16 +1,17 @@
 import { Express } from "express";
-import { OrderController } from "../controllers";
+import { OrderController, OrderStatisticsController } from "../controllers";
 import { requireAuth } from "../services/requireAuth";
 
 export const orderRouter = function (app: Express) {
   app.post("/api/order", requireAuth, OrderController.addOrder);
   app.put("/api/order/close", requireAuth, OrderController.closeOrder);
   app.get("/api/orders", requireAuth, OrderController.getOrders);
+  app.get("/api/orders/full", requireAuth, OrderController.getFullOrders);
   app.get("/api/orders/stats", requireAuth, OrderController.getOrdersWithStats);
   app.get(
-    "/api/orders/ordernumbers",
+    "/api/orders/statistics",
     requireAuth,
-    OrderController.getAllOrderNumbers
+    OrderStatisticsController.getAllOrdersStats
   );
   app.get(
     "/api/orders/partnumbers",
@@ -23,6 +24,16 @@ export const orderRouter = function (app: Express) {
     OrderController.getOrder
   );
   app.get("/api/order/stats/:id", requireAuth, OrderController.getOrderStats);
+  app.get(
+    "/api/order/statistics/:id",
+    requireAuth,
+    OrderStatisticsController.getOneOrderStats
+  );
+  app.post(
+    "/api/orders/statistics/batch",
+    requireAuth,
+    OrderStatisticsController.batchAddAllOrdersStats
+  );
   app.delete(
     "/api/order/:dashedordernumber",
     requireAuth,

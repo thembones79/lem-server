@@ -6,5 +6,5 @@ export * from "./getOrders";
 export * from "./getOrdersWithStats";
 export * from "./getOrderStats";
 export * from "./addScan";
-export * from "./getAllOrderNumbers";
 export * from "./getAllPartNumbers";
+export * from "./getFullOrders";

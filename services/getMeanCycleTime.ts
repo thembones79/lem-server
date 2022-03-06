@@ -1,17 +1,9 @@
 import { OrderDoc } from "../models/order";
 import { millisToHhMmSs } from "./millisToHhMmSs";
-import { getNetDurationInMilliseconds } from "./getNetDurationInMilliseconds";
-import { getDividersSum } from "./getDividersSum";
+import { getMeanCycleTimeInMilliseconds } from "./getMeanCycleTimeInMilliseconds";
 
 export const getMeanCycleTime = (order: OrderDoc) => {
-  const dividerForAllLines = getDividersSum(order);
-
-  const netDurationInMilliseconds = getNetDurationInMilliseconds(order);
-
-  const meanCycleTimeInMilliseconds =
-    dividerForAllLines > 0 && netDurationInMilliseconds > 0
-      ? Math.floor(netDurationInMilliseconds / dividerForAllLines)
-      : 0;
+  const meanCycleTimeInMilliseconds = getMeanCycleTimeInMilliseconds(order);
 
   return millisToHhMmSs(meanCycleTimeInMilliseconds);
 };

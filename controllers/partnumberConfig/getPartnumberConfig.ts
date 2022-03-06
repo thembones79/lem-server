@@ -16,8 +16,6 @@ export const getPartNumberConfig = function (
       return;
     }
 
-    res.json({
-      existingConfig,
-    });
+    res.json(existingConfig);
   });
 };

@@ -1,29 +1,30 @@
 import { Schema } from "mongoose";
 import { OrderDoc } from "../models/order";
-import { BreakAttrs } from "../models/break";
 import { getValidScans } from "./getValidScans";
 import { getUsedLines } from "./getUsedLines";
-
+import { getGrossTimeFromOneLine } from "./getGrossTimeFromOneLine";
 import { getScansFromLine } from "./getScansFromLine";
+import { BreakAttrs } from "../models/break";
 
-export const getBreakTimesInMilliseconds = (order: OrderDoc) => {
-  const { breaks } = order;
+export const getNetDurationInMillisecondsV2 = (order: OrderDoc) => {
   const { scans } = order;
-
+  const { breaks } = order;
   const validScans = getValidScans(scans);
   const usedLines = getUsedLines(scans) as Schema.Types.ObjectId[];
 
-  let breaksInMillis = [] as number[];
+  let sum = 0;
 
   for (let i = 0; i < usedLines.length; i++) {
     const scansFromLine = getScansFromLine(validScans, usedLines[i]);
-    const brakesOnCurrentLine = breaks.filter(
+    const grossTimeInMillis = getGrossTimeFromOneLine(scansFromLine);
+
+    const breaksOnCurrentLine = breaks.filter(
       (item) => item._line.toString() === usedLines[i].toString()
     );
 
     const finishedBreaks =
-      (brakesOnCurrentLine &&
-        brakesOnCurrentLine.filter((item) => item.breakEnd)) ||
+      (breaksOnCurrentLine &&
+        breaksOnCurrentLine.filter((item) => item.breakEnd)) ||
       [];
 
     const firstValidScan =
@@ -51,9 +52,12 @@ export const getBreakTimesInMilliseconds = (order: OrderDoc) => {
         new Date(item.breakEnd!).getTime() - new Date(item.breakStart).getTime()
     );
 
-    breaksInMillis = [...breaksInMillis, ...individualBreakTimes];
+    const arrSum = (arr: number[]) => arr.reduce((a, b) => a + b, 0);
+    const breakInMillis = arrSum(individualBreakTimes);
+    const netTimeInMillis = grossTimeInMillis - breakInMillis;
+
+    sum = sum + netTimeInMillis;
   }
 
-  const arrSum = (arr: number[]) => arr.reduce((a, b) => a + b, 0);
-  return arrSum(breaksInMillis);
+  return sum;
 };

@@ -9,5 +9,9 @@ export const getMeanGrossHourlyRate = (order: OrderDoc) => {
 
   const grossDurationInHours = grossDurationInMilliseconds / (1000 * 60 * 60);
 
-  return dividerForAllLines / grossDurationInHours;
+  const meanGrossHourlyRate = dividerForAllLines / grossDurationInHours;
+
+  return meanGrossHourlyRate > 0 && meanGrossHourlyRate < 3600
+    ? meanGrossHourlyRate
+    : 0;
 };

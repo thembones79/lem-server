@@ -2,15 +2,19 @@ import { OrderDoc } from "../models/order";
 import { LineDoc } from "../models/line";
 import { getUsedLinesDescriptions } from "./getUsedLinesDescriptions";
 import { getNetTime } from "./getNetTime";
+import { getAbsoluteTime } from "./getAbsoluteTime";
+import { getGrossTime } from "./getGrossTime";
 import { getMeanCycleTime } from "./getMeanCycleTime";
+import { getMeanCycleTimeInMilliseconds } from "./getMeanCycleTimeInMilliseconds";
 import { getMeanHourlyRate } from "./getMeanHourlyRate";
 import { getMeanGrossHourlyRate } from "./getMeanGrossHourlyRate";
 import { getValidScans } from "./getValidScans";
 import { getHourlyRates } from "./getHourlyRates";
 import { getDate } from "./getDate";
+import { getGivenTimes } from "../controllers/productStatistics/getGivenTimes";
 
-export const getOrderDetails = (order: OrderDoc, lines: LineDoc[]) => {
-  const orderStats = () => {
+export const getOrderDetails = async (order: OrderDoc, lines: LineDoc[]) => {
+  const orderStats = async () => {
     const {
       orderNumber,
       _id,
@@ -22,9 +26,15 @@ export const getOrderDetails = (order: OrderDoc, lines: LineDoc[]) => {
       scans,
     } = order;
 
+    const givenTimes = await getGivenTimes(partNumber);
+
     const scansWithoutErrors = getValidScans(scans);
     const netTime = () => getNetTime(order);
+    const grossTime = () => getGrossTime(order);
+    const absoluteTime = () => getAbsoluteTime(order);
     const meanCycleTime = () => getMeanCycleTime(order);
+    const meanCycleTimeInMilliseconds = () =>
+      getMeanCycleTimeInMilliseconds(order);
     const meanHourlyRate = () => getMeanHourlyRate(order);
     const meanGrossHourlyRate = () => getMeanGrossHourlyRate(order);
     const hourlyRates = () => getHourlyRates(order, lines);
@@ -46,11 +56,14 @@ export const getOrderDetails = (order: OrderDoc, lines: LineDoc[]) => {
       validScans,
       linesUsed,
       netTime,
+      grossTime,
+      absoluteTime,
       meanCycleTime,
+      meanCycleTimeInMilliseconds,
       meanHourlyRate,
       meanGrossHourlyRate,
-      givenHourlyRate: 1,
-      givenTactTime: 3600,
+      givenHourlyRate: givenTimes.givenHourlyRate,
+      givenTactTime: givenTimes.givenTactTime,
       xlsxTactTime: tactTime,
       hourlyRates,
     };

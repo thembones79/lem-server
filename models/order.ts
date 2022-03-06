@@ -3,13 +3,13 @@ import { breakSchema, BreakAttrs } from "./break";
 import { scanSchema, ScanAttrs } from "./scan";
 
 export interface OrderAttrs {
-  orderNumber?: string;
+  orderNumber: string;
   quantity: number;
-  partNumber?: string;
+  partNumber: string;
   qrCode: string;
-  tactTime?: number;
-  customer?: string;
-  orderStatus?: string;
+  tactTime: number;
+  customer: string;
+  orderStatus: string;
   orderAddedAt: Date;
   breaks: BreakAttrs[];
   scans: ScanAttrs[];
@@ -20,13 +20,13 @@ interface OrderModel extends mongoose.Model<OrderDoc> {
 }
 
 export interface OrderDoc extends mongoose.Document {
-  orderNumber?: string;
+  orderNumber: string;
   quantity: number;
-  partNumber?: string;
+  partNumber: string;
   qrCode: string;
-  tactTime?: number;
-  customer?: string;
-  orderStatus?: string;
+  tactTime: number;
+  customer: string;
+  orderStatus: string;
   orderAddedAt: Date;
   breaks: BreakAttrs[];
   scans: ScanAttrs[];
