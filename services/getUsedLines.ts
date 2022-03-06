@@ -5,6 +5,5 @@ import { getValidScans } from "./getValidScans";
 export const getUsedLines = (scans: ScanAttrs[]) => {
   const scansWithoutErrors = getValidScans(scans);
   const usedLines = scansWithoutErrors.map((scan) => scan._line) as [];
-  console.log({ usedlines: removeDuplicates(usedLines) });
   return removeDuplicates(usedLines);
 };

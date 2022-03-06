@@ -15,21 +15,16 @@ export const getBreakTimesInMilliseconds = (order: OrderDoc) => {
 
   let breaksInMillis = [] as number[];
 
-  console.log({ B1: breaksInMillis });
-
   for (let i = 0; i < usedLines.length; i++) {
     const scansFromLine = getScansFromLine(validScans, usedLines[i]);
     const brakesOnCurrentLine = breaks.filter(
       (item) => item._line.toString() === usedLines[i].toString()
     );
 
-    console.log({ brakesOnCurrentLine });
-
     const finishedBreaks =
       (brakesOnCurrentLine &&
         brakesOnCurrentLine.filter((item) => item.breakEnd)) ||
       [];
-    console.log({ finishedBreaks });
 
     const firstValidScan =
       scansFromLine.length >= 1
@@ -51,19 +46,14 @@ export const getBreakTimesInMilliseconds = (order: OrderDoc) => {
         )) ||
       [];
 
-    console.log({ finishedBreaksWithinValidScans });
-
     const individualBreakTimes = finishedBreaksWithinValidScans.map(
       (item) =>
         new Date(item.breakEnd!).getTime() - new Date(item.breakStart).getTime()
     );
 
-    console.log({ individualBreakTimes });
-
     breaksInMillis = [...breaksInMillis, ...individualBreakTimes];
   }
 
   const arrSum = (arr: number[]) => arr.reduce((a, b) => a + b, 0);
-  console.log({ B2: breaksInMillis });
   return arrSum(breaksInMillis);
 };

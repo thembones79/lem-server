@@ -27,7 +27,7 @@ export const getOrderStats = function (
       if (err) {
         return next(err);
       }
-      Order.findById(id, function (err, existingOrder) {
+      Order.findById(id, async function (err, existingOrder) {
         if (err) {
           return next(err);
         }
@@ -58,7 +58,7 @@ export const getOrderStats = function (
           givenTactTime,
           xlsxTactTime,
           hourlyRates,
-        } = getOrderDetails(existingOrder, lines);
+        } = await getOrderDetails(existingOrder, lines);
 
         res.json({
           orderNumber,

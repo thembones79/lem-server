@@ -11,9 +11,10 @@ import { getMeanGrossHourlyRate } from "./getMeanGrossHourlyRate";
 import { getValidScans } from "./getValidScans";
 import { getHourlyRates } from "./getHourlyRates";
 import { getDate } from "./getDate";
+import { getGivenTimes } from "../controllers/productStatistics/getGivenTimes";
 
-export const getOrderDetails = (order: OrderDoc, lines: LineDoc[]) => {
-  const orderStats = () => {
+export const getOrderDetails = async (order: OrderDoc, lines: LineDoc[]) => {
+  const orderStats = async () => {
     const {
       orderNumber,
       _id,
@@ -24,6 +25,8 @@ export const getOrderDetails = (order: OrderDoc, lines: LineDoc[]) => {
       orderAddedAt,
       scans,
     } = order;
+
+    const givenTimes = await getGivenTimes(partNumber);
 
     const scansWithoutErrors = getValidScans(scans);
     const netTime = () => getNetTime(order);
@@ -59,8 +62,8 @@ export const getOrderDetails = (order: OrderDoc, lines: LineDoc[]) => {
       meanCycleTimeInMilliseconds,
       meanHourlyRate,
       meanGrossHourlyRate,
-      givenHourlyRate: 1,
-      givenTactTime: 3600,
+      givenHourlyRate: givenTimes.givenHourlyRate,
+      givenTactTime: givenTimes.givenTactTime,
       xlsxTactTime: tactTime,
       hourlyRates,
     };

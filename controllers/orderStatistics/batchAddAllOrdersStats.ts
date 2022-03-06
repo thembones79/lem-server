@@ -45,7 +45,10 @@ export const batchAddAllOrdersStats = function (
                     .send({ error: "Order does not exist" });
                 }
 
-                const orderDetails = getOrderDetails(existingOrder, lines);
+                const orderDetails = await getOrderDetails(
+                  existingOrder,
+                  lines
+                );
 
                 const {
                   orderNumber,
