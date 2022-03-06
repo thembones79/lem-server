@@ -20,7 +20,7 @@ export const getOrdersWithStats = function (
           return next(err);
         }
 
-        const ordersWithStats = orders.map(async (order) => {
+        const ordersWithStats = orders.map((order) => {
           const {
             orderNumber,
             _id,
@@ -28,7 +28,7 @@ export const getOrdersWithStats = function (
             orderStatus,
             quantity,
             orderAddedAt,
-          } = await getOrderDetails(order, lines);
+          } = getOrderDetails(order, lines);
 
           return {
             orderNumber,

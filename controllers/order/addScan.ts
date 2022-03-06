@@ -128,7 +128,7 @@ export const addScan = function (
             return res.status(422).send({ error: "Order does not exist" });
           }
 
-          const orderDetails = await getOrderDetails(existingOrder, lines);
+          const orderDetails = getOrderDetails(existingOrder, lines);
 
           const {
             orderNumber,

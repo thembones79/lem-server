@@ -62,7 +62,7 @@ export const addOrder = function (
         }
 
         async function handleStatistics() {
-          const orderDetails = await getOrderDetails(order, lines);
+          const orderDetails = getOrderDetails(order, lines);
 
           const {
             orderNumber,
