@@ -150,6 +150,7 @@ export const addScan = function (
             meanGrossHourlyRate,
             givenHourlyRate,
             givenTactTime,
+            hourlyRates,
             xlsxTactTime,
           } = orderDetails;
 
@@ -179,6 +180,7 @@ export const addScan = function (
           await res.json({
             orderStats,
             existingOrder,
+            hourlyRates: hourlyRates(),
           });
         }
 

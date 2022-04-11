@@ -13,7 +13,7 @@ export const getHourlyRates = (order: OrderDoc, lines: LineDoc[]) => {
   const scansWithDateHour = validScans.map((scan) => {
     return {
       dateHour: getDateWithHour(scan.timeStamp),
-      timeStamp: renderTime(scan.timeStamp),
+      timeStamp: scan.scanContent + " - - - " + renderTime(scan.timeStamp),
       scansLine: scan._line,
     };
   });
