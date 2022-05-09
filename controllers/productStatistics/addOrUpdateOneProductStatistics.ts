@@ -4,6 +4,7 @@ interface IProductStatistics {
   givenHourlyRate?: number;
   suggestedHourlyRate?: number;
   givenTactTime?: number;
+  cleanRoomTime?: number;
   suggestedTactTime?: number;
   automatic?: boolean;
   xlsxTactTime?: number;
@@ -16,6 +17,7 @@ export const addOrUpdateOneProductStatistics = async function ({
   givenTactTime,
   suggestedTactTime,
   xlsxTactTime,
+  cleanRoomTime,
   automatic,
   partNumber,
 }: IProductStatistics) {
@@ -56,6 +58,10 @@ export const addOrUpdateOneProductStatistics = async function ({
 
         if (givenHourlyRate) {
           existingProductStatistics.givenHourlyRate = givenHourlyRate;
+        }
+
+        if (cleanRoomTime) {
+          existingProductStatistics.cleanRoomTime = cleanRoomTime;
         }
 
         if (givenTactTime) {
