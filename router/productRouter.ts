@@ -11,6 +11,11 @@ export const productRouter = function (app: Express) {
     requireAuth,
     ProductController.addRedirection
   );
+  app.post(
+    "/api/product/tt",
+    requireAuth,
+    ProductStatisticsController.getGivenTactTime
+  );
   app.put(
     "/api/product/redirection/:_id",
     requireAuth,
