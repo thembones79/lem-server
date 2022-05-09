@@ -6,6 +6,7 @@ export interface ProductStatisticsAttrs {
   givenTactTime: number;
   suggestedTactTime: number;
   xlsxTactTime: number;
+  cleanRoomTime: number;
   automatic: boolean;
   partNumber: string;
 }
@@ -19,6 +20,7 @@ export interface ProductStatisticsDoc extends mongoose.Document {
   suggestedHourlyRate: number;
   givenTactTime: number;
   suggestedTactTime: number;
+  cleanRoomTime: number;
   xlsxTactTime: number;
   automatic: boolean;
   partNumber: string;
@@ -30,6 +32,7 @@ export const ProductStatisticsSchema = new mongoose.Schema({
   givenTactTime: { type: Number, default: 3600 },
   suggestedTactTime: { type: Number, default: 3600 },
   xlsxTactTime: { type: Number, default: 36000 }, // 10 hours
+  cleanRoomTime: { type: Number, default: 1 },
   automatic: { type: Boolean, default: false },
   partNumber: { type: String, required: true, index: true },
 });

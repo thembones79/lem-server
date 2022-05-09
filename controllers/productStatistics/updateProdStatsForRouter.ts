@@ -17,6 +17,7 @@ export const updateProdStatsForRouter = function (
     givenTactTime,
     suggestedTactTime,
     xlsxTactTime,
+    cleanRoomTime,
     automatic,
   } = req.body;
 
@@ -58,6 +59,10 @@ export const updateProdStatsForRouter = function (
 
     if (givenHourlyRate) {
       existingProductStatistics.givenHourlyRate = parseInt(givenHourlyRate);
+    }
+
+    if (cleanRoomTime) {
+      existingProductStatistics.cleanRoomTime = parseInt(cleanRoomTime);
     }
 
     if (givenTactTime) {
