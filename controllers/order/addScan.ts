@@ -34,6 +34,11 @@ export const addScan = function (
         return next(err);
       }
 
+
+
+
+
+
       if (!existingOrder) {
         return res.status(422).send({ error: "Order does not exist" });
       }

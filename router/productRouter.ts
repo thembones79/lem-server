@@ -16,6 +16,11 @@ export const productRouter = function (app: Express) {
     requireAuth,
     ProductStatisticsController.getGivenTactTime
   );
+  app.post(
+    "/api/product/onestats",
+    requireAuth,
+    ProductStatisticsController.getOneStats
+  );
   app.put(
     "/api/product/redirection/:_id",
     requireAuth,
