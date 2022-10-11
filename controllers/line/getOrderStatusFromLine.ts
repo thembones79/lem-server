@@ -2,14 +2,12 @@ import { Request, Response, NextFunction } from "express";
 import { Order } from "../../models/order";
 import { Line, LineAttrs } from "../../models/line";
 
-
 export const getOrderStatusFromLine = function (
   req: Request,
   res: Response,
   next: NextFunction
 ): void {
   const lineDescription = req.params.lineDescription;
-  console.log({lineDescription})
   if (!lineDescription) {
     res.status(422).send({
       error: "You must provide line id!",
@@ -17,18 +15,18 @@ export const getOrderStatusFromLine = function (
     return;
   }
 
-  Line.find({ lineDescription }, function (err: Error, line: LineAttrs) {
+  Line.find({ lineDescription }, function (err: Error, line: LineAttrs[]) {
     if (err) {
       next(err);
       return;
     }
 
-    if (!line) {
+    if (!line.length) {
       res.status(422).send({ error: "Line does not exist" });
       return;
     }
 
-    const orderNumber = line.lineOccupiedWith;
+    const orderNumber = line[0]?.lineOccupiedWith;
     if (!orderNumber || orderNumber === "") {
       res.status(422).send({
         error: "Line is free!",
@@ -50,7 +48,34 @@ export const getOrderStatusFromLine = function (
           return;
         }
 
-        res.json(order);
+        const { breaks, orderNumber, orderStatus, scans } = order;
+
+        const isOrderRunning = () => {
+          if (scans && !breaks) return true;
+
+          if (!scans) return false;
+
+          if (
+            scans &&
+            breaks.length > 0 &&
+            breaks[breaks.length - 1].breakEnd
+          ) {
+            return true;
+          }
+          return false;
+        };
+
+        const getExactOrderStatus = () => {
+          if (orderStatus === "closed") return orderStatus;
+          if (isOrderRunning()) return "in progress";
+          return "paused";
+        };
+
+        res.json({
+          orderStatus: getExactOrderStatus(),
+          orderNumber,
+          line: lineDescription,
+        });
       }
     );
   });
