@@ -2,12 +2,12 @@ import { Request, Response, NextFunction } from "express";
 import { Order } from "../../models/order";
 import { Line } from "../../models/line";
 
-export const getLiveView = function (
+export const getLiveView = function(
   req: Request,
   res: Response,
   next: NextFunction
 ): void {
-  Line.find({}, function (err, lines) {
+  Line.find({}, function(err, lines) {
     if (err) {
       return next(err);
     }
@@ -21,7 +21,7 @@ export const getLiveView = function (
       {
         $or: orderNumbers,
       },
-      function (err, orders) {
+      function(err, orders) {
         if (err) {
           return next(err);
         }
@@ -97,7 +97,6 @@ export const getLiveView = function (
 
           const isOrderRunning = () => {
             if (!breaks) return false;
-
             if (breaks.length > 0 && breaks[breaks.length - 1].breakEnd) {
               return true;
             }
@@ -106,6 +105,7 @@ export const getLiveView = function (
 
           const getExactOrderStatus = () => {
             if (orderStatus === "closed") return orderStatus;
+            if (!scans) return "before start";
             if (isOrderRunning()) return "in progress";
             return "paused";
           };
@@ -171,8 +171,8 @@ export const getLiveView = function (
           const efficiency =
             meanCycleTimeInMilliseconds > 0 && tactTime
               ? Math.floor(
-                  ((tactTime * 1000) / meanCycleTimeInMilliseconds) * 100
-                )
+                ((tactTime * 1000) / meanCycleTimeInMilliseconds) * 100
+              )
               : 0;
 
           const estimatedDurationInMilliseconds =

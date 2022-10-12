@@ -1,4 +1,3 @@
-
 import { Request, Response, NextFunction } from "express";
 import { User } from "../../models/user";
 import { Types } from "mongoose";
@@ -14,7 +13,7 @@ export const changePassword = function (
   const password = req.body.password;
 
   const { _id } = req.params;
-  
+
   if (!_id) {
     res.status(422).send({
       error: "You must provide user id!",
@@ -39,8 +38,7 @@ export const changePassword = function (
 
   if (!password) {
     res.status(422).send({
-      error:
-        "You must provide password",
+      error: "You must provide password",
     });
     return;
   }

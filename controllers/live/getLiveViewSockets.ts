@@ -2,8 +2,8 @@ import { Socket } from "socket.io";
 import { Order } from "../../models/order";
 import { Line } from "../../models/line";
 
-export const getLiveViewSockets = function (socket: Socket) {
-  Line.find({}, { timeout: false }, function (err, lines) {
+export const getLiveViewSockets = function(socket: Socket) {
+  Line.find({}, { timeout: false }, function(err, lines) {
     if (err) {
       return [];
     }
@@ -16,7 +16,7 @@ export const getLiveViewSockets = function (socket: Socket) {
       {
         $or: orderNumbers,
       },
-      function (err, orders) {
+      function(err, orders) {
         if (err) {
           return [];
         }
@@ -90,7 +90,6 @@ export const getLiveViewSockets = function (socket: Socket) {
 
           const isOrderRunning = () => {
             if (!breaks) return false;
-
             if (breaks.length > 0 && breaks[breaks.length - 1].breakEnd) {
               return true;
             }
@@ -99,6 +98,7 @@ export const getLiveViewSockets = function (socket: Socket) {
 
           const getExactOrderStatus = () => {
             if (orderStatus === "closed") return orderStatus;
+            if (!scans) return "before start";
             if (isOrderRunning()) return "in progress";
             return "paused";
           };
@@ -164,8 +164,8 @@ export const getLiveViewSockets = function (socket: Socket) {
           const efficiency =
             meanCycleTimeInMilliseconds > 0 && tactTime
               ? Math.floor(
-                  ((tactTime * 1000) / meanCycleTimeInMilliseconds) * 100
-                )
+                ((tactTime * 1000) / meanCycleTimeInMilliseconds) * 100
+              )
               : 0;
 
           const estimatedDurationInMilliseconds =

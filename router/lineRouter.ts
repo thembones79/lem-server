@@ -9,4 +9,9 @@ export const lineRouter = function (app: Express) {
 
   app.put("/api/line/occupiedwith", requireAuth, LineController.occupyLineWith);
   app.get("/api/line/:_id", requireAuth, LineController.getProductFromLine);
+  app.get(
+    "/api/lineorder/:lineDescription",
+    requireAuth,
+    LineController.getOrderStatusFromLine
+  );
 };
