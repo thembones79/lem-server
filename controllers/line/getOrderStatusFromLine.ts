@@ -52,9 +52,7 @@ export const getOrderStatusFromLine = function (
 
         const isOrderRunning = () => {
           if (scans && !breaks) return true;
-
           if (!scans) return false;
-
           if (
             scans &&
             breaks.length > 0 &&
@@ -67,6 +65,7 @@ export const getOrderStatusFromLine = function (
 
         const getExactOrderStatus = () => {
           if (orderStatus === "closed") return orderStatus;
+          if (!scans) return "before start";
           if (isOrderRunning()) return "in progress";
           return "paused";
         };
